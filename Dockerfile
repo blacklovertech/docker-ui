@@ -19,7 +19,11 @@ RUN go build -trimpath -ldflags="-s -w" -o /app/server .
 FROM alpine:3.20
 
 WORKDIR /app
-RUN apk add --no-cache ca-certificates
+ENV TZ=Asia/Shanghai
+
+RUN apk add --no-cache ca-certificates tzdata \
+	&& cp /usr/share/zoneinfo/$TZ /etc/localtime \
+	&& echo $TZ > /etc/timezone
 
 COPY --from=build /app/server /app/server
 COPY ./log4go.xml /app/log4go.xml

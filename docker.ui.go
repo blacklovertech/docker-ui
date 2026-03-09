@@ -351,7 +351,12 @@ func startHttpServer(listener net.Listener) {
 		}
 
 		//fix bug error when serving connection "[::1]:8999"<->"[::1]:27982": body size exceeds the given limit
-		s.MaxRequestBodySize = 4 * 1024 * 1024 * 1024
+		maxBodySize := int64(4) * 1024 * 1024 * 1024
+		maxInt := int64(^uint(0) >> 1)
+		if maxBodySize > maxInt {
+			maxBodySize = maxInt
+		}
+		s.MaxRequestBodySize = int(maxBodySize)
 
 		if err := s.Serve(listener); err != nil {
 			Logger.Critical("error in ListenAndServe: %v", err)
