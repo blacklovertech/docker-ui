@@ -1349,7 +1349,7 @@ function show_term() {
         width: 1000,
         height: 600,
         title: "《条款说明》",
-        href: 'https://erp-cdn.ginghan.com/public/cube/static/term/terms.html?1.0.0.23'
+        href: ROOT_RES_URL + '/static/term/terms.html'
     });
 }
 

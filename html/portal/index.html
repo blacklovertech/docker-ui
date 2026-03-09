@@ -397,16 +397,6 @@
                                     </tr>
 
                                     <tr>
-                                        <td>Gitee</td>
-                                        <td style="padding-bottom: 0;">
-                                            <div class="layui-btn-container">
-                                                <a href="https://gitee.com/mirrors_back/docker-cli" target="_blank" style="margin-right: 15px"><img src="https://gitee.com/mirrors_back/docker-cli/badge/star.svg?theme=dark" alt="star"></a>
-                                                <a href="https://gitee.com/mirrors_back/docker-cli" target="_blank"><img src="https://gitee.com/mirrors_back/docker-cli/badge/fork.svg?theme=dark" alt="fork"></a>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
                                         <td>Github</td>
                                         <td style="padding-bottom: 0;">
                                             <div class="layui-btn-container">
@@ -437,8 +427,23 @@
                     <span>版本历史</span>
                     <span style='float: right;position: absolute;right: 20px;height: 48px;'></span>
                 </div>
-                <div class="card-body we-changelog" style="text-align: center;">
-                    <ul class="layui-timeline" style="height1: 729px; overflow-y: auto;">
+                        <li class="layui-timeline-item">
+                          <i class="layui-icon layui-timeline-axis" style="color: #FF5722;"></i>
+                          <div class="layui-timeline-content layui-text">
+                            <div class="layui-timeline-title">
+                              <h3>v2.0 by Jonnyan404</h3>
+                              <span class="layui-badge-rim">2026-03-09</span>
+                            </div>
+                            <ul>
+                              <li>修复了修改密码不生效的问题</li>
+                              <li>新增用户管理功能</li>
+                            </ul>
+                          </div>
+                        </li>
+                    <div class="card-body we-changelog" style="text-align: left;">
+                            <details class="we-changelog-details">
+                                    <summary>点击展开/收起版本历史</summary>
+                                    <ul class="layui-timeline" style="height1: 729px; overflow-y: auto;">
                         <li class="layui-timeline-item">
                           <i class="layui-icon layui-timeline-axis" style="color: #FF5722;"></i>
                           <div class="layui-timeline-content layui-text">
@@ -491,7 +496,8 @@
                           </div>
                         </li>
 
-                    </ul>
+                        </ul>
+                    </details>
                 </div>
             </div>
         </div>
@@ -517,6 +523,13 @@
             <div class="layui-col-md12">
                 <blockquote class="layui-elem-quote explain" style="border-left: 5px solid #598bfb;">
                     <p>
+                        首先感谢<s>锦翰科技（深圳）有限公司</s>开源该项目!
+                        由于该公司已不存在,所以折叠了相关信息.
+                        <a href="https://github.com/Jonnyan404" target="_blank">By Jonnyan404</a><br>
+                    </p>
+                    <details>
+                    <summary>点击展开详情</summary>
+                    <p>
                         锦翰科技（深圳）有限公司致力于打造既美观实用又能快速开发的后台管理前端框架，解决传统EasyUI的性能和功能问题！
                         锦翰科技（深圳）有限公司，前身是卓尚软件工作室，组建于2008年11月，是针对大中小企业、政府机构提供信息化管理的咨询、开发、实施、服务为一体的企业管理信息化的高新技术企业。
                     </p>
@@ -530,15 +543,10 @@
                         <a href="http://www.zuoyoutech.com" target="_blank">锦翰科技（深圳）有限公司</a><br>
                         <span style="font-weight: bold;">地址：</span>广东省深圳市龙岗区龙飞大道333号启迪协信科技园4号楼301<br>
                         <span style="font-weight: bold;">Addr：</span>301, building 4, Qidi Xiexin science and Technology Park, 333 Longfei Avenue, Longgang District, Shenzhen City, Guangdong Province<br>
-                        <span style="font-weight: bold;">客服QQ：</span>793875613<br>
-                        <span style="font-weight: bold;">办公电话：</span>0755-89769403，13510831210<br>
-                        <span style="font-weight: bold;">电子邮箱：</span>service@ginghan.com
-                        <a target=blank href="https://wpa.qq.com/msgrd?v=3&uin=793875613&site=qq&menu=yes">
-                            <img border="0" SRC='https://pub.idqqimg.com/qconn/wpa/button/button_old_11.gif' alt="点击这里给我发消息">
-                        </a><br>
                     </p>
 
                     </p>
+                    </details>
                 </blockquote>
             </div>
         </div>
@@ -562,7 +570,8 @@
 </script>
 <style>
 
-    .panel {width: 100%;!important;}
+    .panel {width: 100% !important;}
+    .we-changelog-details summary{cursor:pointer; user-select:none;}
 </style>
 </body>
 </html>

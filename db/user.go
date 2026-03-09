@@ -1,9 +1,10 @@
 package db
 
 import (
+	"time"
+
 	"github.com/gohutool/boot4go-docker-ui/model"
 	. "github.com/gohutool/boot4go-util"
-	"time"
 )
 
 /**
@@ -30,13 +31,13 @@ const (
 )
 
 func InitAdminUser() {
-	c, err := dbPlus.QueryCount("select count(1) from t_user where username=?", "ginghan")
+	c, err := dbPlus.QueryCount("select count(1) from t_user where username=?", "dockerui")
 	if err != nil {
 		panic(err)
 	}
 
 	if c == 0 {
-		err = CreateUser("ginghan", "123456")
+		err = CreateUser("dockerui", "dockerui")
 
 		if err != nil {
 			panic(err)
@@ -63,7 +64,7 @@ func CreateUser(username, password string) error {
 
 func UpdatePwd(userid, passwd string) error {
 	passwd = SaltMd5(passwd, userid)
-	_, _, err := dbPlus.Exec(UPDATE_PWD_USER_BY_ID, userid, passwd)
+	_, _, err := dbPlus.Exec(UPDATE_PWD_USER_BY_ID, passwd, userid)
 	return err
 }
 

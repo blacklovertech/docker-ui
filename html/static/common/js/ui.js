@@ -125,7 +125,7 @@ function loadOne(css, js, cb){
 
 contextpath = "";
 window.APP_DEBUG = true;
-window.APP_VERSION = '1.0.22';
+window.APP_VERSION = '2.0';
 window.ROOT_RES_URL = '';
 
 function loadAllCss(){
