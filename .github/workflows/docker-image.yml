@@ -6,6 +6,7 @@ on:
       tag:
         description: 'Docker image tag (e.g. v1.0.0)'
         required: true
+        default: '20260309'
         type: string
       push_latest:
         description: 'Also push the latest tag'
