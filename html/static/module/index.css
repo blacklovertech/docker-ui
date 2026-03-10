@@ -35,3 +35,54 @@
 #RightAccordion .layui-badge-dot {
     top: 0%!important;
 }
+
+.top-action-bar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.top-action-btn.l-btn,
+.top-action-btn {
+    width: 108px;
+    flex: 0 0 108px;
+    text-align: center;
+}
+
+.top-action-btn-lang.l-btn,
+.top-action-btn-lang {
+    width: 64px;
+    flex: 0 0 64px;
+}
+
+.top-action-btn .l-btn-left,
+.top-action-btn .l-btn-text,
+.top-action-btn-lang .l-btn-left,
+.top-action-btn-lang .l-btn-text {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-action-btn .l-btn-left,
+.top-action-btn-lang .l-btn-left {
+    width: 100%;
+}
+
+.top-action-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.top-action-badge {
+    margin-left: 4px;
+}
+
+#langToggleText {
+    display: inline-block;
+    min-width: 2em;
+    text-align: center;
+}

@@ -6,7 +6,7 @@
 
         <div class="cubeui-fluid">
             <fieldset style="margin-top: 20px!important;margin-bottom1: 10px;">
-                <legend>任务基本信息</legend>
+                <legend data-i18n="tasks.inspect.basic">任务基本信息</legend>
             </fieldset>
 
             <div class="cubeui-row">
@@ -91,8 +91,8 @@
                 </div>
             </div>
 
-            <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="服务的容器规范, ">
-                <legend style="margin-bottom: 10px;">容器规范(服务的容器规范)</legend>
+            <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="服务的容器规范, " data-i18n-title="tasks.inspect.containerSpec.tip">
+                <legend style="margin-bottom: 10px;" data-i18n="tasks.inspect.containerSpec">容器规范(服务的容器规范)</legend>
             </fieldset>
 
             <div class="cubeui-row">
@@ -453,21 +453,21 @@
                 </div>
             </div>
 
-            <fieldset style="margin-top: 20px!important;margin-bottom1: 10px;" title="用户定义的容器的键/值元数据">
-                <legend style="margin-bottom: 10px;">容器标签选项(容器的键/值元数据)</legend>
+            <fieldset style="margin-top: 20px!important;margin-bottom1: 10px;" title="用户定义的容器的键/值元数据" data-i18n-title="tasks.inspect.labels.tip">
+                <legend style="margin-bottom: 10px;" data-i18n="tasks.inspect.labels">容器标签选项(容器的键/值元数据)</legend>
             </fieldset>
 
             <div class="cubeui-row">
                 <div class="cubeui-col-sm12">
                     <div class="cubeui-row"  style="margin-top: 0px;">
                         <div class="cubeui-col-sm5 cubeui-col-sm-offset1" style="padding-right: 5px">
-                            <span style='line-height: 20px;padding-right:0px;'>标签</span>
+                            <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.key">标签</span>
                         </div>
                         <div class="cubeui-col-sm1">
                             <span style='line-height: 20px;padding-right:0px;'>&nbsp;</span>
                         </div>
                         <div class="cubeui-col-sm5" >
-                            <span style='line-height: 20px;padding-right:0px;'>值</span>
+                            <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.value">值</span>
                         </div>
                     </div>
                     {{if Spec.ContainerSpec.Labels}}

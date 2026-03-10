@@ -3053,8 +3053,7 @@ $.iGrid.EditCell = {
                   }
                 });
 
-                delete newRows;
-                newRows = undefined;
+				newRows = undefined;
 
         	}
 
@@ -5233,7 +5232,6 @@ function checkAndOpenDialog(f, d){
 
 function addOneTab(title, src) {
   var iframe = '<iframe src="' + src + '" frameborder="0" style="border:0;width:100%;height:100%;"></iframe>';
-
   var t = parent.$('#index_tabs');
 
   //showloading();
@@ -5268,7 +5266,6 @@ function addOneTab(title, src) {
 
 function addOneTabAndRefresh(title, src) {
   var iframe = '<iframe src="' + src + '" frameborder="0" style="border:0;width:100%;height:100%;"></iframe>';
-
   var t = parent.$('#index_tabs');
 
   //showloading();

@@ -3,44 +3,44 @@
 
 <div class="cubeui-fluid">
     <fieldset>
-        <legend>服务基础选项</legend>
+        <legend data-i18n="orchestrator.form.service.legend">服务基础选项</legend>
     </fieldset>
     <div class="cubeui-row">
         <div class="cubeui-col-sm12" style="margin-top: 5px">
-            <label class="cubeui-form-label">服务名:</label>
+            <label class="cubeui-form-label" data-i18n="orchestrator.form.service.name">服务名:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-textbox" name="Name"
                        value='{{:Name}}'
                        data-options="
-                                required:true,prompt:'服务名称，必须填写，在任务计划里必须唯一'
+                                required:true,prompt:'{{:~t("orchestrator.prompt.service.name")}}'
                                 "
                 >
             </div>
         </div>
         <div class="cubeui-col-sm12" style="margin-top: 5px">
-            <label class="cubeui-form-label">镜像名称:</label>
+            <label class="cubeui-form-label" data-i18n="orchestrator.form.service.image">镜像名称:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-textbox" id="fromImage" name="fromImage"
                        value='{{:repo}}'
                        data-options="
-                                required:true,prompt:'镜像名称，选择填写；比如joinsunsoft/docker-ui'
+                                required:true,prompt:'{{:~t("orchestrator.prompt.service.image")}}'
                                 "
                 >
             </div>
         </div>
         <div class="cubeui-col-sm12" style="margin-top: 5px">
-            <label class="cubeui-form-label">TAG:</label>
+            <label class="cubeui-form-label" data-i18n="orchestrator.form.service.tag">TAG:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-textbox" name="tag" value="latest"
                        value='latest'
                        data-options="
-                                required:false,prompt:'TAG，选择填写；为空使用默认latest'
+                                required:false,prompt:'{{:~t("orchestrator.prompt.service.tag")}}'
                                 "
                 >
             </div>
         </div>
         <div class="cubeui-col-sm12" style="margin-top: 5px">
-            <label class="cubeui-form-label">仓库:</label>
+            <label class="cubeui-form-label" data-i18n="orchestrator.form.service.repo">仓库:</label>
             <div class="cubeui-input-block">
                 <input type="text" name="repo" data-toggle="cubeui-combobox"
                        value='{{:repo}}'
@@ -50,7 +50,7 @@
                                     $('#pull_username').textbox('setValue', record.Username);
                                     $('#pull_password').passwordbox('setValue', record.Password);
                                 },
-                                required:false,prompt:'仓库，选择填写；为空使用默认docker hub',
+                                required:false,prompt:'{{:~t("orchestrator.prompt.service.repo")}}',
                                 valueField:'ID',
                                 textField:'Name',
                                 data:$.docker.request.repos.getReposItem()
@@ -58,23 +58,23 @@
             </div>
         </div>
         <div class="cubeui-col-sm12" style="margin-top: 5px">
-            <label class="cubeui-form-label">用户名:</label>
+            <label class="cubeui-form-label" data-i18n="orchestrator.form.service.username">用户名:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-textbox" id="pull_username" name="username"
                        value=''
                        data-options="
-                                                        required:false,prompt:'登录镜像仓库的用户名'
+                                                        required:false,prompt:'{{:~t("orchestrator.prompt.service.username")}}'
                                                         "
                 >
             </div>
         </div>
         <div class="cubeui-col-sm12" style="margin-top: 5px">
-            <label class="cubeui-form-label">密码:</label>
+            <label class="cubeui-form-label" data-i18n="orchestrator.form.service.password">密码:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-passwordbox"  id="pull_password"  name="password"
                        value=''
                        data-options="
-                                                        required:false,prompt:'登录镜像仓库的用户密码'
+                                                        required:false,prompt:'{{:~t("orchestrator.prompt.service.password")}}'
                                                         "
                 >
             </div>

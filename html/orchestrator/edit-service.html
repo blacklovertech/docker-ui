@@ -1,12 +1,12 @@
 <div data-toggle="cubeui-tabs" id='eastTabs'>
-    <div title="服务配置"
+    <div title="{{:~t('orchestrator.service.tab.config')}}"
          data-options="id:'eastTab0',iconCls:'fa fa-info-circle'">
         <div style="margin: 0px;">
         </div>
         <form id='createServiceForm'>
             <div class="cubeui-fluid">
-                <fieldset style="margin-top: 20px!important;margin-bottom1: 10px;">
-                    <legend>服务基本信息</legend>
+                <fieldset style="margin-top: 20px!important;margin-bottom: 10px;">
+                    <legend>{{:~t('orchestrator.service.section.basic')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
@@ -17,23 +17,23 @@
                                    value='{{>Name}}'
                                    data-options="
                                required:true,
-                               prompt:'服务的名称'
+                               prompt:'{{:~t("orchestrator.service.field.namePrompt")}}'
                                             "
                             >
                         </div>
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="调度模式(服务的调度模式)">
-                    <legend style="margin-bottom: 10px;">服务调度模式(服务的调度模式)</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.scheduleTitle')}}">
+                    <legend style="margin-bottom: 10px;">{{:~t('orchestrator.service.section.schedule')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12" >
-                        <label class="cubeui-form-label" title="服务调度模式（replicated or global）（默认为“replicated”）。">服务调度模式:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.schedule.modeTitle')}}">{{:~t('orchestrator.service.schedule.mode')}}</label>
                         <div class="cubeui-input-block">
                             <input data-toggle="cubeui-radiobutton" checked name="Mode"
-                                   data-options="title:'replicated模式',
+                                   data-options="title:'{{:~t(\"orchestrator.service.schedule.replicated\")}}',
                                                 onChange:function(checked){
                                                     if(checked){
                                                         $('.replicated-mode-div').show();
@@ -46,9 +46,9 @@
                                                     }
                                                 }
                                                 " value="replicated">
-                            <span style='line-height: 30px;padding-right:0px' title="replicated模式"><b>replicated模式</b>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                        <span style='line-height: 30px;padding-right:0px' title="{{:~t('orchestrator.service.schedule.replicated')}}"><b>{{:~t('orchestrator.service.schedule.replicated')}}</b>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                             <input data-toggle="cubeui-radiobutton" name="Mode"
-                                   data-options="title:'global模式',
+                                            data-options="title:'{{:~t(\"orchestrator.service.schedule.global\")}}',
                                                 onChange:function(checked){
                                                     if(checked){
                                                         $('.replicated-mode-div').hide();
@@ -63,22 +63,22 @@
                                                     }
                                                 }
                                                 "
-                                   value="global" label1="远程URI">
-                            <span style='line-height: 30px;padding-right:0px' title="global模式"><b>global模式</b>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                   value="global" label1="Remote URI">
+                            <span style='line-height: 30px;padding-right:0px' title="{{:~t('orchestrator.service.schedule.global')}}"><b>{{:~t('orchestrator.service.schedule.global')}}</b>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="cubeui-row replicated-mode-div">
                     <div class="cubeui-col-sm12" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="复制模式的任务数">任务数:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.schedule.replicasTitle')}}">{{:~t('orchestrator.service.schedule.replicas')}}</label>
                         <div class="cubeui-input-block">
 
                             <input type="text" data-toggle="cubeui-numberspinner" id="replicated-mode-Replicas"
                                    name="Mode.Replicated.Replicas"
                                    value=''
                                    data-options="
-                               prompt:'复制模式的任务数',
+                               prompt:'{{:~t("orchestrator.service.schedule.replicasPrompt")}}',
                                required:true,
                                min:1
                                             "
@@ -86,29 +86,28 @@
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="要同时运行的作业任务数（默认值等于--副本）1.41版本或以上支持">
-                            最大复制作业数:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.schedule.maxConcurrentTitle')}}">
+                            {{:~t('orchestrator.service.schedule.maxConcurrent')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" id="replicated-mode-MaxConcurrent"
                                    name="Mode.ReplicatedJob.MaxConcurrent"
                                    value=''
                                    data-options="
-                               prompt:'要同时运行的作业任务数'
+                               prompt:'{{:~t("orchestrator.service.schedule.maxConcurrentPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="希望达到已完成状态的副本总数。如果未设置，将默认为MaxConcurrent的值
-                    1.41版本或以上支持">
-                            希望完成副本数:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.schedule.totalCompletionsTitle')}}">
+                            {{:~t('orchestrator.service.schedule.totalCompletions')}}</label>
                         <div class="cubeui-input-block">
 
                             <input type="text" data-toggle="cubeui-numberspinner" id="replicated-mode-TotalCompletions"
                                    name="Mode.ReplicatedJob.TotalCompletions"
                                    value=''
                                    data-options="
-                               prompt:'希望达到已完成状态的副本总数'
+                               prompt:'{{:~t("orchestrator.service.schedule.totalCompletionsPrompt")}}'
                                             "
                             >
                         </div>
@@ -118,8 +117,8 @@
                 <div class="cubeui-row global-mode-div" style="display: none">
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="服务的容器规范, ">
-                    <legend style="margin-bottom: 10px;">容器规范(服务的容器规范)</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.containerSpecTitle')}}">
+                    <legend style="margin-bottom: 10px;">{{:~t('orchestrator.service.section.containerSpec')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
@@ -131,88 +130,88 @@
                                    value=''
                                    data-options="
                                required:true,
-                               prompt:'用于容器的Image名称，格式repos:tag,默认tag为latest'
+                               prompt:'{{:~t("orchestrator.service.field.imagePrompt")}}'
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm12" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="要在容器中运行的命令">Command:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.commandTitle')}}">{{:~t('orchestrator.service.field.command')}}</label>
                         <div class="cubeui-input-block">
 
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.ContainerSpec.Command"
                                    value=''
                                    data-options="
-                               prompt:'要在容器中运行的命令'
+                               prompt:'{{:~t("orchestrator.service.field.commandPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm12" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="命令的参数">Args:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.argsTitle')}}">{{:~t('orchestrator.service.field.args')}}</label>
                         <div class="cubeui-input-block">
 
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.ContainerSpec.Args"
                                    value=''
                                    data-options="
-                               prompt:'要在容器中运行的命令的参数'
+                               prompt:'{{:~t("orchestrator.service.field.argsPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="用于容器的主机名，作为有效的RFC 1123主机名。">Hostname:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.hostnameTitle')}}">Hostname:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.ContainerSpec.Hostname"
                                    value=''
                                    data-options="
-                               prompt:'用于容器的主机名，作为有效的RFC 1123主机名。'
+                               prompt:'{{:~t("orchestrator.service.field.hostnamePrompt")}}'
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="运行命令的工作目录。">Dir:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.dirTitle')}}">Dir:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.ContainerSpec.Dir"
                                    value=''
                                    data-options="
-                               prompt:'运行命令的工作目录。'
+                               prompt:'{{:~t("orchestrator.service.field.dirPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="容器内的用户。">User:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.userTitle')}}">User:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.ContainerSpec.User"
                                    value=''
                                    data-options="
-                               prompt:'容器内的用户'
+                               prompt:'{{:~t("orchestrator.service.field.userPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="容器进程将作为其运行的其他组。多个Group使用空格分隔">Groups:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.groupsTitle')}}">Groups:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.ContainerSpec.Groups"
                                    value=''
                                    data-options="
-                               prompt:'容器进程将作为其运行的组。多个Group使用空格分隔'
+                               prompt:'{{:~t("orchestrator.service.field.groupsPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="是否应分配伪TTY。">TTY:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.ttyTitle')}}">TTY:</label>
                         <div class="cubeui-input-block">
                             <input data-toggle="cubeui-switchbutton"
                                    name="TaskTemplate.ContainerSpec.TTY" value="1" data-options="onText:'',offText:'',width:60">
@@ -220,7 +219,7 @@
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="打开标准输入。">OpenStdin:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.stdinTitle')}}">OpenStdin:</label>
                         <div class="cubeui-input-block">
                             <input data-toggle="cubeui-switchbutton"
                                    name="TaskTemplate.ContainerSpec.OpenStdin" value="1" data-options="onText:'',offText:'',width:60">
@@ -228,7 +227,7 @@
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="将容器的根文件系统装载为只读。">ReadOnly:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.readOnlyTitle')}}">ReadOnly:</label>
                         <div class="cubeui-input-block">
                             <input data-toggle="cubeui-switchbutton"
                                    name="TaskTemplate.ContainerSpec.ReadOnly" value="1" data-options="onText:'',offText:'',width:60">
@@ -236,7 +235,7 @@
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="在容器内运行init，转发信号并接收进程。如果为空，则省略该字段，并使用默认值（在守护进程上配置）。">Init:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.initTitle')}}">Init:</label>
                         <div class="cubeui-input-block">
                             <input data-toggle="cubeui-switchbutton"
                                    name="TaskTemplate.ContainerSpec.Init" value="1" data-options="onText:'',offText:'',width:60">
@@ -244,12 +243,12 @@
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="运行服务的容器的隔离技术。（仅限Windows）。枚举：“default”“process”“hyperv”">Isolation:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.isolationTitle')}}">Isolation:</label>
                         <div class="cubeui-input-block">
                             <input type="text" name="TaskTemplate.ContainerSpec.Isolation" value="" data-toggle="cubeui-combobox"
                                    data-options="
                                 required:false,
-                                prompt:'运行服务的容器的隔离，默认为空',
+                                prompt:'{{:~t("orchestrator.service.field.isolationPrompt")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:[{'KEY':'default','TEXT':'Default'},{'KEY':'process','TEXT':'Process'},{'KEY':'hyperv','TEXT':'Hyperv'}]
@@ -259,75 +258,75 @@
 
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="停止容器信号。">StopSignal:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.stopSignalTitle')}}">StopSignal:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox"
                                    name="TaskTemplate.ContainerSpec.StopSignal"
                                    value=''
                                    data-options="
-                                prompt:'停止容器信号',
+                                prompt:'{{:~t("orchestrator.service.field.stopSignalPrompt")}}',
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="在强制杀死容器之前等待容器终止的时间量。">StopGracePeriod:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.stopGracePeriodTitle')}}">StopGracePeriod:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner"
                                    name="TaskTemplate.ContainerSpec.StopGracePeriod"
                                    value=''
                                    data-options="
-                                prompt:'在强制杀死容器之前等待容器终止的时间量',
+                                prompt:'{{:~t("orchestrator.service.field.stopGracePeriodPrompt")}}',
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="即使没有更改相关参数，也会触发更新的计数器">ForceUpdate:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.forceUpdateTitle')}}">ForceUpdate:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox"
                                    name="TaskTemplate.ContainerSpec.ForceUpdate"
                                    value=''
                                    data-options="
-                               prompt:'会触发更新的计数'
+                               prompt:'{{:~t("orchestrator.service.field.forceUpdatePrompt")}}'
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="添加到容器默认集的内核功能。多个功能使用空格隔开">CapabilityAdd:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.capabilityAddTitle')}}">CapabilityAdd:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-tagbox" name="TaskTemplate.ContainerSpec.CapabilityAdd"
                                    value=''
                                    data-options="
-                               prompt:'添加到容器默认集的内核功能。多个功能使用空格隔开'
+                               prompt:'{{:~t("orchestrator.service.field.capabilityAddPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="从容器的默认设置中删除的内核功能。多个功能使用空格隔开">CapabilityDrop:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.capabilityDropTitle')}}">CapabilityDrop:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-tagbox" name="TaskTemplate.ContainerSpec.CapabilityDrop"
                                    value=''
                                    data-options="
-                               prompt:'从容器的默认设置中删除的内核功能。多个功能使用空格隔开'
+                               prompt:'{{:~t("orchestrator.service.field.capabilityDropPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="Runtime是为任务执行器指定的运行时类型,默认值runc">Runtime:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.runtimeTitle')}}">Runtime:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.ContainerSpec.Runtime"
                                    value=''
                                    data-options="
-                               prompt:'任务执行器指定的运行时类型；为空为默认值runc'
+                               prompt:'{{:~t("orchestrator.service.field.runtimePrompt")}}'
                                             "
                             >
                         </div>
@@ -335,18 +334,18 @@
 
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="指定用于根据此规范创建的任务的日志驱动程序。如果不存在，则将使用swarm的默认驱动程序，如果未指定，则最终返回到引擎默认驱动程序。">
-                    <legend style="margin-bottom: 0px;">日志驱动</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.logDriverTitle')}}">
+                    <legend style="margin-bottom: 0px;">{{:~t('orchestrator.service.section.logDriver')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="创建的任务的日志驱动程序">Log Driver:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.field.logDriverTitle')}}">Log Driver:</label>
                         <div class="cubeui-input-block">
                             <input type="text" name="TaskTemplate.ContainerSpec.LogDriver.Name" value="" data-toggle="cubeui-combobox"
                                    data-options="
                                 required:false,
-                                prompt:'创建的任务的日志驱动程序，默认为swarm的默认驱动程序',
+                                prompt:'{{:~t("orchestrator.service.field.logDriverPrompt")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:$.docker.utils.getLocalLog()
@@ -359,10 +358,10 @@
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm5 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;'>配置项</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.optionKey')}}</span>
                             </div>
                             <div class="cubeui-col-sm5" >
-                                <span style='line-height: 20px;padding-right:0px;'>配置值</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.optionValue')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                                     <span style='line-height: 20px;padding-right:0px;'>
@@ -373,18 +372,18 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="将卷绑定列表添加到作为服务一部分创建的容器的规范">
-                    <legend style="margin-bottom: 0px;">卷绑定列表</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.mountsTitle')}}">
+                    <legend style="margin-bottom: 0px;">{{:~t('orchestrator.service.section.mounts')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm5 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;'>主机路径或者数据卷</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.hostPath')}}</span>
                             </div>
                             <div class="cubeui-col-sm5" >
-                                <span style='line-height: 20px;padding-right:0px;'>容器目标路径</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.containerPath')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                                     <span style='line-height: 20px;padding-right:0px;'>
@@ -395,18 +394,18 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="在容器中设置内核命名空间参数（sysctl）。服务上的Sysctls选项接受与容器上支持的相同的sysctl。注意，虽然支持相同的sysctl，但没有保证或检查它们是否适合集群环境，由用户决定给定的sysctl是否在服务中正常工作">
-                    <legend style="margin-bottom: 0px;">内核命名空间参数设置列表</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.sysctlsTitle')}}">
+                    <legend style="margin-bottom: 0px;">{{:~t('orchestrator.service.section.sysctls')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm5 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;'>参数键</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.sysctlKey')}}</span>
                             </div>
                             <div class="cubeui-col-sm5" >
-                                <span style='line-height: 20px;padding-right:0px;'>参数值</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.sysctlValue')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                                     <span style='line-height: 20px;padding-right:0px;'>
@@ -417,18 +416,18 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="容器内的环境变量。">
-                    <legend style="margin-bottom: 0px;">容器内的环境变量</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.envTitle')}}">
+                    <legend style="margin-bottom: 0px;">{{:~t('orchestrator.service.section.env')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm5 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;'>环境变量名</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.envKey')}}</span>
                             </div>
                             <div class="cubeui-col-sm5" >
-                                <span style='line-height: 20px;padding-right:0px;'>环境变量值</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.envValue')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                                     <span style='line-height: 20px;padding-right:0px;'>
@@ -439,18 +438,18 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="容器内的用户定义的键/值数据。">
-                    <legend style="margin-bottom: 0px;">容器内的用户定义的键/值数据</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.containerLabelsTitle')}}">
+                    <legend style="margin-bottom: 0px;">{{:~t('orchestrator.service.section.containerLabels')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm5 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;'>用户定义键</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.userKey')}}</span>
                             </div>
                             <div class="cubeui-col-sm5" >
-                                <span style='line-height: 20px;padding-right:0px;'>用户定义键值</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.userValue')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                                     <span style='line-height: 20px;padding-right:0px;'>
@@ -461,21 +460,21 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="要在容器中设置的资源限制。例如：{“Name”：“nofile”，“Soft”：1024，“Hard”：2048}">
-                    <legend style="margin-bottom: 0px;">容器中设置的资源限制</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.ulimitsTitle')}}">
+                    <legend style="margin-bottom: 0px;">{{:~t('orchestrator.service.section.ulimits')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm3 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;'>限制资源名</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.ulimitName')}}</span>
                             </div>
                             <div class="cubeui-col-sm4" >
-                                <span style='line-height: 20px;padding-right:0px;'>soft限制</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.ulimitSoft')}}</span>
                             </div>
                             <div class="cubeui-col-sm3" >
-                                <span style='line-height: 20px;padding-right:0px;'>hard限制</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.ulimitHard')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                                     <span style='line-height: 20px;padding-right:0px;'>
@@ -486,22 +485,22 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;"
-                           title="密码文件(机密包含对将向服务公开的零个或多个机密的引用)">
-                    <legend style="margin-bottom: 10px;">密码文件(机密包含对将向服务公开的零个或多个机密的引用)</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;"
+                           title="{{:~t('orchestrator.service.section.secretsTitle')}}">
+                    <legend style="margin-bottom: 10px;">{{:~t('orchestrator.service.section.secrets')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm3 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;' title="文件表示由文件支持的特定目标。">密码文件</span>
+                                <span style='line-height: 20px;padding-right:0px;' title="File target">{{:~t('orchestrator.service.label.secretFile')}}</span>
                             </div>
                             <div class="cubeui-col-sm4" >
-                                <span style='line-height: 20px;padding-right:0px;' title="引用的特定机密的ID。">密码文件ID</span>
+                                <span style='line-height: 20px;padding-right:0px;' title="Referenced secret ID">{{:~t('orchestrator.service.label.secretId')}}</span>
                             </div>
                             <div class="cubeui-col-sm3" >
-                                <span style='line-height: 20px;padding-right:0px;' title="引用的机密的名称，仅用于查找/显示目的。引用中的秘密将通过其ID识别。">密码文件引用名</span>
+                                <span style='line-height: 20px;padding-right:0px;' title="Referenced secret name">{{:~t('orchestrator.service.label.secretName')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                             <span style='line-height: 20px;padding-right:0px;'>
@@ -512,22 +511,22 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;"
-                           title="配置文件(Configs包含对将向服务公开的零个或多个Config的引用)">
-                    <legend style="margin-bottom: 10px;" title="Configs包含对将向服务公开的零个或多个Config的引用">配置文件</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;"
+                           title="{{:~t('orchestrator.service.section.configsTitle')}}">
+                    <legend style="margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.configsTitle')}}">{{:~t('orchestrator.service.section.configs')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm3 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;' title="文件支持的特定目标/运行时配置内容。">配置文件/运行时配置文本</span>
+                                <span style='line-height: 20px;padding-right:0px;' title="Config target">{{:~t('orchestrator.service.label.configFile')}}</span>
                             </div>
                             <div class="cubeui-col-sm4" >
-                                <span style='line-height: 20px;padding-right:0px;' title="引用的特定机密的ID。">配置文件ID</span>
+                                <span style='line-height: 20px;padding-right:0px;' title="Referenced config ID">{{:~t('orchestrator.service.label.configId')}}</span>
                             </div>
                             <div class="cubeui-col-sm3" >
-                                <span style='line-height: 20px;padding-right:0px;' title="引用的配置的名称，仅用于查找/显示目的。引用中的配置将由其ID标识。">密码文件引用名</span>
+                                <span style='line-height: 20px;padding-right:0px;' title="Referenced config name">{{:~t('orchestrator.service.label.configName')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                             <span style='line-height: 20px;padding-right:0px;'>
@@ -538,70 +537,65 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="健康测试策略(用于检查容器是否健康的测试)">
-                    <legend style="margin-bottom: 10px;">健康测试策略(用于检查容器是否健康的测试)</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.healthcheckTitle')}}">
+                    <legend style="margin-bottom: 10px;">{{:~t('orchestrator.service.section.healthcheck')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="要执行的测试。可能的值为:空值从映像或父映像继承healthcheck; NONE禁用healthcheck;
-                            CMD args直接执行参数;CMD-SHELL command使用系统的默认SHELL运行命令">Test:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.healthcheck.testTitle')}}">Test:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.ContainerSpec.HealthCheck.Test"
                                    value=''
                                    data-options="
-                                       prompt:'要执行的测试。可能的值为:为空从映像或父映像继承healthcheck; NONE禁用healthcheck;CMD args直接执行参数;CMD-SHELL command使用系统的默认SHELL运行命令；使用空格分隔'
+                                       prompt:'{{:~t("orchestrator.service.healthcheck.testPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="检查之间的等待时间（纳秒）。它应为0或至少1000000（1毫秒）。
-                            0表示继承。">Interval(ns):</label>
+                        <label class="cubeui-form-label" title="Interval in nanoseconds. 0 means inherit.">Interval(ns):</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.ContainerSpec.HealthCheck.Interval"
                                    value=''
                                    data-options="
-                               prompt:'检查之间的等待时间（纳秒）。它应为0或至少1000000（1毫秒）。0表示继承。',
+                               prompt:'{{:~t("orchestrator.service.healthcheck.intervalPrompt")}}',
                                min:0
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="在检查认为为已挂时的等待时间。
-                            它应为0或至少1000000（1毫秒）。0表示继承。">Timeout(ns):</label>
+                        <label class="cubeui-form-label" title="Timeout in nanoseconds. 0 means inherit.">Timeout(ns):</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.ContainerSpec.HealthCheck.Timeout"
                                    value=''
                                    data-options="
-                               prompt:'在检查认为为已挂时的等待时间。它应为0或至少1000000（1毫秒）。0表示继承。',
+                               prompt:'{{:~t("orchestrator.service.healthcheck.timeoutPrompt")}}',
                                min:0
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="认为容器不健康所需的连续故障数。
-                            0表示继承。">Retries:</label>
+                        <label class="cubeui-form-label" title="Consecutive failures required before unhealthy. 0 means inherit.">Retries:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.ContainerSpec.HealthCheck.Retries"
                                    value=''
                                    data-options="
-                               prompt:'认为容器不健康所需的连续故障数。0表示继承。',
+                               prompt:'{{:~t("orchestrator.service.healthcheck.retriesPrompt")}}',
                                min:0
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="容器初始化后开始运行健康检查的开始时间（纳秒）。
-                            它应为0或至少1000000（1毫秒）。0表示继承。">StartPeriod(ns):</label>
+                        <label class="cubeui-form-label" title="Start period in nanoseconds before health checks begin. 0 means inherit.">StartPeriod(ns):</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.ContainerSpec.HealthCheck.StartPeriod"
                                    value=''
                                    data-options="
-                               prompt:'容器初始化后开始运行健康检查的开始时间（纳秒）',
+                               prompt:'{{:~t("orchestrator.service.healthcheck.startPeriodPrompt")}}',
                                min:0
                                             "
                             >
@@ -609,42 +603,42 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="限制资源规范(适用于作为服务一部分创建的每个单独容器的资源需求,描述任务可以请求的资源限制的对象)">
-                    <legend style="margin-bottom: 10px;">限制资源规范(适用于作为服务一部分创建的每个单独容器的资源需求)</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.resourceLimitsTitle')}}">
+                    <legend style="margin-bottom: 10px;">{{:~t('orchestrator.service.section.resourceLimits')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="限制CPU">限制CPU:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.resources.limitCpu')}}">{{:~t('orchestrator.service.resources.limitCpu')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.Resources.Limits.NanoCPUs"
                                    value=''
                                    data-options="
-                               prompt:'限制CPU',
+                               prompt:'{{:~t("orchestrator.service.resources.limitCpu")}}',
                                min:0
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="限制内存">限制内存:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.resources.limitMemory')}}">{{:~t('orchestrator.service.resources.limitMemory')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.Resources.Limits.MemoryBytes"
                                    value=''
                                    data-options="
-                               prompt:'限制内存',
+                               prompt:'{{:~t("orchestrator.service.resources.limitMemory")}}',
                                min:0
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="限制容器中PID的最大数量。将0设置为无限。默认值：0">限制最大进程数:</label>
+                        <label class="cubeui-form-label" title="PID limit">{{:~t('orchestrator.service.resources.limitPids')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.Resources.Limits.Pids"
                                    value=''
                                    data-options="
-                               prompt:'限制容器中PID的最大数量。将0设置为无限。默认值：0',
+                               prompt:'PID limit. Set 0 for unlimited.',
                                min:0
                                             "
                             >
@@ -652,30 +646,30 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="保留资源规范(适用于作为服务一部分创建的每个单独容器的资源需求,可以由节点播发并由任务请求的资源)">
-                    <legend style="margin-bottom: 10px;">保留资源规范(适用于作为服务一部分创建的每个单独容器的资源需求)</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.resourceReservationsTitle')}}">
+                    <legend style="margin-bottom: 10px;">{{:~t('orchestrator.service.section.resourceReservations')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="保留CPU">保留CPU:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.resources.reserveCpu')}}">{{:~t('orchestrator.service.resources.reserveCpu')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.Resources.Reservations.NanoCPUs"
                                    value=''
                                    data-options="
-                               prompt:'保留CPU',
+                               prompt:'{{:~t("orchestrator.service.resources.reserveCpu")}}',
                                min:0
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="保留内存">保留内存:</label>
+                        <label class="cubeui-form-label" title="{{:~t('orchestrator.service.resources.reserveMemory')}}">{{:~t('orchestrator.service.resources.reserveMemory')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.Resources.Reservations.MemoryBytes"
                                    value=''
                                    data-options="
-                               prompt:'保留内存',
+                               prompt:'{{:~t("orchestrator.service.resources.reserveMemory")}}',
                                min:0
                                             "
                             >
@@ -683,18 +677,18 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="重启策略(适用于作为此服务一部分创建的容器的重启策略规范。)">
-                    <legend style="margin-bottom: 10px;">重启策略(适用于作为此服务一部分创建的容器的重启策略规范)</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.restartPolicyTitle')}}">
+                    <legend style="margin-bottom: 10px;">{{:~t('orchestrator.service.section.restartPolicy')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="重新启动的条件">重启条件:</label>
+                        <label class="cubeui-form-label" title="Restart condition">{{:~t('orchestrator.service.restart.condition')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" name="TaskTemplate.RestartPolicy.Condition" value="" data-toggle="cubeui-combobox"
                                    data-options="
                                 required:false,
-                                prompt:'重启条件，默认为空',
+                                prompt:'{{:~t("orchestrator.service.restart.conditionPrompt")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:[{'KEY':'none','TEXT':'None'},{'KEY':'on-failure','TEXT':'On-failure'},{'KEY':'any','TEXT':'Any'}]
@@ -702,36 +696,36 @@
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="重启尝试之间的延迟。">延迟(ns):</label>
+                        <label class="cubeui-form-label" title="Restart delay">{{:~t('orchestrator.service.restart.delay')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.RestartPolicy.Delay"
                                    value=''
                                    data-options="
-                                prompt:'重启尝试之间的延迟，默认为空',
+                                prompt:'{{:~t("orchestrator.service.restart.delayPrompt")}}',
                                 min:0
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="在放弃之前重新启动给定容器的最大尝试次数（默认值为0，忽略该值）。">最大尝试次数:</label>
+                        <label class="cubeui-form-label" title="Max restart attempts">{{:~t('orchestrator.service.restart.maxAttempts')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.RestartPolicy.MaxAttempts"
                                    value=''
                                    data-options="
-                                prompt:'在放弃之前重新启动给定容器的最大尝试次数（默认值为0，忽略该值）',
+                                prompt:'{{:~t("orchestrator.service.restart.maxAttemptsPrompt")}}',
                                 min:0
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="Windows是用于评估重启策略的时间窗口（默认值为0，无限制）。默认值：0">时间窗口:</label>
+                        <label class="cubeui-form-label" title="Restart time window">{{:~t('orchestrator.service.restart.window')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.RestartPolicy.Window"
                                    value=''
                                    data-options="
-                                prompt:'重启策略的时间窗口（默认值为0，无限制）。默认值：0',
+                                prompt:'{{:~t("orchestrator.service.restart.windowPrompt")}}',
                                 min:0
                                             "
                             >
@@ -739,13 +733,13 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="服务分配策略(适用于作为服务一部分创建的每个单独容器的服务分配)">
-                    <legend style="margin-bottom: 10px;">服务分配策略(适用于作为服务一部分创建的每个单独容器的服务分配)</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.placementTitle')}}">
+                    <legend style="margin-bottom: 10px;">{{:~t('orchestrator.service.section.placement')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12" style="margin-top: 2px">
-                        <!--<label class="cubeui-form-label" title="约束表达式数组，用于限制可以调度任务的节点集。约束表达式可以使用匹配（=）或排除（！=）规则。多个约束查找满足每个表达式（和匹配）的节点。约束可以匹配节点或Docker引擎标签">Constraints:</label>-->
+                        <!--<label class="cubeui-form-label" title="Constraint expressions limit the nodes where tasks can be scheduled.">Constraints:</label>-->
                         <label class="cubeui-form-label" title="
                            An array of constraint expressions to limit the set of nodes where a task can be scheduled.
                            Constraint expressions can either use a match (==) or exclude (!=) rule.
@@ -761,47 +755,47 @@
                                engine.labels	    Docker Engine's labels	    engine.labels.operatingsystem==ubuntu-14.04
                                engine.labels apply to Docker Engine labels like operating system, drivers, etc.
                             Swarm administrators add node.labels for operational purposes by using the node update endpoint.
-                           ">约束:</label>
+                           ">{{:~t('orchestrator.service.placement.constraints')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-tagbox" name="TaskTemplate.Placement.Constraints"
                                    value=''
                                    data-options="
-                               prompt:'约束表达式数组, 条件格式查看标头提示'
+                               prompt:'{{:~t("orchestrator.service.placement.constraintsPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm12" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="首选项提供了一种使调度器了解拓扑等因素的方法。它们按优先级从高到低的顺序提供。">
-                            首选项设置:</label>
+                        <label class="cubeui-form-label" title="Preferences let the scheduler account for topology and similar factors. They are evaluated from highest to lowest priority.">
+                            {{:~t('orchestrator.service.placement.preferences')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-tagbox" name="TaskTemplate.Placement.Preferences"
                                    value=''
                                    data-options="
-                               prompt:'首选项设置数组, 条件格式查看标头提示'
+                               prompt:'{{:~t("orchestrator.service.placement.preferencesPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="平台存储服务映像可以在其上运行的所有平台。此字段在平台筛选器中用于调度。如果为空，则平台过滤器关闭，这意味着没有调度限制。">
-                            平台筛选:</label>
+                        <label class="cubeui-form-label" title="Platforms lists the operating system and architecture combinations where the service image can run. Leave empty to disable platform-based scheduling restrictions.">
+                            {{:~t('orchestrator.service.placement.platforms')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-tagbox" name="TaskTemplate.Placement.Platforms"
                                    value=''
                                    data-options="
-                               prompt:'平台筛选设置数组, 条件格式查看标头提示'
+                               prompt:'{{:~t("orchestrator.service.placement.platformsPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="每个节点的最大副本数（默认值为0，不受限制）默认值：0">最大副本数:</label>
+                        <label class="cubeui-form-label" title="Max replicas per node">{{:~t('orchestrator.service.placement.maxReplicas')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="TaskTemplate.Placement.MaxReplicas"
                                    value=''
                                    data-options="
-                               prompt:'节点的最大副本数（默认值为0，不受限制）为空使用默认值：0',
+                               prompt:'{{:~t("orchestrator.service.placement.maxReplicasPrompt")}}',
                                min:0
                                             "
                             >
@@ -809,43 +803,42 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="服务更新策略(适用于作为服务一部分创建的每个单独容器的服务更新策略的规范)">
-                    <legend style="margin-bottom: 10px;">服务更新策略(适用于作为服务一部分创建的每个单独容器的服务更新策略的规范)</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.updatePolicyTitle')}}">
+                    <legend style="margin-bottom: 10px;">{{:~t('orchestrator.service.section.updatePolicy')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="一次迭代中要更新的最大任务数（0表示无限并行性）。">最大任务数:</label>
+                        <label class="cubeui-form-label" title="Update parallelism">{{:~t('orchestrator.service.update.parallelism')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="UpdateConfig.Parallelism"
                                    value=''
                                    data-options="
-                                   prompt:'一次迭代中要更新的最大任务数（0表示无限并行性)为空使用默认值：0',
+                                   prompt:'{{:~t("orchestrator.service.update.parallelismPrompt")}}',
                                    min:0
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="更新之间的时间量，以纳秒为单位。">时间延迟量:</label>
+                        <label class="cubeui-form-label" title="Update delay">{{:~t('orchestrator.service.update.delay')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="UpdateConfig.Delay"
                                    value=''
                                    data-options="
-                                   prompt:'更新之间的时间量，以纳秒为单位。',
+                                   prompt:'{{:~t("orchestrator.service.update.delayPrompt")}}',
                                    min:0
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="如果更新的任务无法运行或在更新过程中停止运行，则要采取的操作。
-                    枚举：'continue','pause','rollback'">失败操作:</label>
+                        <label class="cubeui-form-label" title="Action to take if an updated task cannot start or stops during the update. Allowed values: continue, pause, rollback.">{{:~t('orchestrator.service.update.failureAction')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" name="UpdateConfig.FailureAction" value="" data-toggle="cubeui-combobox"
                                    data-options="
                                 required:false,
-                                prompt:'任务无法运行或在更新过程中停止运行，则要采取的操作',
+                                prompt:'{{:~t("orchestrator.service.update.failureActionPrompt")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:[{'KEY':'continue','TEXT':'Continue'},{'KEY':'pause','TEXT':'Pause'},
@@ -854,25 +847,25 @@
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="监视每个更新任务的失败时间量，以纳秒为单位。">监视时间:</label>
+                        <label class="cubeui-form-label" title="Monitor time">{{:~t('orchestrator.service.update.monitor')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="UpdateConfig.Monitor"
                                    value=''
                                    data-options="
-                                   prompt:'监视每个更新任务的失败时间量，以纳秒为单位',
+                                   prompt:'{{:~t("orchestrator.service.update.monitorPrompt")}}',
                                    min:0
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="在调用失败操作之前的更新期间可能失败的任务最大失败率，指定为1到100之间的数。默认: 0">
-                            最大失败率(0-100):</label>
+                        <label class="cubeui-form-label" title="Maximum percentage of tasks that may fail during the update before the failure action is triggered. Default: 0.">
+                            {{:~t('orchestrator.service.update.maxFailureRatio')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="UpdateConfig.MaxFailureRatio"
                                    value=''
                                    data-options="
-                                   prompt:'更新期间可能最大失败率,(0-100)',
+                                   prompt:'{{:~t("orchestrator.service.update.maxFailureRatioPrompt")}}',
                                    min:0,
                                    max:100
                                             "
@@ -880,14 +873,13 @@
                         </div>
                     </div>
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="推出更新任务时的操作顺序。要么在新任务启动之前关闭旧任务，
-                    要么在旧任务关闭之前启动新任务。枚举：“stop-first”“start-first”">操作顺序:</label>
+                        <label class="cubeui-form-label" title="Order for replacing tasks during the update. Either stop the old task before starting the new one, or start the new task before stopping the old one. Allowed values: stop-first, start-first.">{{:~t('orchestrator.service.update.order')}}</label>
                         <div class="cubeui-input-block">
 
                             <input type="text" name="UpdateConfig.Order" value="" data-toggle="cubeui-combobox"
                                    data-options="
                                 required:false,
-                                prompt:'推出更新任务时的操作顺序',
+                                prompt:'{{:~t("orchestrator.service.update.orderPrompt")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:[
@@ -899,18 +891,18 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="服务回滚策略(适用于作为服务一部分创建的每个单独容器的服务服务回滚策略的规范)">
-                    <legend style="margin-bottom: 10px;">服务回滚策略(适用于作为服务一部分创建的每个单独容器的服务服务回滚策略的规范)</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.rollbackPolicyTitle')}}">
+                    <legend style="margin-bottom: 10px;">{{:~t('orchestrator.service.section.rollbackPolicy')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="一次迭代中要回滚的最大任务数（0表示无限并行性）。">最大任务数:</label>
+                        <label class="cubeui-form-label" title="Rollback parallelism">{{:~t('orchestrator.service.rollback.parallelism')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="RollbackConfig.Parallelism"
                                    value=''
                                    data-options="
-                                   prompt:'一次迭代中要回滚的最大任务数（0表示无限并行性)为空使用默认值：0',
+                                   prompt:'{{:~t("orchestrator.service.rollback.parallelismPrompt")}}',
                                    min:0
                                             "
                             >
@@ -918,12 +910,12 @@
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="回滚之间的时间量，以纳秒为单位。">时间延迟量:</label>
+                        <label class="cubeui-form-label" title="Rollback delay">{{:~t('orchestrator.service.rollback.delay')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="RollbackConfig.Delay"
                                    value=''
                                    data-options="
-                                   prompt:'回滚之间的时间量，以纳秒为单位。',
+                                   prompt:'{{:~t("orchestrator.service.rollback.delayPrompt")}}',
                                    min:0
                                             "
                             >
@@ -931,13 +923,12 @@
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="如果回滚的任务无法运行或在回滚过程中停止运行，则要采取的操作。
-                    枚举：'continue','pause'">失败操作:</label>
+                        <label class="cubeui-form-label" title="Action to take if a rollback task cannot start or stops during rollback. Allowed values: continue, pause.">{{:~t('orchestrator.service.rollback.failureAction')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" name="RollbackConfig.FailureAction" value="" data-toggle="cubeui-combobox"
                                    data-options="
                                 required:false,
-                                prompt:'任务无法运行或在回滚过程中停止运行，则要采取的操作',
+                                prompt:'{{:~t("orchestrator.service.rollback.failureActionPrompt")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:[{'KEY':'continue','TEXT':'Continue'},{'KEY':'pause','TEXT':'Pause'}]
@@ -946,12 +937,12 @@
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="监视每个回滚任务的失败时间量，以纳秒为单位。">监视时间:</label>
+                        <label class="cubeui-form-label" title="Rollback monitor time">{{:~t('orchestrator.service.rollback.monitor')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="RollbackConfig.Monitor"
                                    value=''
                                    data-options="
-                                   prompt:'监视每个回滚任务的失败时间量，以纳秒为单位',
+                                   prompt:'{{:~t("orchestrator.service.rollback.monitorPrompt")}}',
                                    min:0
                                             "
                             >
@@ -959,13 +950,13 @@
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="在调用失败操作之前的回滚期间可能失败的任务的最大失败率，指定为1到100之间的数。默认: 0">
-                            最大失败率(0-100):</label>
+                        <label class="cubeui-form-label" title="Maximum percentage of tasks that may fail during rollback before the failure action is triggered. Default: 0.">
+                            {{:~t('orchestrator.service.rollback.maxFailureRatio')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-numberspinner" name="RollbackConfig.MaxFailureRatio"
                                    value=''
                                    data-options="
-                                   prompt:'回滚期间可能最大失败率,(0-100)',
+                                   prompt:'{{:~t("orchestrator.service.rollback.maxFailureRatioPrompt")}}',
                                    min:0,
                                    max:100
                                             "
@@ -974,14 +965,13 @@
                     </div>
 
                     <div class="cubeui-col-sm6" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="回滚任务时的操作顺序。要么在新任务启动之前关闭旧任务，
-                    要么在旧任务关闭之前启动新任务。枚举：“stop-first”“start-first”">操作顺序:</label>
+                        <label class="cubeui-form-label" title="Order for replacing tasks during rollback. Either stop the old task before starting the new one, or start the new task before stopping the old one. Allowed values: stop-first, start-first.">{{:~t('orchestrator.service.rollback.order')}}</label>
                         <div class="cubeui-input-block">
 
                             <input type="text" name="RollbackConfig.Order" value="" data-toggle="cubeui-combobox"
                                    data-options="
                                 required:false,
-                                prompt:'推出回滚任务时的操作顺序',
+                                prompt:'{{:~t("orchestrator.service.rollback.orderPrompt")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:[
@@ -994,18 +984,18 @@
 
                 </div>
 
-                <fieldset style="margin-top: 20px!important;margin-bottom1: 10px;" title="用户定义的服务的键/值元数据">
-                    <legend style="margin-bottom: 10px;">服务标签选项(服务的键/值元数据)</legend>
+                <fieldset style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.serviceLabelsTitle')}}">
+                    <legend style="margin-bottom: 10px;">{{:~t('orchestrator.service.section.serviceLabels')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm5 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;'>服务定义键</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.serviceKey')}}</span>
                             </div>
                             <div class="cubeui-col-sm5" >
-                                <span style='line-height: 20px;padding-right:0px;'>服务定义键值</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.label.serviceValue')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                                     <span style='line-height: 20px;padding-right:0px;'>
@@ -1020,7 +1010,7 @@
         </form>
     </div>
 
-    <div title="Endpoint配置"
+    <div title="{{:~t('orchestrator.service.tab.endpoint')}}"
          data-options="id:'eastTab1',iconCls:'fa fa-desktop'">
         <div style="margin: 0px;">
         </div>
@@ -1028,17 +1018,17 @@
         <form id='createServiceForm2'>
             <div class="cubeui-fluid">
                 <fieldset>
-                    <legend>端点信息(可配置为访问和负载平衡服务的属性)</legend>
+                    <legend>{{:~t('orchestrator.service.section.endpoint')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="用于任务之间内部负载平衡的解析模式。枚举：“vip”,“dnsrr”">负载平衡模式:</label>
+                        <label class="cubeui-form-label" title="Internal load balancing mode">{{:~t('orchestrator.service.endpoint.mode')}}</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-combobox" value=""
                                    name='EndpointSpec.Mode' data-options="
                                required:false,
-                               prompt:'内部负载平衡的解析模式，为空只用默认值，“vip”',
+                               prompt:'{{:~t("orchestrator.service.endpoint.modePrompt")}}',
                                valueField:'KEY',
                                textField:'TEXT',
                                data:[{KEY:'vip',TEXT:'Vip'},{KEY:'dnsrr',TEXT:'Dnsrr(DNS Resource Records)'}]
@@ -1047,22 +1037,21 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="要添加到容器主机文件的主机名/IP映射列表。
-                            额外主机的格式在主机（5）手册页中指定：IP_address canonical_hostname [aliases...]">
-                    <legend style="margin-bottom: 0px;">主机名/IP映射列表</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.hostsTitle')}}">
+                    <legend style="margin-bottom: 0px;">{{:~t('orchestrator.service.section.hosts')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm3 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;'>IP地址</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.endpoint.hostIp')}}</span>
                             </div>
                             <div class="cubeui-col-sm4" >
-                                <span style='line-height: 20px;padding-right:0px;'>主机名</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.endpoint.hostName')}}</span>
                             </div>
                             <div class="cubeui-col-sm3" >
-                                <span style='line-height: 20px;padding-right:0px;'>别名</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.endpoint.alias')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                                     <span style='line-height: 20px;padding-right:0px;'>
@@ -1073,62 +1062,61 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="DNS配置(解析程序配置文件resolv.conf中DNS相关配置的规范)">
-                    <legend style="margin-bottom: 0px;">DNS配置(解析程序配置文件resolv.conf中DNS相关配置的规范)</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.dnsTitle')}}">
+                    <legend style="margin-bottom: 0px;">{{:~t('orchestrator.service.section.dns')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm6">
-                        <label class="cubeui-form-label" title="名称服务器的IP地址。多个值之间使用空格分隔。">Nameservers:</label>
+                        <label class="cubeui-form-label" title="IP addresses of DNS name servers. Separate multiple values with spaces.">Nameservers:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.ContainerSpec.DNSConfig.Nameservers"
                                    value=''
                                    data-options="
-                               prompt:'名称服务器的IP地址。多个值之间使用空格分隔'
+                               prompt:'{{:~t("orchestrator.service.endpoint.dnsServersPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm6">
-                        <label class="cubeui-form-label" title="主机名查找的搜索列表。多个值之间使用空格分隔">Search:</label>
+                        <label class="cubeui-form-label" title="Search domains used for hostname lookup. Separate multiple values with spaces.">Search:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.ContainerSpec.Search"
                                    value=''
                                    data-options="
-                               prompt:'主机名查找的搜索列表。多个值之间使用空格分隔'
+                               prompt:'{{:~t("orchestrator.service.endpoint.searchPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
                     <div class="cubeui-col-sm12" style="margin-top: 2px">
-                        <label class="cubeui-form-label" title="
-要修改的内部解析器变量列表（例如debug、NDOT:3等）,多个值之间使用空格分隔">Options:</label>
+                        <label class="cubeui-form-label" title="Resolver options to override, such as debug or ndots:3. Separate multiple values with spaces.">Options:</label>
                         <div class="cubeui-input-block">
                             <input type="text" data-toggle="cubeui-textbox" name="TaskTemplate.ContainerSpec.Options"
                                    value=''
                                    data-options="
-                               prompt:'变量。（例如debug、NDOT:3等）,多个值之间使用空格分隔'
+                               prompt:'{{:~t("orchestrator.service.endpoint.optionsPrompt")}}'
                                             "
                             >
                         </div>
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="指定服务应连接到的网络">
-                    <legend style="margin-bottom: 0px;">服务网络设置</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.networksTitle')}}">
+                    <legend style="margin-bottom: 0px;">{{:~t('orchestrator.service.section.networks')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm3 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;'>网络</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.endpoint.network')}}</span>
                             </div>
                             <div class="cubeui-col-sm4" >
-                                <span style='line-height: 20px;padding-right:0px;'>别名</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.endpoint.alias')}}</span>
                             </div>
                             <div class="cubeui-col-sm3" >
-                                <span style='line-height: 20px;padding-right:0px;'>配置项</span>
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.endpoint.option')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                             <span style='line-height: 20px;padding-right:0px;'>
@@ -1139,24 +1127,24 @@
                     </div>
                 </div>
 
-                <fieldset  style="margin-top: 20px!important;margin-bottom1: 10px;" title="可从外部访问此服务的公开端口列表。只有在使用vip解析模式时才能提供端口">
-                    <legend style="margin-bottom: 0px;">公开端口列表</legend>
+                <fieldset  style="margin-top: 20px!important;margin-bottom: 10px;" title="{{:~t('orchestrator.service.section.portsTitle')}}">
+                    <legend style="margin-bottom: 0px;">{{:~t('orchestrator.service.section.ports')}}</legend>
                 </fieldset>
 
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm12 add-opt-div">
                         <div class="cubeui-row">
                             <div class="cubeui-col-sm2 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                <span style='line-height: 20px;padding-right:0px;' title="公开端口发布的模式，枚举值：“ingress”和“host”">公开端口方式</span>
+                                <span style='line-height: 20px;padding-right:0px;' title="Publish mode">{{:~t('orchestrator.service.endpoint.publishMode')}}</span>
                             </div>
                             <div class="cubeui-col-sm3" >
-                                <span style='line-height: 20px;padding-right:0px;'  title="公开端口发布的协议，枚举值：“tcp”,“udp”和“sctp”">公开端口协议</span>
+                                <span style='line-height: 20px;padding-right:0px;'  title="Protocol">{{:~t('orchestrator.service.endpoint.protocol')}}</span>
                             </div>
-                            <div class="cubeui-col-sm3" title="公开端口">
-                                <span style='line-height: 20px;padding-right:0px;'>公开端口</span>
+                            <div class="cubeui-col-sm3" title="Published port">
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.endpoint.publishedPort')}}</span>
                             </div>
-                            <div class="cubeui-col-sm2" title="目标端口">
-                                <span style='line-height: 20px;padding-right:0px;'>目标端口</span>
+                            <div class="cubeui-col-sm2" title="Target port">
+                                <span style='line-height: 20px;padding-right:0px;'>{{:~t('orchestrator.service.endpoint.targetPort')}}</span>
                             </div>
                             <div class="cubeui-col-sm1" style="text-align: center">
                             <span style='line-height: 20px;padding-right:0px;'>

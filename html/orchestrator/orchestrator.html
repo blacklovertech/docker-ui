@@ -29,44 +29,44 @@
                }">
 
 
-            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a  href="javascript:void(0)" id="orchestratorCreateBtn" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
                         createOrchestrators();
                     },
                     btnCls: 'cubeui-btn-blue',
                     iconCls: 'fa fa-plus'
-                }">编排任务</a>
+                }">{{:~t("orchestrator.toolbar.create")}}</a>
 
-            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a  href="javascript:void(0)" id="orchestratorEditBtn" data-toggle='cubeui-menubutton' data-options="{
                 onClick:function(){
                     updateRepos();
                 },
                 btnCls: 'cubeui-btn-slateblue',
                 iconCls: 'fa fa-tags'
-            }">编辑编排</a>
+            }">{{:~t("orchestrator.toolbar.edit")}}</a>
 
-            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a  href="javascript:void(0)" id="orchestratorRemoveBtn" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
                         removeOrchestrators();
                     },
                     extend: '#orchestratorsDg-toolbar',
                     btnCls: 'cubeui-btn-red',
                     iconCls: 'fa fa-times'
-                }">删除编排</a>
+                }">{{:~t("orchestrator.toolbar.remove")}}</a>
 
             <form id="queryForm" class="search-box">
             <input type="text" name="search_key" data-toggle="cubeui-textbox"
                        data-options="onClear:function(){
                             console.log(111);
                             $('#searchbtn').trigger('click');
-                       }, prompt:'根据编排任务名称；进行查询',width:420">
+                       }, prompt:'{{:~t("orchestrator.search.placeholder")}}',width:420">
                 <a href="javascript:void(0)" id="searchbtn"
                    data-toggle="cubeui-menubutton"
                    data-options="method:'query',
                    iconCls:'fa fa-search',
                    btnCls:'cubeui-btn-blue',
                    form:{id:'queryForm'},
-                   grid:{type:'datagrid','id':'orchestratorsDg'}">查询</a>
+                   grid:{type:'datagrid','id':'orchestratorsDg'}">{{:~t("common.btn.search")}}</a>
             </form>
         </div>
     </div>
@@ -79,58 +79,58 @@ console.log($(this).menu('options').node);
 $(this).menu('options').node=null;
 }
 ">
-    <div id="menuitem01" onclick="openClose()" data-options="iconCls:'fa fa-folder-open-o'">打开连接</div>
+    <div id="menuitem01" onclick="openClose()" data-options="iconCls:'fa fa-folder-open-o'">{{:~t("orchestrator.menu.openConnection")}}</div>
     <div class="menu-sep"></div>
-    <div data-options="iconCls:'fa fa-pencil'" onclick='openEtcd()'>编辑连接...</div>
+    <div data-options="iconCls:'fa fa-pencil'" onclick='openEtcd()'>{{:~t("orchestrator.menu.editConnection")}}</div>
     <div data-options="iconCls:'fa fa-plus'">
-        <span>新建连接</span>
+        <span>{{:~t("orchestrator.menu.newConnection")}}</span>
         <div style="width:150px;">
-            <div data-options="iconCls:'fa fa-share-square-o'" onclick='importEtcd()'>导入...</div>
-            <div data-options="iconCls:'fa fa-floppy-o'" onclick='openEtcdAs()'>另存为...</div>
+            <div data-options="iconCls:'fa fa-share-square-o'" onclick='importEtcd()'>{{:~t("orchestrator.menu.import")}}</div>
+            <div data-options="iconCls:'fa fa-floppy-o'" onclick='openEtcdAs()'>{{:~t("orchestrator.menu.saveAs")}}</div>
             <div class="menu-sep"></div>
-            <div data-options="iconCls:'fa fa-html5'" onclick='createEtcd()'><b>Etcd数据库...</b></div>
+            <div data-options="iconCls:'fa fa-html5'" onclick='createEtcd()'><b>{{:~t("orchestrator.menu.etcd")}}</b></div>
             <div class="menu-sep"></div>
-            <div data-options="iconCls:'fa fa-print',disabled:true">打印</div>
+            <div data-options="iconCls:'fa fa-print',disabled:true">{{:~t("orchestrator.menu.print")}}</div>
         </div>
     </div>
-    <div data-options="iconCls:'fa fa-trash'" onclick="deleteNode();">删除连接</div>
-    <div data-options="iconCls:'fa fa-clone'" onclick='openEtcdAs()'>复制连接...</div>
+    <div data-options="iconCls:'fa fa-trash'" onclick="deleteNode();">{{:~t("orchestrator.menu.deleteConnection")}}</div>
+    <div data-options="iconCls:'fa fa-clone'" onclick='openEtcdAs()'>{{:~t("orchestrator.menu.copyConnection")}}</div>
 
-    <div data-options="iconCls:'fa fa-reply-all'" onclick="exportEtcd()">导出...</div>
+    <div data-options="iconCls:'fa fa-reply-all'" onclick="exportEtcd()">{{:~t("orchestrator.menu.export")}}</div>
     <div class="menu-sep"></div>
-    <div data-options="iconCls:'fa fa-refresh'" onclick="refreshNodes()">刷新</div>
+    <div data-options="iconCls:'fa fa-refresh'" onclick="refreshNodes()">{{:~t("orchestrator.menu.refresh")}}</div>
     <div class="menu-sep"></div>
-    <div id="menuitem_snapshot" data-options="iconCls:'fa fa-camera',disabled:true" onclick="snapshot()">导出快照</div>
+    <div id="menuitem_snapshot" data-options="iconCls:'fa fa-camera',disabled:true" onclick="snapshot()">{{:~t("orchestrator.menu.snapshot")}}</div>
     <div class="menu-sep"></div>
-    <div id="menuitem_status" data-options="iconCls:'fa fa-server',disabled:true" onclick="showStatus()">服务器状况</div>
-    <div id="menuitem_version" data-options="iconCls:'fa fa-registered',disabled:true" onclick="showVersion()">版本信息</div>
+    <div id="menuitem_status" data-options="iconCls:'fa fa-server',disabled:true" onclick="showStatus()">{{:~t("orchestrator.menu.serverStatus")}}</div>
+    <div id="menuitem_version" data-options="iconCls:'fa fa-registered',disabled:true" onclick="showVersion()">{{:~t("orchestrator.menu.version")}}</div>
 </div>
 
 
 <div id="rootMm" data-toggle="cubeui-menu" style="width:120px;display:none" data-options="">
     <div data-options="iconCls:'fa fa-plus'">
-        <span>新建</span>
+        <span>{{:~t("orchestrator.menu.new")}}</span>
         <div style="width:150px;">
-            <div id='menuitem_service' data-options="iconCls:'fa fa-spinner'" onclick='createService()'>服务</div>
+            <div id='menuitem_service' data-options="iconCls:'fa fa-spinner'" onclick='createService()'>{{:~t("orchestrator.menu.service")}}</div>
             <div class="menu-sep"></div>
-            <div id='menuitem_network' data-options="iconCls:'fa fa-usb'" onclick='createNetwork()'>网络</div>
-            <div id='menuitem_volume' data-options="iconCls:'fa fa-database'" onclick='createVolume()'>数据卷</div>
+            <div id='menuitem_network' data-options="iconCls:'fa fa-usb'" onclick='createNetwork()'>{{:~t("orchestrator.menu.network")}}</div>
+            <div id='menuitem_volume' data-options="iconCls:'fa fa-database'" onclick='createVolume()'>{{:~t("orchestrator.menu.volume")}}</div>
             <div class="menu-sep"></div>
-            <div id='menuitem_secret' data-options="iconCls:'fa fa-key'" onclick='createEtcd()'>密码文件</div>
-            <div id='menuitem_config' data-options="iconCls:'fa fa-gear'" onclick='createEtcd()'>配置文件</div>
+            <div id='menuitem_secret' data-options="iconCls:'fa fa-key'" onclick='createEtcd()'>{{:~t("orchestrator.menu.secret")}}</div>
+            <div id='menuitem_config' data-options="iconCls:'fa fa-gear'" onclick='createEtcd()'>{{:~t("orchestrator.menu.config")}}</div>
             <div class="menu-sep"></div>
-            <div id='menuitem_extra' data-options="iconCls:'fa fa-key'" onclick='createEtcd()'>其他项目</div>
+            <div id='menuitem_extra' data-options="iconCls:'fa fa-key'" onclick='createEtcd()'>{{:~t("orchestrator.menu.extra")}}</div>
             <div class="menu-sep"></div>
-            <div data-options="iconCls:'fa fa-print',disabled:true">打印</div>
+            <div data-options="iconCls:'fa fa-print',disabled:true">{{:~t("orchestrator.menu.print")}}</div>
         </div>
     </div>
-    <div id='menuitem_rename' data-options="iconCls:'fa fa-pencil'" onclick='openEtcd()'>重命名...</div>
-    <div id='menuitem_empty' data-options="iconCls:'fa fa-trash-o'" onclick='openEtcd()'>清空</div>
+    <div id='menuitem_rename' data-options="iconCls:'fa fa-pencil'" onclick='openEtcd()'>{{:~t("orchestrator.menu.rename")}}</div>
+    <div id='menuitem_empty' data-options="iconCls:'fa fa-trash-o'" onclick='openEtcd()'>{{:~t("orchestrator.menu.empty")}}</div>
 </div>
 
 <!-- 表格工具栏结束 -->
 <div id="searchImageMm" data-toggle="cubeui-menu" style="width:120px;display:none" data-options="">
-    <div onclick="setImgFromMenu()" data-options="iconCls:'fa fa-check-square-o'">使用镜像</div>
+    <div onclick="setImgFromMenu()" data-options="iconCls:'fa fa-check-square-o'">{{:~t("orchestrator.menu.useImage")}}</div>
 </div>
 </script>
 
@@ -152,6 +152,11 @@ $(this).menu('options').node=null;
                 stop = true
                 console.log("finish")
                 APP.renderBody("#tmpl1", {})
+                try {
+                    if (typeof __orchestrator_applyControlsI18n === 'function') {
+                        __orchestrator_applyControlsI18n();
+                    }
+                } catch (e) {}
             }
         }
     });

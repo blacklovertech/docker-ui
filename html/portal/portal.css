@@ -66,6 +66,7 @@
     font-weight: 700;
     margin-top: 12px;
     padding-left: 25px;
+    white-space: nowrap;
 }
 
 .card-info {
@@ -79,6 +80,15 @@
 .card-info span {
     font-size: .9rem;
     display: block;
+}
+
+.all-count > span,
+.all-count .suffix,
+.card-info > span,
+.card-info > span > span,
+.card-info t {
+    display: inline;
+    white-space: nowrap;
 }
 
 .sale-list .col {

@@ -140,7 +140,7 @@ $(function () {
 
                 		if (opts.iframe) {
                 			var refresh_iframe = refresh_tab.find('iframe')[0];
-                			refresh_iframe.contentWindow.location.href = refresh_iframe.src;
+                            reloadIframeWithLatestUrl(refresh_iframe);
                 		}else{
                 			$(refresh_tab[0]).panel('refresh');
                 		}
@@ -151,13 +151,12 @@ $(function () {
 
                 });
                 **/
-
 				var refresh_tab = $('#index_tabs').iTabs('getSelected');
                 		var opts = $.data(refresh_tab[0], 'panel').options;
 
                 		if (opts.iframe) {
                 			var refresh_iframe = refresh_tab.find('iframe')[0];
-                			refresh_iframe.contentWindow.location.href = refresh_iframe.src;
+					reloadIframeWithLatestUrl(refresh_iframe);
                 		}else{
                 			$(refresh_tab[0]).panel('refresh');
                 		}
@@ -322,7 +321,7 @@ function tabMenuOprate(menu, type) {
 			var opts = $.data(currentTab[0], 'panel').options;
 			if (opts.iframe) {
 				var currentIframe = currentTab.find('iframe')[0];
-				currentIframe.contentWindow.location.href = currentIframe.src;
+                reloadIframeWithLatestUrl(currentIframe);
 			} else {
 				$(currentTab[0]).panel('refresh');
 			}
@@ -352,7 +351,7 @@ function tabMenuOprate(menu, type) {
         case "7": //在新窗口打开
             var refresh_tab = $('#index_tabs').iTabs('getSelected');
             var refresh_iframe = refresh_tab.find('iframe')[0];
-            window.open(refresh_iframe.src);
+                window.open(buildVersionedIframeUrl(refresh_iframe.src));
             break;
     }
 
@@ -555,7 +554,7 @@ function closeCurrentTab(){
 }
 
 function setMenuSelected(navtitle, iaccordtitle, menutitle, submenutitle){
-	arguments = Array.prototype.slice.call(arguments);
+    var args = Array.prototype.slice.call(arguments);
 
 	var systemname = $('.systemName');
 	var selected = -1;
@@ -577,7 +576,7 @@ function setMenuSelected(navtitle, iaccordtitle, menutitle, submenutitle){
 		$.app.err('can not find nav item with ' + navtitle);
 	}
 
-	if(arguments.length==1){
+    if(args.length==1){
 		return 1;
 	}
 
@@ -622,14 +621,14 @@ function setMenuSelected(navtitle, iaccordtitle, menutitle, submenutitle){
 		return -1;
 	}
 
-	if(arguments.length==2){
+    if(args.length==2){
 		return 1;
 	}
 
 	var nodes = $(treeobj).tree('getRoots');
 
-	for(var levelindx = 0; levelindx < arguments.length-2; levelindx ++){
-		var wantmenutitle = arguments[2+levelindx];
+    for(var levelindx = 0; levelindx < args.length-2; levelindx ++){
+        var wantmenutitle = args[2+levelindx];
 
 		if(nodes.length==0){
 			$.app.err('can not find tree parent node with ' + wantmenutitle);
@@ -642,16 +641,17 @@ function setMenuSelected(navtitle, iaccordtitle, menutitle, submenutitle){
 			var currentnode = nodes[idx];
 			var nodedata = $(treeobj).tree('getData', currentnode.target);
 
-			var title = nodedata.text ;
+            var title = nodedata.text ;
+            var titleId = nodedata.titleId || '';
 
-			if(title == wantmenutitle){
+            if(title == wantmenutitle || (titleId != '' && titleId==wantmenutitle) ){
 				selected = idx;
 				//current.trigger('click');
 				//$(treeobj).tree("expand",currentnode.target);
 				//$(treeobj).tree("expand",currentnode.target);
 				//var treeobj = current.find('ul');
 
-				if(levelindx == arguments.length-3 && $(treeobj).tree('isLeaf',currentnode.target)){
+				if(levelindx == args.length-3 && $(treeobj).tree('isLeaf',currentnode.target)){
                     try{
                         $(treeobj).tree('select',currentnode.target)
                     }catch (v){
@@ -683,7 +683,7 @@ function triggerMenuClick(navtitle, iaccordtitle, menutitle, submenutitle, onAft
         delete window.__activatedParam;
     },2000);
     
-	arguments = Array.prototype.slice.call(arguments);
+    var args = Array.prototype.slice.call(arguments);
 
 	var systemname = $('.systemName');
 	var selected = -1;
@@ -705,7 +705,7 @@ function triggerMenuClick(navtitle, iaccordtitle, menutitle, submenutitle, onAft
 		$.app.err('can not find nav item with ' + navtitle);
 	}
 
-	if(arguments.length==1){
+    if(args.length==1){
 		return 1;
 	}
 
@@ -745,11 +745,11 @@ function triggerMenuClick(navtitle, iaccordtitle, menutitle, submenutitle, onAft
 		return -1;
 	}
 
-	if(typeof(arguments[arguments.length-1])=='function'){
-		onAfterClick = arguments.pop();
+    if(typeof(args[args.length-1])=='function'){
+        onAfterClick = args.pop();
 	}
 
-	if(arguments.length==2 || arguments[2] == null){
+    if(args.length==2 || args[2] == null){
 
         if(!$.isEmptyObject(titleObj)){
             titleObj.__param = param;
@@ -760,8 +760,8 @@ function triggerMenuClick(navtitle, iaccordtitle, menutitle, submenutitle, onAft
 
 	var nodes = treeobj.tree('getRoots');
 
-	for(var levelindx = 0; levelindx < arguments.length-2; levelindx ++){
-		var wantmenutitle = arguments[2+levelindx];
+    for(var levelindx = 0; levelindx < args.length-2; levelindx ++){
+        var wantmenutitle = args[2+levelindx];
 
 		if(nodes.length==0){
 			$.app.err('can not find tree parent node with ' + wantmenutitle);
@@ -784,7 +784,7 @@ function triggerMenuClick(navtitle, iaccordtitle, menutitle, submenutitle, onAft
 				//$(treeobj).tree("expand",currentnode.target);
 				//var treeobj = current.find('ul');
 
-				if(levelindx == arguments.length-3 && onAfterClick){
+                if(levelindx == args.length-3 && onAfterClick){
 					currentnode.onAfterClick=onAfterClick;
 				}
 
@@ -875,7 +875,7 @@ function createMenu(moduleId, systemName){
 
 			$("#tree_" + treeid).tree({
                 data: e.children,
-                navpath:[systemName, e.text],
+                navpath:[systemName, textId],
                 lines: false,
                 animate: true,
                 onBeforeExpand: function (node, param) {
@@ -907,6 +907,19 @@ function createMenu(moduleId, systemName){
 
 		}
     });
+
+    // Menu is created after async menu.json load; ensure i18n is applied
+    // AFTER accordion/tree DOM has been rendered (otherwise refresh may show zh-CN).
+    try {
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        if (i18n && i18n.apply) {
+            var west = document.getElementById('west');
+            i18n.apply(west || document);
+            setTimeout(function(){
+                try { i18n.apply(west || document); } catch (e2) {}
+            }, 0);
+        }
+    } catch (e3) {}
 }
 
 function isTabOpen(title){
@@ -1025,12 +1038,65 @@ function addNewTab(title, html, options, fn){
     }
 }
 
+function appendUrlParam(url, key, value) {
+    var nextUrl = url || '';
+    if (value === undefined || value === null || value === '') {
+        return nextUrl;
+    }
+
+    var parts = nextUrl.split('#');
+    var base = parts[0] || '';
+    var hash = parts.length > 1 ? '#' + parts.slice(1).join('#') : '';
+    var encodedKey = encodeURIComponent(key);
+    var encodedValue = encodeURIComponent(value);
+    var pattern = new RegExp('([?&])' + encodedKey + '=.*?(&|$)', 'i');
+
+    if (pattern.test(base)) {
+        base = base.replace(pattern, '$1' + encodedKey + '=' + encodedValue + '$2');
+    } else {
+        base += (base.indexOf('?') >= 0 ? '&' : '?') + encodedKey + '=' + encodedValue;
+    }
+
+    return base + hash;
+}
+
+function buildVersionedIframeUrl(url) {
+    var nextUrl = url || '';
+    try {
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        var lang = (i18n && i18n.getLang) ? i18n.getLang() : null;
+        if (lang) {
+            nextUrl = appendUrlParam(nextUrl, 'lang', lang);
+        }
+    } catch (e) {}
+
+    try {
+        if (window.APP_VERSION) {
+            nextUrl = appendUrlParam(nextUrl, 'v', window.APP_VERSION);
+        }
+    } catch (e2) {}
+
+    return nextUrl;
+}
+
+function reloadIframeWithLatestUrl(iframe) {
+    if (!iframe) return;
+    var nextUrl = buildVersionedIframeUrl(iframe.src || '');
+    iframe.src = nextUrl;
+    try {
+        iframe.contentWindow.location.href = nextUrl;
+    } catch (e) {
+        iframe.src = nextUrl;
+    }
+}
+
 //打开Tab窗口
 function addTab(params) {
     var t = $('#index_tabs');
     var $selectedTab = t.iTabs('getSelected');
     var selectedTabOpts = $selectedTab.iPanel('options');
-    var iframe = '<iframe src="' + contextpath + params.url + '" scrolling="auto" frameborder="0" style="width:100%;height:100%;"></iframe>';
+    var _tabSrc = buildVersionedIframeUrl(contextpath + params.url);
+    var iframe = '<iframe src="' + _tabSrc + '" scrolling="auto" frameborder="0" style="width:100%;height:100%;"></iframe>';
 
     var defaults = {
         id: getRandomNumByDef(),
@@ -1076,7 +1142,7 @@ function addTab(params) {
                 let navpath = treeobj.tree('options').navpath;
 
                 while(currentnode){
-                    nodepath.push(currentnode.text);
+					nodepath.push(currentnode.titleId || currentnode.text);
                     currentnode = treeobj.tree('getParent', currentnode.target);
                 }
 
@@ -1098,6 +1164,17 @@ function addTab(params) {
 			}else{
 				t.iTabs('add', opts);
 			}
+
+            // 新 tab 插入 DOM 后，刷新 tab header 里的 data-i18n 元素
+            try {
+                setTimeout(function(){
+                    var _ai18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+                    if (_ai18n && _ai18n.apply) {
+                        var hdr = document.querySelector('.tabs-header');
+                        _ai18n.apply(hdr || document);
+                    }
+                }, 0);
+            } catch (_ie) {}
 
 			if(params.onAfterClick){
 				var fn = params.onAfterClick;

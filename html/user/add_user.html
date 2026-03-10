@@ -6,35 +6,39 @@
 </style>
 <table class="editTable">
     <tr>
-        <td class="label">用户名</td>
+        <td class="label" data-i18n="users.form.username">用户名</td>
         <td><input type="text" id="username" name="username" value=""></td>
     </tr>
     <tr>
-        <td class="label">密码</td>
+        <td class="label" data-i18n="users.form.password">密码</td>
         <td><input type="password" id="password" name="password" value=""></td>
     </tr>
     <tr>
-        <td class="label">确认密码</td>
+        <td class="label" data-i18n="users.form.confirmPassword">确认密码</td>
         <td><input type="password" id="password2" name="password2" value=""></td>
     </tr>
 </table>
 
 <script type="text/javascript">
     $(function () {
+        var i18n = window.APP_I18N || (window.APP && window.APP.i18n);
+        if(i18n && i18n.apply){
+            i18n.apply(document);
+        }
         $('#username').iTextbox({
             width: 300,
-            prompt: '用户名，必须填写',
+            prompt: i18n ? i18n.t('users.prompt.usernameRequired') : '用户名，必须填写',
             required: true
         });
         $('#password').iPasswordbox({
             width: 300,
-            prompt: '密码,长度6-12，必须填写',
+            prompt: i18n ? i18n.t('users.prompt.passwordRequired') : '密码,长度6-12，必须填写',
             required: true,
             validType: ['length[6,12]']
         });
         $('#password2').iPasswordbox({
             width: 300,
-            prompt: '确认密码,必须填写且一致',
+            prompt: i18n ? i18n.t('users.prompt.confirmPasswordRequired') : '确认密码,必须填写且一致',
             required: true,
             validType: ['length[6,12]',"equals['#password']"]
         });

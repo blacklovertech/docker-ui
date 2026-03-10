@@ -34,7 +34,7 @@
                 },
                 btnCls: 'cubeui-btn-slateblue',
                 iconCls: 'fa fa-tags'
-            }">编辑元数据</a>
+            }"><span data-i18n="nodes.toolbar.editMetadata">编辑元数据</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     method1: 'openDialog',
@@ -44,7 +44,7 @@
                     extend: '#nodesDg-toolbar',
                     btnCls: 'cubeui-btn-blue',
                     iconCls: 'fa fa-hand-o-up'
-                }">提升管理节点</a>
+                }"><span data-i18n="nodes.toolbar.promoteManager">提升管理节点</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
@@ -53,7 +53,7 @@
                     extend: '#nodesDg-toolbar',
                     btnCls: 'cubeui-btn-orange',
                     iconCls: 'fa fa-hand-o-down'
-                }">降级工作节点</a>
+                }"><span data-i18n="nodes.toolbar.demoteWorker">降级工作节点</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
@@ -62,14 +62,14 @@
                     extend: '#nodesDg-toolbar',
                     btnCls: 'cubeui-btn-red',
                     iconCls: 'fa fa-times'
-                }">删除节点</a>
+                }"><span data-i18n="nodes.toolbar.remove">删除节点</span></a>
 
             <form id="queryForm" class="search-box">
 
 <!--                <input data-toggle="cubeui-checkbox" name="dangling" value="1" label="">-->
 <!--                <span style='line-height: 30px;padding-right:0px'>管理节点</span>-->
 
-                <span style='line-height: 30px;padding-right:0px'>节点角色：</span>
+                <span style='line-height: 30px;padding-right:0px' data-i18n="nodes.search.role">节点角色：</span>
                 <input type="text" name="role" value="" data-toggle="cubeui-combobox"
                        data-options="
                                 width:160,
@@ -79,7 +79,7 @@
                                 data:[{'KEY':'all','TEXT':'所有'},{'KEY':'manager','TEXT':'管理节点'},{'KEY':'worker','TEXT':'工作节点'}]
                        ">
 
-                <span style='line-height: 30px;padding-right:0px'>成员身份：</span>
+                <span style='line-height: 30px;padding-right:0px' data-i18n="nodes.search.membership">成员身份：</span>
                 <input type="text" name="membership" value="" data-toggle="cubeui-combobox"
                        data-options="
                                 width:160,
@@ -110,15 +110,15 @@
                    iconCls:'fa fa-search',
                    btnCls:'cubeui-btn-blue',
                    form:{id:'queryForm'},
-                   grid:{type:'datagrid','id':'nodesDg'}">查询</a>
+                         grid:{type:'datagrid','id':'nodesDg'}"><span data-i18n="common.btn.search">查询</span></a>
             </form>
         </div>
     </div>
 </div>
 <!-- 表格工具栏结束 -->
 <div id="searchImageMm" data-toggle="cubeui-menu" style="width:120px;display:none" data-options="">
-    <div onclick="pullImgFromMenu()" data-options="iconCls:'fa fa-download'">拉取latest镜像</div>
-    <div onclick="setImgFromMenu()" data-options="iconCls:'fa fa-check-square-o'">指定镜像Tag</div>
+    <div onclick="pullImgFromMenu()" data-options="iconCls:'fa fa-download'"><span data-i18n="images.menu.pullLatest">拉取latest镜像</span></div>
+    <div onclick="setImgFromMenu()" data-options="iconCls:'fa fa-check-square-o'"><span data-i18n="images.menu.setTag">指定镜像Tag</span></div>
 </div>
 </script>
 

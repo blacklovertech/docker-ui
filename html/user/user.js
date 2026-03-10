@@ -1,3 +1,10 @@
+function t(key) {
+    try {
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        return i18n ? i18n.t.apply(i18n, arguments) : key;
+    } catch (e) { return key; }
+}
+
 function loadUsers(){
     $(function(){
         $("#userDg").iDatagrid({
@@ -7,12 +14,12 @@ function loadUsers(){
             pageSize:50,
             frozenColumns:[[
                 {field: 'ck', title: '', checkbox: true},
-                {field: 'op', title: '操作', sortable: false, halign:'center',align:'left',
+                {field: 'op', title: '<span data-i18n="common.col.operation">操作</span>', sortable: false, halign:'center',align:'left',
                     width1: 120, formatter:userOperateFormatter},
-                {field: 'UserName', title: '用户名', sortable: true,
+                {field: 'UserName', title: t('users.col.username'), sortable: true,
                     formatter:$.iGrid.tooltipformatter(),
                     width: 180},
-                {field: 'UserID', title: '用户ID', sortable: true,
+                {field: 'UserID', title: t('users.col.userId'), sortable: true,
                     formatter:$.iGrid.tooltipformatter(),
                     width: 260},
             ]],
@@ -20,24 +27,30 @@ function loadUsers(){
                 refreshUsers(param)
             },
             columns: [[
-                {field: 'CreateTime', title: '创建时间', sortable: true,
+                {field: 'CreateTime', title: t('users.col.createTime'), sortable: true,
                     formatter:$.iGrid.tooltipformatter(),width: 260}
             ]]
         });
+
+        var i18n = window.APP_I18N || (window.APP && window.APP.i18n);
+        if(i18n && i18n.apply){
+            i18n.apply(document);
+            try { i18n.apply($('#userDg').datagrid('getPanel')); } catch (e) {}
+        }
     });
 }
 
 function userOperateFormatter(value, row, index) {
     let htmlstr = "";
-    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="resetUserPwd(\'' + row.UserID + '\')">改密</button>';
-    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeUser(\'' + row.UserID + '\')">删除</button>';
+    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="resetUserPwd(\'' + row.UserID + '\')">' + t('users.btn.resetPwd') + '</button>';
+    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeUser(\'' + row.UserID + '\')">' + t('common.btn.delete') + '</button>';
     return htmlstr;
 }
 
 function refreshUsers(param){
     $.app.getJson(V3_API_URL + '/user/list', null, function (data) {
         if(data.status !== 0){
-            $.app.alert(data.msg || '获取用户列表失败');
+            $.app.alert(data.msg || t('users.msg.load.fail'));
             return;
         }
 
@@ -52,14 +65,14 @@ function refreshUsers(param){
 
 function createUser(){
     $.iDialog.openDialog({
-        title: '新增用户',
+        title: t('users.dialog.create.title'),
         minimizable:false,
         id:'addUserDlg',
         width: 560,
         height: 300,
         href:'./add_user.html',
         buttonsGroup: [{
-            text: '确定',
+            text: t('common.btn.confirm'),
             iconCls: 'fa fa-floppy-o',
             btnCls: 'cubeui-btn-orange',
             handler:'ajaxForm',
@@ -70,11 +83,11 @@ function createUser(){
 
                 $.app.post(V3_API_URL + '/user/create', params, function(resp){
                     if(resp.status === 0){
-                        $.app.show('创建用户成功');
+                        $.app.show(t('users.msg.create.success'));
                         $.iDialog.closeOutterDialog($(t))
                         reloadUserDg();
                     }else{
-                        $.app.alert(resp.msg || '创建用户失败');
+                        $.app.alert(resp.msg || t('users.msg.create.fail'));
                     }
                 })
 
@@ -89,25 +102,25 @@ function removeUser(userid){
         let rows = $('#userDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个用户删除');
+            $.app.show(t('users.msg.onlyOne.remove'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个用户删除');
+            $.app.show(t('users.msg.pickOne.remove'));
             return;
         }else{
             userid = rows[0].UserID;
         }
     }
 
-    $.app.confirm("删除用户", "您确定要删除所选择的用户？",function () {
+    $.app.confirm(t('users.dialog.remove.title'), t('users.dialog.remove.confirm'),function () {
         $.app.post(V3_API_URL + '/user/delete', {userid: userid}, function (resp) {
             if(resp.status === 0){
-                $.app.show("删除用户成功");
+                $.app.show(t('users.msg.remove.success'));
                 reloadUserDg();
             }else{
-                $.app.alert(resp.msg || '删除用户失败');
+                $.app.alert(resp.msg || t('users.msg.remove.fail'));
             }
         })
     })
@@ -118,12 +131,12 @@ function resetUserPwd(userid){
         let rows = $('#userDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个用户改密');
+            $.app.show(t('users.msg.onlyOne.resetPwd'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个用户改密');
+            $.app.show(t('users.msg.pickOne.resetPwd'));
             return;
         }else{
             userid = rows[0].UserID;
@@ -131,14 +144,14 @@ function resetUserPwd(userid){
     }
 
     $.iDialog.openDialog({
-        title: '修改用户密码',
+        title: t('users.dialog.resetPwd.title'),
         minimizable:false,
         id:'resetPwdDlg',
         width: 560,
         height: 240,
         href:'./resetpwd.html',
         buttonsGroup: [{
-            text: '确定',
+            text: t('common.btn.confirm'),
             iconCls: 'fa fa-floppy-o',
             btnCls: 'cubeui-btn-orange',
             handler:'ajaxForm',
@@ -149,11 +162,11 @@ function resetUserPwd(userid){
 
                 $.app.post(V3_API_URL + '/user/resetpwd', params, function(resp){
                     if(resp.status === 0){
-                        $.app.show('修改密码成功');
+                        $.app.show(t('users.msg.resetPwd.success'));
                         $.iDialog.closeOutterDialog($(t))
                         reloadUserDg();
                     }else{
-                        $.app.alert(resp.msg || '修改密码失败');
+                        $.app.alert(resp.msg || t('users.msg.resetPwd.fail'));
                     }
                 })
 

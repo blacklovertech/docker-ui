@@ -1,3 +1,33 @@
+function applyPortalI18n(){
+    try {
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        if (i18n && i18n.apply) {
+            i18n.apply(document);
+        }
+    } catch (e) {}
+}
+
+function bindPortalI18nEvents(){
+    if (window.__portal_i18n_bound) {
+        return;
+    }
+    window.__portal_i18n_bound = true;
+
+    window.addEventListener('app:langChanged', function(){
+        applyPortalI18n();
+    });
+
+    window.addEventListener('message', function(event){
+        try {
+            var data = event && event.data;
+            if (!data || data.type !== 'dockerui:setLang') {
+                return;
+            }
+            applyPortalI18n();
+        } catch (e) {}
+    });
+}
+
 function rendPage(){
     $.docker.request.info(local_node, function (data) {
 
@@ -35,6 +65,7 @@ function rendPage(){
             fillData(d)
 
             APP.renderBody("#tmpl1", d);
+            applyPortalI18n();
 
             console.log(d)
 
@@ -62,6 +93,8 @@ function rendPage(){
 
     refreshVolumeInfo();
 }
+
+bindPortalI18nEvents();
 
 function refreshData(){
     $.docker.request.info(local_node, function (data) {

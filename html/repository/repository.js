@@ -1,3 +1,56 @@
+function t(key) {
+    try {
+        let i18n = window.APP_I18N || (window.APP && window.APP.i18n);
+        if (i18n && i18n.t) {
+            let args = Array.prototype.slice.call(arguments, 1);
+            return i18n.t.apply(i18n, [key].concat(args));
+        }
+    } catch (e) {}
+
+    let args2 = Array.prototype.slice.call(arguments, 1);
+    if (args2 && args2.length) {
+        return key + ' ' + args2.join(' ');
+    }
+    return key;
+}
+
+function __repository_applyI18n(root) {
+    try {
+        let i18n = window.APP_I18N || (window.APP && window.APP.i18n);
+        if (i18n && i18n.apply) {
+            i18n.apply(root || document);
+        }
+    } catch (e) {}
+}
+
+function __repository_applyRepoFormPrompts(root) {
+    let container = root ? $(root) : $(document);
+    try {
+        container.find("input[name='Name']").textbox({ prompt: t('repository.prompt.name') });
+        container.find("input[name='Endpoint']").textbox({ prompt: t('repository.prompt.endpoint') });
+        container.find("input[name='Description']").textbox({ prompt: t('repository.prompt.description') });
+        container.find("input[name='Username']").textbox({ prompt: t('repository.prompt.username') });
+        container.find("input[name='Password']").passwordbox({ prompt: t('repository.prompt.password') });
+    } catch (e) {}
+}
+
+function __repository_bindLangChangedOnce() {
+    if (window.__repositoryI18nBound) return;
+    window.__repositoryI18nBound = true;
+
+    $(document).on('app:langChanged', function () {
+        try {
+            __repository_applyI18n(document);
+        } catch (e) {}
+        try {
+            __repository_applyRepoFormPrompts(document);
+        } catch (e) {}
+        try {
+            reloadDg();
+        } catch (e) {}
+    });
+}
+
 function loadRepository(){
     let node = local_node;
 
@@ -9,7 +62,7 @@ function loadRepository(){
             pageSize:50,
             frozenColumns:[[
                 {field: 'ID', title: '', checkbox: true},
-                {field: 'op', title: '操作', sortable: false, halign:'center',align:'left',
+                {field: 'op', title: '<span data-i18n="common.col.operation">操作</span>', sortable: false, halign:'center',align:'left',
                     width1: 100, formatter:reposOperateFormatter},
                 {field: 'Id', title: 'ID', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),
@@ -38,13 +91,16 @@ function loadRepository(){
                     formatter:$.iGrid.tooltipformatter(),width: 260}
             ]]
         });
+
+        __repository_applyI18n(document);
+        __repository_bindLangChangedOnce();
     });
 }
 
 function reposOperateFormatter(value, row, index) {
     let htmlstr = "";
-    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="updateRepos(\'' + row.ID + '\')">修改仓库</button>';
-    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeRepos(\'' + row.ID + '\')">删除仓库</button>';
+    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="updateRepos(\'' + row.ID + '\')">' + t('repository.btn.edit') + '</button>';
+    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeRepos(\'' + row.ID + '\')">' + t('repository.btn.delete') + '</button>';
     return htmlstr;
 }
 
@@ -80,23 +136,23 @@ function removeRepos(id){
         let rows = $('#reposDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个从仓库删除');
+            $.app.show(t('repository.msg.onlyOne.remove'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个仓库删除');
+            $.app.show(t('repository.msg.pickOne.remove'));
             return;
         }else{
             id = rows[0].ID;
         }
     }
 
-    $.app.confirm("删除仓库信息", "您确定要删除所选择的仓库信息？",function () {
+    $.app.confirm(t('repository.dialog.remove.title'), t('repository.dialog.remove.confirm'),function () {
 
         let node = local_node;
         $.docker.request.repos.delete(function (data) {
-            $.app.show("删除仓库信息成功");
+            $.app.show(t('repository.msg.remove.success'));
             reloadDg();
         }, node, id);
     })
@@ -108,12 +164,12 @@ function updateRepos(id){
         let rows = $('#reposDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个从仓库修改');
+            $.app.show(t('repository.msg.onlyOne.edit'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个仓库修改');
+            $.app.show(t('repository.msg.pickOne.edit'));
             return;
         }else{
             id = rows[0].ID;
@@ -123,7 +179,7 @@ function updateRepos(id){
     $.docker.request.repos.all(function (data, map) {
         let reposData = map[id];
         if(reposData==null){
-            $.app.show('仓库不存在，请刷新后再重新编辑')
+            $.app.show(t('repository.msg.notFound'))
             return false;
         }
 
@@ -138,9 +194,9 @@ function updateReposDlg(reposData){
     let isAdd = true;
     if(reposData == null || reposData.ID == null){
         reposData = {};
-        title = "添加仓库";
+        title = t('repository.dialog.add.title');
     }else{
-        title = "修改仓库{0}".format(reposData.Name);
+        title = t('repository.dialog.edit.titleformat', reposData.Name);
         isAdd = false;
     }
 
@@ -156,9 +212,12 @@ function updateReposDlg(reposData){
             console.log("Open dialog");
             reposData.Password = '';
             handler.render(reposData);
+
+            __repository_applyI18n(d);
+            __repository_applyRepoFormPrompts(d);
         },
         buttonsGroup: [{
-            text: '确定',
+            text: t('common.btn.confirm'),
             iconCls: 'fa fa-floppy-o',
             btnCls: 'cubeui-btn-orange',
             handler:'ajaxForm',
@@ -176,7 +235,7 @@ function updateReposDlg(reposData){
                 }
 
                 $.docker.request.repos.save(function (data) {
-                    $.app.show('保存仓库{0}成功'.format(info.Name))
+                    $.app.show(t('repository.msg.save.success', info.Name))
                     $.iDialog.closeOutterDialog($(t))
                     reloadDg()
                 }, node, info);

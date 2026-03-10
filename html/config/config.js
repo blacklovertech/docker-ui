@@ -1,4 +1,88 @@
+function t(key) {
+    try {
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        return i18n ? i18n.t.apply(i18n, arguments) : key;
+    } catch (e) { return key; }
+}
+
+function __configs_getI18n(){
+    return (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+}
+
+function __configs_applyI18n(root){
+    var i18n = __configs_getI18n();
+    if(i18n && i18n.apply){
+        try { i18n.apply(root || document); } catch (e) {}
+    }
+}
+
+function __configs_setPlaceholder($el, text){
+    if(!$el || !$el.length) return;
+    try {
+        if($el.textbox){
+            $el.textbox('textbox').attr('placeholder', text);
+            return;
+        }
+    } catch (e) {}
+    try {
+        if($el.combobox){
+            $el.combobox('textbox').attr('placeholder', text);
+            return;
+        }
+    } catch (e2) {}
+}
+
+function __configs_setButtonText(selector, text){
+    var $el = $(selector);
+    if(!$el.length) return;
+
+    $el.html(text);
+
+    try {
+        $el.linkbutton({text:text});
+    } catch (e) {}
+
+    try {
+        $el.menubutton({text:text});
+    } catch (e2) {}
+}
+
+function __configs_applyControlsI18n(){
+    var i18n = __configs_getI18n();
+    if(!i18n || !i18n.t) return;
+
+    __configs_setButtonText('#configsCreateBtn', i18n.t('configs.toolbar.create'));
+    __configs_setButtonText('#configsEditMetadataBtn', i18n.t('configs.toolbar.editMetadata'));
+    __configs_setButtonText('#configsUpdateBtn', i18n.t('configs.toolbar.update'));
+    __configs_setButtonText('#configsRemoveBtn', i18n.t('configs.toolbar.remove'));
+    __configs_setButtonText('#searchbtn', i18n.t('common.btn.search'));
+
+    __configs_setPlaceholder($('#search_type'), i18n.t('common.prompt.searchTypeRequired'));
+    __configs_setPlaceholder($('#search_key'), i18n.t('configs.search.placeholder'));
+
+    try {
+        var value = $('#search_type').combobox('getValue');
+        $('#search_type').combobox('loadData', [
+            {KEY:'name', TEXT:'Name'},
+            {KEY:'label', TEXT:'Label'},
+            {KEY:'names', TEXT:'Names'},
+            {KEY:'id', TEXT:'ID'}
+        ]).combobox('setValue', value || 'name');
+    } catch (e3) {}
+}
+
+function __configs_applyGridI18n(){
+    try { __configs_applyI18n($('#configsDg').datagrid('getPanel')); } catch (e) {}
+}
+
 function loadLease(){
+
+    function t(key) {
+        try {
+            var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+            return i18n ? i18n.t.apply(i18n, arguments) : key;
+        } catch (e) { return key; }
+    }
 
     // let node = $.docker.menu.getCurrentTabAttachNode();
     let node = local_node;
@@ -12,7 +96,7 @@ function loadLease(){
             queryParams:{all1:1},
             frozenColumns:[[
                 {field: 'ID', title: '', checkbox: true},
-                {field: 'op', title: '操作', sortable: false, halign:'center',align:'left',
+                {field: 'op', title: '<span data-i18n="common.col.operation">操作</span>', sortable: false, halign:'center',align:'left',
                     width1: 100, formatter:leaseOperateFormatter},
                 {field: 'Id', title: 'ID', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),
@@ -46,14 +130,27 @@ function loadLease(){
                 }
             ),
         });
+
+        __configs_applyControlsI18n();
+        __configs_applyGridI18n();
+        __configs_applyI18n(document);
+
+        try {
+            $(document).off('app:langChanged.configs').on('app:langChanged.configs', function () {
+                __configs_applyControlsI18n();
+                __configs_applyGridI18n();
+                __configs_applyI18n(document);
+                try { reloadDg(); } catch (e) {}
+            });
+        } catch (e) {}
     });
 }
 
 function leaseOperateFormatter(value, row, index) {
     let htmlstr = "";
-    htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectConfig(\'' + row.ID + '\')">查看</button>';
-    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="updateData(\'' + row.ID + '\')">修改配置</button>';
-    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeLease(\'' + row.ID + '\')">删除</button>';
+    htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectConfig(\'' + row.ID + '\')">'+t('configs.btn.view')+'</button>';
+    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="updateData(\'' + row.ID + '\')">'+t('configs.btn.update')+'</button>';
+    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeLease(\'' + row.ID + '\')">'+t('configs.btn.delete')+'</button>';
     return htmlstr;
 }
 
@@ -92,23 +189,23 @@ function removeLease(id, closePanel) {
         let rows = $('#configsDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个配置删除');
+            $.app.show(t('configs.msg.onlyOne.remove'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个配置删除');
+            $.app.show(t('configs.msg.pickOne.remove'));
             return;
         }else{
             id = rows[0].ID;
         }
     }
 
-    $.app.confirm('您确认要删除当前配置',function (){
+    $.app.confirm(t('configs.dialog.remove.confirm'),function (){
 
         let node = local_node;
         $.docker.request.config.delete(function(response){
-            $.app.show("删除配置成功".format(""));
+            $.app.show(t('configs.msg.remove.success'));
             reloadDg();
 
             if(closePanel){
@@ -150,7 +247,7 @@ function showConfigPanel(rowData){
         iconCls:'fa fa-gear',
         collapsible:false,
         showHeader1:false,
-        titleformat:'配置信息-{0}'.format($.extends.isEmpty(rowData.Name, '新建')), title:'配置信息',
+        titleformat:t('configs.panel.titleformat').format($.extends.isEmpty(rowData.Name, t('common.word.new'))), title:t('configs.panel.title'),
         headerCls:'border_right',bodyCls:'border_right',collapsible:true,
         footerHtml:$.templates(footer_html_template).render(rowData),
         render:function (panel, option) {
@@ -190,12 +287,12 @@ function saveConfig(fn){
 
 
         let doFn = function (row) {
-            $.app.confirm("您确定新建当前配置信息？", function () {
+            $.app.confirm(t('configs.dialog.create.confirm'), function () {
                 $.docker.request.config.create(function (response) {
                     if (fn) {
                         fn.call(row, response, row)
                     } else {
-                        $.app.show('创建配置信息{0}成功'.format(row.Name));
+                        $.app.show(t('configs.msg.create.success').format(row.Name));
                         reloadDg();
                         removePanel();
                         //$('#layout').layout('collapse', 'east');
@@ -208,7 +305,7 @@ function saveConfig(fn){
 
         if(info.mode == 'data'){
             if($.extends.isEmpty(info.data_text)){
-                $.app.show("必须填写配置信息文本内容");
+                $.app.show(t('configs.msg.content.required'));
                 return false;
             }
             data.Data = info.data_text;
@@ -217,7 +314,7 @@ function saveConfig(fn){
             let files = $('#data_file').filebox('files');
 
             if($.extends.isEmpty(files)){
-                $.app.show("必须选择需要上传的配置信息文件");
+                $.app.show(t('configs.msg.file.required'));
                 return false;
             }
 
@@ -240,14 +337,14 @@ let footer_html_template = `
             },
             btnCls: 'cubeui-btn-slateblue',
             iconCls: 'fa fa-tags'
-        }">编辑元数据</a>        
+        }">{{:~t("configs.toolbar.editMetadata")}}</a>        
         <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
             onClick:function(){
                 removeLease('{{:ID}}', true);
             },
             btnCls: 'cubeui-btn-orange',
             iconCls: 'fa fa-times'
-        }">删除</a>
+        }">{{:~t("common.btn.delete")}}</a>
         {{else}}   
         <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
             onClick:function(){
@@ -255,7 +352,7 @@ let footer_html_template = `
             },
             btnCls: 'cubeui-btn-blue',
             iconCls: 'fa fa-plus'
-        }">添加</a>
+        }">{{:~t("common.btn.add")}}</a>
         {{/if}}
          <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
             onClick:function(){
@@ -263,19 +360,19 @@ let footer_html_template = `
             },
             btnCls: 'cubeui-btn-red',
             iconCls: 'fa fa-close'
-        }">关闭</a>
+        }">{{:~t("common.btn.close")}}</a>
 `;
 
 let config_html_template = `
         <div data-toggle="cubeui-tabs" id='eastTabs'>
-            <div title="配置信息"
+            <div title="{{:~t('configs.tab.info')}}"
                  data-options="id:'eastTab0',iconCls:'fa fa-info-circle'">                 
                 <div style="margin: 0px;">
                 </div>
                 
                 <div class="cubeui-fluid">
                     <fieldset>
-                        <legend>基础信息</legend>
+                        <legend>{{:~t("configs.section.basic")}}</legend>
                     </fieldset>
                     
                     <form id='createConfigForm'>
@@ -312,7 +409,7 @@ let config_html_template = `
 								},
 								btnCls: 'cubeui-btn-blue',
 								iconCls: 'fa fa-pencil-square-o'
-							}">修改</a>
+							}">{{:~t("configs.btn.edit")}}</a>
                         </div>
                     </div>
                     
@@ -360,13 +457,13 @@ let config_html_template = `
                     
                     <div class="cubeui-row">
                         <div class="cubeui-col-sm12">
-                            <label class="cubeui-form-label">                                          
-                            配置信息:</label>
+                            <label class="cubeui-form-label">
+                            {{:~t("configs.label.content")}}</label>
                             <div class="cubeui-input-block">                
                                 <input readonly type="text" data-toggle="cubeui-textbox" name="data_text" id="data_text"
                                        value='{{>DataStr}}'
                                        data-options="
-                                       prompt:'配置数据内容，必填项目',
+                                       prompt:'{{:~t(\"configs.prompt.data\")}}',
                                        required:true,
                                        multiline:true,
                                        height:200,
@@ -384,7 +481,7 @@ let config_html_template = `
                                 <input type="text" data-toggle="cubeui-textbox" id="ConfigName" name="Name"
                                        value=''
                                        data-options="
-                                       prompt:'配置的名称，必填项目',
+                                       prompt:'{{:~t(\"configs.prompt.nameRequired\")}}',
                                        required:true,
                                             "
                                 >
@@ -403,7 +500,7 @@ let config_html_template = `
                         <div class="cubeui-col-sm12" style="margin-top: 5px">
                             <label class="cubeui-form-label">
                             <input data-toggle="cubeui-radiobutton" checked name="mode" 
-                                            data-options="title:'从本地上传配置文件',
+                                            data-options="title:'{{:~t(\"configs.mode.file\")}}',
                                             onChange:function(checked){    
                                                     $('#data_file').filebox('enableValidation');
                                                     $('#data_file').filebox('enable');
@@ -412,11 +509,11 @@ let config_html_template = `
                                                     $('#data_text').textbox('disable');                                            
                                             }
                                             " value="file" >
-                            选择配置文件:</label>
+                            {{:~t("configs.mode.file")}}</label>
                             <div class="cubeui-input-block">
                                 <input  data-toggle="cubeui-filebox" id="data_file" data-options="
-                                    prompt:'从本地文件系统选择配置文件...',
-                                    buttonText: '选择文件',
+                                    prompt:'{{:~t(\"configs.prompt.file\")}}',
+                                    buttonText: '{{:~t(\"configs.btn.chooseFile\")}}',
                                     required:true,
                                     accept:'.*',
                                     " style="width:100%">  
@@ -428,7 +525,7 @@ let config_html_template = `
                         <div class="cubeui-col-sm12">
                             <label class="cubeui-form-label">                            
                             <input data-toggle="cubeui-radiobutton" name="mode" 
-                                            data-options="title:'直接输入配置文本内容',
+                                            data-options="title:'{{:~t(\"configs.mode.data\")}}',
                                             onChange:function(checked){               
                                                     $('#data_text').textbox('enableValidation');  
                                                     $('#data_text').textbox('enable');   
@@ -438,14 +535,14 @@ let config_html_template = `
                                                     $('#data_file').filebox('resize');         
                                             }
                                             " value="data" >                                            
-                            配置信息:</label>
+                            {{:~t("configs.mode.data")}}</label>
                             <div class="cubeui-input-block">
                 
                                 <input type="text" data-toggle="cubeui-textbox" name="data_text" id="data_text"
                                        value=''
                                        data-options="
                                        disabled:true,
-                                       prompt:'配置数据内容，必填项目',
+                                       prompt:'{{:~t(\"configs.prompt.data\")}}',
                                        required:true,
                                        multiline:true,
                                        height:200,
@@ -457,7 +554,7 @@ let config_html_template = `
                     {{/if}}
                                     
                     <fieldset  style="margin-top: 10px;">
-                        <legend style="margin-bottom: 0px;">标签选项</legend>
+                        <legend style="margin-bottom: 0px;">{{:~t("configs.section.labels")}}</legend>
                     </fieldset>
                                 
                     {{if updated}}
@@ -465,13 +562,13 @@ let config_html_template = `
                         <div class="cubeui-col-sm12">
                             <div class="cubeui-row"  style="margin-top: 0px;">
                                 <div class="cubeui-col-sm5 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                    <span style='line-height: 20px;padding-right:0px;'>标签</span>
+                                    <span style='line-height: 20px;padding-right:0px;'>{{:~t("configs.label.tag")}}</span>
                                 </div>
                                 <div class="cubeui-col-sm1">
                                     <span style='line-height: 20px;padding-right:0px;'>&nbsp;</span>
                                 </div>
                                 <div class="cubeui-col-sm5" >
-                                    <span style='line-height: 20px;padding-right:0px;'>值</span>
+                                    <span style='line-height: 20px;padding-right:0px;'>{{:~t("configs.label.value")}}</span>
                                 </div>
                             </div>
                             {{if Spec.Labels}}
@@ -497,10 +594,10 @@ let config_html_template = `
                         <div class="cubeui-col-sm12 add-opt-div">
                             <div class="cubeui-row">
                                 <div class="cubeui-col-sm4 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                    <span style='line-height: 20px;padding-right:0px;'>键</span>
+                                    <span style='line-height: 20px;padding-right:0px;'>{{:~t("configs.label.key")}}</span>
                                 </div>
                                 <div class="cubeui-col-sm5" >
-                                    <span style='line-height: 20px;padding-right:0px;'>值</span>
+                                    <span style='line-height: 20px;padding-right:0px;'>{{:~t("configs.label.value")}}</span>
                                 </div>
                                 <div class="cubeui-col-sm2" style="text-align: center">
                                     <span style='line-height: 20px;padding-right:0px;'>
@@ -514,11 +611,11 @@ let config_html_template = `
                             <div class="cubeui-row">
                                 <div class="cubeui-col-sm4 cubeui-col-sm-offset1" style="padding-right: 5px">
                                     <input type="text" data-toggle="cubeui-textbox" value="{{>key}}"
-                                           name='Labels-name' data-options="required:false,prompt:'名字，比如：group '">
+                                           name='Labels-name' data-options="required:false,prompt:'{{:~t(\"configs.prompt.labelKey\")}}'">
                                 </div>
                                 <div class="cubeui-col-sm5">
                                     <input type="text" data-toggle="cubeui-textbox" value="{{>prop}}"
-                                           name='Labels-value' data-options="required:false,prompt:'对应值，比如：db '">
+                                           name='Labels-value' data-options="required:false,prompt:'{{:~t(\"configs.prompt.labelValue\")}}'">
                                 </div>
                                 <div class="cubeui-col-sm2" style="text-align: center">
                                     <span style='line-height: 30px;padding-right:0px;'><span onClick="$.docker.utils.ui.removeOpt(this)"  class="ops-fa-icon fa fa-close" style="font-size:14px!important;">&nbsp;</span></span>
@@ -545,12 +642,12 @@ function updateData(id){
         let rows = $('#configsDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个配置信息修改');
+            $.app.show(t('configs.msg.onlyOne.update'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个配置信息修改');
+            $.app.show(t('configs.msg.pickOne.update'));
             return;
         }else{
             id = rows[0].ID;
@@ -568,9 +665,9 @@ function updateData(id){
                 </div>
                 <div class="cubeui-fluid">
                     <div style="margin-top:5px">      
-                        <div class="cubeui-row" title="配置信息数据">
+                        <div class="cubeui-row" title="${t('configs.dialog.update.title')}">
                             <fieldset>
-                                <legend style="margin-bottom: 0px;"配置信息数据</legend>
+                                <legend style="margin-bottom: 0px;">${t('configs.dialog.update.title')}</legend>
                             </fieldset>
                         
                         <form id='updateConfigForm'>    
@@ -581,7 +678,7 @@ function updateData(id){
                                     <input type="text" data-toggle="cubeui-textbox" name="Name" readonly
                                            value='{{>Name}}'
                                            data-options="
-                                           prompt:'配置的名称，必填项目',
+                                           prompt:'${t("configs.prompt.nameRequired")}',
                                            required:true,
                                                 "
                                     >
@@ -642,7 +739,7 @@ function updateData(id){
                             <div class="cubeui-col-sm12" style="margin-top: 5px">
                                 <label class="cubeui-form-label">
                                 <input data-toggle="cubeui-radiobutton" checked name="mode" 
-                                                data-options="title:'从本地上传配置文件',
+                                                data-options="title:'${t("configs.mode.file")}',
                                                 onChange:function(checked){    
                                                         $('#data_file').filebox('enableValidation');
                                                         $('#data_file').filebox('enable');
@@ -651,11 +748,11 @@ function updateData(id){
                                                         $('#data_text').textbox('disable');                                            
                                                 }
                                                 " value="file" >
-                                选择配置文件:</label>
+                                ${t('configs.label.file')}:</label>
                                 <div class="cubeui-input-block">
                                     <input  data-toggle="cubeui-filebox" id="data_file" data-options="
-                                        prompt:'从本地文件系统选择配置文件...',
-                                        buttonText: '选择文件',
+                                        prompt:'${t("configs.prompt.file")}',
+                                        buttonText: '${t("configs.btn.chooseFile")}',
                                         required:true,
                                         accept:'.*',
                                         " style="width:100%">  
@@ -667,7 +764,7 @@ function updateData(id){
                             <div class="cubeui-col-sm12">
                                 <label class="cubeui-form-label">                            
                                 <input data-toggle="cubeui-radiobutton" name="mode" 
-                                                data-options="title:'直接输入配置文本内容',
+                                                data-options="title:'${t("configs.mode.data")}',
                                                 onChange:function(checked){               
                                                         $('#data_text').textbox('enableValidation');  
                                                         $('#data_text').textbox('enable');   
@@ -677,14 +774,14 @@ function updateData(id){
                                                         $('#data_file').filebox('resize');         
                                                 }
                                                 " value="data" >                                            
-                                配置信息:</label>
+                                ${t('configs.label.data')}:</label>
                                 <div class="cubeui-input-block">
                     
                                     <input type="text" data-toggle="cubeui-textbox" name="data_text" id="data_text"
                                            value=''
                                            data-options="
                                            disabled:true,
-                                           prompt:'配置数据内容，必填项目',
+                                           prompt:'${t("configs.prompt.data")}',
                                            required:true,
                                            multiline:true,
                                            height:240,
@@ -702,7 +799,7 @@ function updateData(id){
 
         html = $.templates(html).render(response)
 
-        $.docker.utils.optionConfirm('修改配置信息数据', null, html, function (param, closeFn) {
+        $.docker.utils.optionConfirm(t('configs.dialog.update.title'), null, html, function (param, closeFn) {
 
             if($('#updateConfigForm').form('validate')) {
 
@@ -712,12 +809,12 @@ function updateData(id){
                 let doFn = function (param) {
 
                     if($.extends.isEmpty(param.Data)){
-                        $.app.show("请输入配置信息数据内容");
+                        $.app.show(t('configs.msg.updateData.emptyCheck'));
                         return false;
                     }
 
                     $.docker.request.config.update_data(function (response) {
-                        $.app.show("配置信息{0}数据修改成功".format(response.Info.Spec.Name));
+                        $.app.show(t('configs.msg.updateData.success').format(response.Info.Spec.Name));
 
                         reloadDg();
                         inspectConfig(id)
@@ -730,7 +827,7 @@ function updateData(id){
 
                 if(param.mode == 'data'){
                     if($.extends.isEmpty(param.data_text)){
-                        $.app.show("必须填写配置信息文本内容");
+                        $.app.show(t('configs.msg.content.required'));
                         return false;
                     }
                     param.Data = param.data_text;
@@ -739,7 +836,7 @@ function updateData(id){
                     let files = $('#data_file').filebox('files');
 
                     if($.extends.isEmpty(files)){
-                        $.app.show("必须选择需要上传的配置信息文件");
+                        $.app.show(t('configs.msg.file.required'));
                         return false;
                     }
 
@@ -760,12 +857,12 @@ function updateTags(id, inspect){
         let rows = $('#configsDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个配置信息编辑元数据');
+            $.app.show(t('configs.msg.onlyOne.editMetadata'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个配置信息编辑元数据');
+            $.app.show(t('configs.msg.pickOne.editMetadata'));
             return;
         }else{
             id = rows[0].ID;
@@ -781,18 +878,18 @@ function updateTags(id, inspect){
                 </div>
                 <div class="cubeui-fluid">
                     <div style="margin-top:5px">      
-                        <div class="cubeui-row" title="用户定义的配置信息键/值元数据">
+                        <div class="cubeui-row" title="${t('configs.dialog.labels.sectionTitle')}">
                             <fieldset>
-                                <legend style="margin-bottom: 0px;">用户定义的配置信息键/值元数据</legend>
+                                <legend style="margin-bottom: 0px;">${t('configs.dialog.labels.sectionTitle')}</legend>
                             </fieldset>
                                             
                             <div class="cubeui-col-sm12 add-opt-div">
                                 <div class="cubeui-row">
                                     <div class="cubeui-col-sm4 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                        <span style='line-height: 20px;padding-right:0px;'>键</span>
+                                        <span style='line-height: 20px;padding-right:0px;'>${t('configs.label.key')}</span>
                                     </div>
                                     <div class="cubeui-col-sm5" >
-                                        <span style='line-height: 20px;padding-right:0px;'>值</span>
+                                        <span style='line-height: 20px;padding-right:0px;'>${t('configs.label.value')}</span>
                                     </div>
                                     <div class="cubeui-col-sm2" style="text-align: center">
                                         <span style='line-height: 20px;padding-right:0px;'>
@@ -806,11 +903,11 @@ function updateTags(id, inspect){
                                 <div class="cubeui-row">
                                     <div class="cubeui-col-sm4 cubeui-col-sm-offset1" style="padding-right: 5px">
                                         <input type="text" data-toggle="cubeui-textbox" value="{{>key}}"
-                                               name='Labels-name' data-options="required:false,prompt:'名字，比如：group '">
+                                               name='Labels-name' data-options="required:false,prompt:'${t("configs.prompt.labelKey")}'">
                                     </div>
                                     <div class="cubeui-col-sm5">
                                         <input type="text" data-toggle="cubeui-textbox" value="{{>prop}}"
-                                               name='Labels-value' data-options="required:false,prompt:'对应值，比如：db '">
+                                               name='Labels-value' data-options="required:false,prompt:'${t("configs.prompt.labelValue")}'">
                                     </div>
                                     <div class="cubeui-col-sm2" style="text-align: center">
                                         <span style='line-height: 30px;padding-right:0px;'><span onClick="$.docker.utils.ui.removeOpt(this)"  class="ops-fa-icon fa fa-close" style="font-size:14px!important;">&nbsp;</span></span>
@@ -829,12 +926,12 @@ function updateTags(id, inspect){
 
         html = $.templates(html).render(response)
 
-        $.docker.utils.optionConfirm('修改配置信息键/值标签的元数据', null, html,
+        $.docker.utils.optionConfirm(t('configs.dialog.labels.title'), null, html,
             function(param, closeFn){
                 let labels = $.docker.utils.buildOptsData(param['Labels-name'],param['Labels-value']);
 
                 $.docker.request.config.update_labels(function (response) {
-                    $.app.show("配置信息{0键/值标签的元数据修改成功".format(response.Info.Spec.Name));
+                    $.app.show(t('configs.msg.labels.updated').format(response.Info.Spec.Name));
 
                     reloadDg();
                     if(inspect){
@@ -855,20 +952,20 @@ function updateName(btn, id){
 
     if(opts.flag==2){
 
-        $.app.confirm("确定修改配置信息名称？", function(){
+        $.app.confirm(t('configs.dialog.name.confirm'), function(){
 
             let name = $('#ConfigName').textbox('getValue');
 
             if($.extends.isEmpty(name)){
-                $.app.show("请输入配置信息的名字");
+                $.app.show(t('configs.msg.name.required'));
                 return false;
             }
 
             $.docker.request.config.update_name(function (response) {
-                $.app.show('修改配置信息名称已经完成');
+                $.app.show(t('configs.msg.name.updated'));
                 opts.flag = 1;
                 $(btn).linkbutton({
-                    text:'修改',
+                    text:t('configs.btn.edit'),
                     iconCls: 'fa fa-pencil-square-o'
                 });
 
@@ -884,7 +981,7 @@ function updateName(btn, id){
         $('#ConfigName').textbox('readonly', false);
         $('#ConfigName').textbox('textbox').focus();
         $(btn).linkbutton({
-            text:'确定',
+            text:t('common.btn.confirm'),
             iconCls: 'fa fa-check-square-o'
         });
     }
@@ -896,3 +993,5 @@ function onActivated(opts, title, idx){
     reloadDg();
     //refreshCharts();
 }
+
+

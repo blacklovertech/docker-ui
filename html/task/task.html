@@ -35,12 +35,12 @@
                             extend: '#relatedTasksDg-toolbar',
                             btnCls: 'cubeui-btn-orange',
                             iconCls: 'fa fa-refresh'
-                        }">刷新</a>
+                        }"><span data-i18n="common.btn.refresh">刷新</span></a>
 
             <form id="queryForm" class="search-box">
 
                 <div id='dg_header' style="display1:none;margin-bottom1:15px">
-                        <span style='line-height: 30px;padding-right:0px' title="">模式：</span>
+                    <span style='line-height: 30px;padding-right:0px' title="" data-i18n="tasks.search.mode">模式：</span>
                         <input type="text" id="service_mode" value="" data-toggle="cubeui-combobox"
                                data-options="
                                         width:160,
@@ -79,10 +79,10 @@
 
                                 $('#tasklist-service').combogrid('grid').datagrid('reload',param)
                            }
-                           ">查询</a>
+                           "><span data-i18n="common.btn.search">查询</span></a>
                 </div>
 
-                <span style='line-height: 30px;padding-right:0px' title="">服务：</span>
+                <span style='line-height: 30px;padding-right:0px' title="" data-i18n="tasks.search.service">服务：</span>
                 <input type="text" id="tasklist-service" name="service" value="" data-toggle="cubeui-combogrid"
                        data-options="
                                    width: 200,
@@ -140,7 +140,7 @@
                                    ]]
                                ">
 
-                <span style='line-height: 30px;padding-right:0px' title="">节点：</span>
+                <span style='line-height: 30px;padding-right:0px' title="" data-i18n="tasks.search.node">节点：</span>
                 <div id='dg_node_header' style="display1:none;margin-bottom1:15px">
                     <input type="text" id="node_search_role" value="" data-toggle="cubeui-combobox"
                            data-options="
@@ -151,7 +151,7 @@
                                     data:[{'KEY':'all','TEXT':'所有'},{'KEY':'manager','TEXT':'管理节点'},{'KEY':'worker','TEXT':'工作节点'}]
                            ">
 
-                    <span style='line-height: 30px;padding-right:0px'>成员身份：</span>
+                    <span style='line-height: 30px;padding-right:0px' data-i18n="tasks.search.membership">成员身份：</span>
                     <input type="text" id="node_search_membership" value="" data-toggle="cubeui-combobox"
                            data-options="
                                     width:160,
@@ -190,7 +190,7 @@
 
                             $('#tasklist-node').combogrid('grid').datagrid('reload',param)
                        }
-                       ">查询</a>
+                   "><span data-i18n="common.btn.search">查询</span></a>
                 </div>
                 <input type="text" id='tasklist-node' name="nodeid" value="" data-toggle="cubeui-combogrid"
                        data-options="
@@ -262,7 +262,7 @@
                                     ]]
                                ">
 
-                <span style='line-height: 30px;padding-right:0px' title="">状态：</span>
+                <span style='line-height: 30px;padding-right:0px' title="" data-i18n="tasks.search.status">状态：</span>
                 <input type="text" id="tasklist-desired-state" name="desired-state" value="running" data-toggle="cubeui-combobox"
                        data-options="
                                         width:160,
@@ -297,7 +297,7 @@
                    iconCls:'fa fa-search',
                    btnCls:'cubeui-btn-blue',
                    form:{id:'queryForm'},
-                   grid:{type:'datagrid','id':'tasksDg'}">查询</a>
+                         grid:{type:'datagrid','id':'tasksDg'}"><span data-i18n="common.btn.search">查询</span></a>
             </form>
         </div>
     </div>

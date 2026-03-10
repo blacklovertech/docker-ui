@@ -1,3 +1,112 @@
+function t(key) {
+    try {
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        return i18n ? i18n.t.apply(i18n, arguments) : key;
+    } catch (e) {
+        return key;
+    }
+}
+
+function __nodes_getI18n(){
+    return (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+}
+
+function __nodes_applyI18n(root){
+    var i18n = __nodes_getI18n();
+    if(i18n && i18n.apply){
+        try{ i18n.apply(root || document); }catch(e){}
+    }
+}
+
+function __nodes_setPlaceholder($el, text){
+    if(!$el || !$el.length) return;
+    try{
+        if($el.textbox){
+            $el.textbox('textbox').attr('placeholder', text);
+            return;
+        }
+    }catch(e){}
+    try{
+        if($el.combobox){
+            $el.combobox('textbox').attr('placeholder', text);
+            return;
+        }
+    }catch(e){}
+}
+
+function __nodes_applyControlsI18n(){
+    var i18n = __nodes_getI18n();
+    if(!i18n || !i18n.t) return;
+
+    var $role = $('input[name=role]');
+    var $membership = $('input[name=membership]');
+    var $searchType = $('#search_type');
+    var $searchKey = $('#search_key');
+
+    __nodes_setPlaceholder($role, i18n.t('common.prompt.emptyAll'));
+    __nodes_setPlaceholder($membership, i18n.t('common.prompt.emptyAll'));
+    __nodes_setPlaceholder($searchType, i18n.t('common.prompt.searchTypeRequired'));
+    __nodes_setPlaceholder($searchKey, i18n.t('common.prompt.searchKey'));
+
+    try{
+        var v1 = $role.combobox('getValue');
+        $role.combobox('loadData', [
+            {KEY:'all', TEXT:i18n.t('common.option.all')},
+            {KEY:'manager', TEXT:i18n.t('nodes.role.manager')},
+            {KEY:'worker', TEXT:i18n.t('nodes.role.worker')}
+        ]).combobox('setValue', v1);
+    }catch(e){}
+
+    try{
+        var v2 = $membership.combobox('getValue');
+        $membership.combobox('loadData', [
+            {KEY:'all', TEXT:i18n.t('common.option.all')},
+            {KEY:'accepted', TEXT:i18n.t('nodes.membership.accepted')},
+            {KEY:'pending', TEXT:i18n.t('nodes.membership.pending')}
+        ]).combobox('setValue', v2);
+    }catch(e){}
+
+    try{
+        var v3 = $searchType.combobox('getValue');
+        $searchType.combobox('loadData', [
+            {KEY:'name', TEXT:'Name'},
+            {KEY:'label', TEXT:i18n.t('nodes.search.engineLabel')},
+            {KEY:'node.label', TEXT:i18n.t('nodes.search.nodeLabel')},
+            {KEY:'id', TEXT:'ID'}
+        ]).combobox('setValue', v3);
+    }catch(e){}
+}
+
+function __nodes_applyGridI18n(){
+    try{
+        __nodes_applyI18n($('#nodesDg').datagrid('getPanel'));
+    }catch(e){}
+}
+
+function __nodes_bindLangChanged(){
+    try{
+        $(document).off('app:langChanged.nodes').on('app:langChanged.nodes', function(){
+            __nodes_applyControlsI18n();
+            try{ $('#nodesDg').datagrid('reload'); }catch(e){}
+            __nodes_applyGridI18n();
+            try{ __nodes_updateOpenPanelTitle(); }catch(e2){}
+        });
+    }catch(e3){}
+}
+
+function __nodes_updateOpenPanelTitle(){
+    var i18n = __nodes_getI18n();
+    if(!i18n || !i18n.t) return;
+    if(!window.__node_inspect_row) return;
+    try{
+        var p = $('#layout').layout('panel','east');
+        if(p && p.length){
+            p.panel('setTitle', i18n.t('nodes.panel.titleformat', $.extends.isEmpty(window.__node_inspect_row.Description && window.__node_inspect_row.Description.Hostname, window.__node_inspect_row.ID)));
+            __nodes_applyI18n(p[0]);
+        }
+    }catch(e){}
+}
+
 function loadLease(){
 
     // let node = $.docker.menu.getCurrentTabAttachNode();
@@ -12,7 +121,7 @@ function loadLease(){
             queryParams:{all1:1},
             frozenColumns:[[
                 {field: 'ID', title: '', checkbox: true},
-                {field: 'op', title: '操作', sortable: false, halign:'center',align:'left',
+                {field: 'op', title: '<span data-i18n="common.col.operation">操作</span>', sortable: false, halign:'center',align:'left',
                     width1: 300, formatter:leaseOperateFormatter},
                 {field: 'Hostname', title: 'NODE', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),
@@ -48,13 +157,13 @@ function loadLease(){
                     width: 170},
                 {field: 'Platform', title: 'OS', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),width: 120},
-                {field: 'EVersion', title: '版本', sortable: true,
+                {field: 'EVersion', title: '<span data-i18n="nodes.col.engineVersion">版本</span>', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),width: 100},
                 {field: 'CPUs', title: 'CPUS', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),width: 60},
-                {field: 'MemoryBytes', title: '内存', sortable: true,
+                {field: 'MemoryBytes', title: '<span data-i18n="nodes.col.memory">内存</span>', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),width: 80},
-                {field: 'SVersion', title: '节点版本', sortable: true,
+                {field: 'SVersion', title: '<span data-i18n="nodes.col.swarmVersion">节点版本</span>', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),width: 80},
                 {field: 'LabelStr', title: 'LABELS', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),width: 900}
@@ -66,26 +175,31 @@ function loadLease(){
                 }
             ),
         });
+
+        __nodes_bindLangChanged();
+        __nodes_applyControlsI18n();
+        __nodes_applyGridI18n();
     });
 }
 
 function leaseOperateFormatter(value, row, index) {
+    var i18n = __nodes_getI18n();
     let htmlstr = "";
-    htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectNode(\'' + row.ID + '\')">查看</button>';
-    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeLease(\'' + row.ID + '\')">删除</button>';
-    htmlstr += '<button title="提升为管理节点" class="layui-btn-blue layui-btn layui-btn-xs" onclick="promoteLease(\'' + row.ID + '\')">提升</button>';
-    htmlstr += '<button title="降级为工作节点"  class="layui-btn-red layui-btn layui-btn-xs" onclick="demoteLease(\'' + row.ID + '\')">降级</button>';
+    htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectNode(\'' + row.ID + '\')">' + (i18n ? i18n.t('common.btn.view') : '查看') + '</button>';
+    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeLease(\'' + row.ID + '\')">' + (i18n ? i18n.t('common.btn.delete') : '删除') + '</button>';
+    htmlstr += '<button title="' + (i18n ? i18n.t('nodes.action.promote.title') : '提升为管理节点') + '" class="layui-btn-blue layui-btn layui-btn-xs" onclick="promoteLease(\'' + row.ID + '\')">' + (i18n ? i18n.t('nodes.action.promote') : '提升') + '</button>';
+    htmlstr += '<button title="' + (i18n ? i18n.t('nodes.action.demote.title') : '降级为工作节点') + '"  class="layui-btn-red layui-btn layui-btn-xs" onclick="demoteLease(\'' + row.ID + '\')">' + (i18n ? i18n.t('nodes.action.demote') : '降级') + '</button>';
 
     if(row.Status.State == 'ready' && row.LeaderStr != "Leader"){
         if(row.Spec.Availability == 'active'){
-            htmlstr += '<button title="作为污点节点排空"  class="layui-btn-orange layui-btn layui-btn-xs" onclick="drainLease(\'' + row.ID + '\')">污点</button>';
-            htmlstr += '<button title="暂停节点服务"  class="layui-btn-brown layui-btn layui-btn-xs" onclick="pauseLease(\'' + row.ID + '\')">暂停</button>';
+            htmlstr += '<button title="' + (i18n ? i18n.t('nodes.action.drain.title') : '作为污点节点排空') + '"  class="layui-btn-orange layui-btn layui-btn-xs" onclick="drainLease(\'' + row.ID + '\')">' + (i18n ? i18n.t('nodes.action.drain') : '污点') + '</button>';
+            htmlstr += '<button title="' + (i18n ? i18n.t('nodes.action.pause.title') : '暂停节点服务') + '"  class="layui-btn-brown layui-btn layui-btn-xs" onclick="pauseLease(\'' + row.ID + '\')">' + (i18n ? i18n.t('nodes.action.pause') : '暂停') + '</button>';
         }else if(row.Spec.Availability == 'pause'){
-            htmlstr += '<button title="作为污点节点排空"  class="layui-btn-orange layui-btn layui-btn-xs" onclick="drainLease(\'' + row.ID + '\')">污点</button>';
-            htmlstr += '<button title="激活节点"  class="layui-btn-slateblue layui-btn layui-btn-xs" onclick="activeLease(\'' + row.ID + '\')">激活</button>';
+            htmlstr += '<button title="' + (i18n ? i18n.t('nodes.action.drain.title') : '作为污点节点排空') + '"  class="layui-btn-orange layui-btn layui-btn-xs" onclick="drainLease(\'' + row.ID + '\')">' + (i18n ? i18n.t('nodes.action.drain') : '污点') + '</button>';
+            htmlstr += '<button title="' + (i18n ? i18n.t('nodes.action.active.title') : '激活节点') + '"  class="layui-btn-slateblue layui-btn layui-btn-xs" onclick="activeLease(\'' + row.ID + '\')">' + (i18n ? i18n.t('nodes.action.active') : '激活') + '</button>';
         }else if(row.Spec.Availability == 'drain'){
-            htmlstr += '<button title="暂停节点服务"  class="layui-btn-brown layui-btn layui-btn-xs" onclick="pauseLease(\'' + row.ID + '\')">暂停</button>';
-            htmlstr += '<button title="激活节点"  class="layui-btn-slateblue layui-btn layui-btn-xs" onclick="activeLease(\'' + row.ID + '\')">激活</button>';
+            htmlstr += '<button title="' + (i18n ? i18n.t('nodes.action.pause.title') : '暂停节点服务') + '"  class="layui-btn-brown layui-btn layui-btn-xs" onclick="pauseLease(\'' + row.ID + '\')">' + (i18n ? i18n.t('nodes.action.pause') : '暂停') + '</button>';
+            htmlstr += '<button title="' + (i18n ? i18n.t('nodes.action.active.title') : '激活节点') + '"  class="layui-btn-slateblue layui-btn layui-btn-xs" onclick="activeLease(\'' + row.ID + '\')">' + (i18n ? i18n.t('nodes.action.active') : '激活') + '</button>';
         }
     }
 
@@ -97,12 +211,12 @@ function drainLease(id, inspect){
         let rows = $('#nodesDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个节点作为污点节点排空');
+            $.app.show(t('nodes.msg.onlyOne.drain'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个节点作为污点节点排空');
+            $.app.show(t('nodes.msg.pickOne.drain'));
             return;
         }else{
             id = rows[0].ID;
@@ -110,13 +224,13 @@ function drainLease(id, inspect){
     }
 
 
-    $.app.confirm("作为污点节点排空","确定将当前节点作为污点节点排空？", function (){
+    $.app.confirm(t('nodes.dialog.drain.title'), t('nodes.dialog.drain.confirm'), function (){
 
         let node = local_node;
 
         $.docker.request.node.drain(function (response) {
-            $.app.show("节点{0}作为污点节点排空成功".format(response.Info.Description.Hostname));
-            $.app.showProgress("重新获取节点{0}信息".format(response.Info.Description.Hostname));
+            $.app.show(t('nodes.msg.drain.success', response.Info.Description.Hostname));
+            $.app.showProgress(t('nodes.msg.reload.progress', response.Info.Description.Hostname));
 
             $.easyui.thread.sleep(function () {
                 reloadDg();
@@ -135,12 +249,12 @@ function pauseLease(id, inspect){
         let rows = $('#nodesDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个节点暂停');
+            $.app.show(t('nodes.msg.onlyOne.pause'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个节点暂停');
+            $.app.show(t('nodes.msg.pickOne.pause'));
             return;
         }else{
             id = rows[0].ID;
@@ -148,13 +262,13 @@ function pauseLease(id, inspect){
     }
 
 
-    $.app.confirm("暂停节点","确定将当前节点暂停？", function (){
+    $.app.confirm(t('nodes.dialog.pause.title'), t('nodes.dialog.pause.confirm'), function (){
 
         let node = local_node;
 
         $.docker.request.node.pause(function (response) {
-            $.app.show("节点{0}暂停成功".format(response.Info.Description.Hostname));
-            $.app.showProgress("重新获取节点{0}信息".format(response.Info.Description.Hostname));
+            $.app.show(t('nodes.msg.pause.success', response.Info.Description.Hostname));
+            $.app.showProgress(t('nodes.msg.reload.progress', response.Info.Description.Hostname));
 
             $.easyui.thread.sleep(function () {
                 reloadDg();
@@ -173,12 +287,12 @@ function activeLease(id, inspect){
         let rows = $('#nodesDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个节点激活');
+            $.app.show(t('nodes.msg.onlyOne.active'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个节点激活');
+            $.app.show(t('nodes.msg.pickOne.active'));
             return;
         }else{
             id = rows[0].ID;
@@ -186,13 +300,13 @@ function activeLease(id, inspect){
     }
 
 
-    $.app.confirm("激活节点","确定将当前节点激活？", function (){
+    $.app.confirm(t('nodes.dialog.active.title'), t('nodes.dialog.active.confirm'), function (){
 
         let node = local_node;
 
         $.docker.request.node.active(function (response) {
-            $.app.show("节点{0}激活成功".format(response.Info.Description.Hostname));
-            $.app.showProgress("重新获取节点{0}信息".format(response.Info.Description.Hostname));
+            $.app.show(t('nodes.msg.active.success', response.Info.Description.Hostname));
+            $.app.showProgress(t('nodes.msg.reload.progress', response.Info.Description.Hostname));
 
             $.easyui.thread.sleep(function () {
                 reloadDg();
@@ -211,23 +325,23 @@ function promoteLease(id, inspect){
         let rows = $('#nodesDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个节点提升为管理节点');
+            $.app.show(t('nodes.msg.onlyOne.promote'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个节点提升为管理节点');
+            $.app.show(t('nodes.msg.pickOne.promote'));
             return;
         }else{
             id = rows[0].ID;
         }
     }
 
-    $.app.confirm("提升节点","确定提升当前节点为管理节点？", function (){
+    $.app.confirm(t('nodes.dialog.promote.title'), t('nodes.dialog.promote.confirm'), function (){
         let node = local_node;
         $.docker.request.node.promote(function(response){
-            $.app.show("节点{0}提升为管理节点成功".format(response.Info.Description.Hostname));
-            $.app.showProgress("重新获取节点{0}信息".format(response.Info.Description.Hostname));
+            $.app.show(t('nodes.msg.promote.success', response.Info.Description.Hostname));
+            $.app.showProgress(t('nodes.msg.reload.progress', response.Info.Description.Hostname));
 
             $.easyui.thread.sleep(function () {
 
@@ -248,24 +362,24 @@ function demoteLease(id, inspect){
         let rows = $('#nodesDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个节点降级当前节点为工作节点');
+            $.app.show(t('nodes.msg.onlyOne.demote'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个节点降级当前节点为工作节点');
+            $.app.show(t('nodes.msg.pickOne.demote'));
             return;
         }else{
             id = rows[0].ID;
         }
     }
 
-    $.app.confirm("降级节点","确定降级当前节点为工作节点？", function (){
+    $.app.confirm(t('nodes.dialog.demote.title'), t('nodes.dialog.demote.confirm'), function (){
         let node = local_node;
         $.docker.request.node.demote(function(response){
-            $.app.show("节点{0}降级为为工作节点成功".format(response.Info.Description.Hostname));
+            $.app.show(t('nodes.msg.demote.success', response.Info.Description.Hostname));
 
-            $.app.showProgress("重新获取节点{0}信息".format(response.Info.Description.Hostname));
+            $.app.showProgress(t('nodes.msg.reload.progress', response.Info.Description.Hostname));
             $.easyui.thread.sleep(function () {
 
                 reloadDg();
@@ -307,12 +421,12 @@ function removeLease(id, closePanel) {
         let rows = $('#nodesDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个节点从SWARM集群里删除');
+            $.app.show(t('nodes.msg.onlyOne.remove'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个节点从SWARM集群里删除');
+            $.app.show(t('nodes.msg.pickOne.remove'));
             return;
         }else{
             id = rows[0].ID;
@@ -321,11 +435,11 @@ function removeLease(id, closePanel) {
 
     let node = local_node;
 
-    $.docker.utils.deleteConfirm('从SWARM集群里删除节点', '您确认要从SWARM集群里删除当前节点', function (param, closeFn){
+    $.docker.utils.deleteConfirm(t('nodes.dialog.remove.title'), t('nodes.dialog.remove.confirm'), function (param, closeFn){
 
         let node = local_node;
         $.docker.request.node.delete(function(response){
-            $.app.show("从SWARM集群里删除节点成功".format(""));
+            $.app.show(t('nodes.msg.remove.success'));
             reloadDg();
             closeFn();
 
@@ -355,6 +469,8 @@ function showNodePanel(id){
         let rowData = response;
         rowData.Name = response.Spec.Name;
 
+        window.__node_inspect_row = rowData;
+
         $('#layout').layout('remove', 'east');
 
         let east_layout_options = {
@@ -363,7 +479,7 @@ function showNodePanel(id){
             iconCls:'fa fa-info-circle',
             collapsible:false,
             showHeader1:false,
-            titleformat:'SWARM节点信息-{0}'.format($.extends.isEmpty(rowData.Description.Hostname, rowData.ID)), title:'节点信息',
+            titleformat:t('nodes.panel.titleformat', $.extends.isEmpty(rowData.Description.Hostname, rowData.ID)), title:t('nodes.panel.title'),
             headerCls:'border_right',bodyCls:'border_right',collapsible:true,
             footerHtml:`
         <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
@@ -372,14 +488,14 @@ function showNodePanel(id){
             },
             btnCls: 'cubeui-btn-slateblue',
             iconCls: 'fa fa-tags'
-        }">编辑元数据</a>
+        }"><span data-i18n="nodes.toolbar.editMetadata">编辑元数据</span></a>
         <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
             onClick:function(){
                 removeLease('{0}', true);
             },
             btnCls: 'cubeui-btn-orange',
             iconCls: 'fa fa-times'
-        }">删除</a>
+        }"><span data-i18n="common.btn.delete">删除</span></a>
         <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                 onClick:function(){
                     promoteLease('{0}', true);
@@ -387,27 +503,29 @@ function showNodePanel(id){
                 extend: '#nodesDg-toolbar',
                 btnCls: 'cubeui-btn-ivory',
                 iconCls: 'fa fa-hand-o-up'
-            }">提升管理节点</a>
+            }"><span data-i18n="nodes.toolbar.promoteManager">提升管理节点</span></a>
         <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
             onClick:function(){                    
                     demoteLease('{0}', true);
             },
             btnCls: 'cubeui-btn-blue',
             iconCls: 'fa fa-hand-o-down'
-        }">降级工作节点</a>
+        }"><span data-i18n="nodes.toolbar.demoteWorker">降级工作节点</span></a>
          <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
             onClick:function(){
                     $('#layout').layout('collapse', 'east');
             },
             btnCls: 'cubeui-btn-red',
             iconCls: 'fa fa-close'
-        }">关闭</a>
+        }"><span data-i18n="common.btn.close">关闭</span></a>
         `.format(rowData.ID),
             render:function (panel, option) {
 
                 let cnt = $($.templates(node_html_template).render(rowData));
                 panel.append(cnt);
                 $.parser.parse(cnt);
+
+                __nodes_applyI18n(cnt[0]);
 
                 $('#eastTabs').tabs({
                     fit:true,
@@ -417,6 +535,8 @@ function showNodePanel(id){
                     narrow:true,
                     pill:true,
                 });
+
+                __nodes_applyI18n(panel[0]);
 
             }
         }
@@ -431,14 +551,14 @@ function showNodePanel(id){
 
 let node_html_template = `
         <div data-toggle="cubeui-tabs" id='eastTabs'>
-            <div title="节点信息"
+            <div title="节点信息" data-i18n-title="nodes.tab.info"
                  data-options="id:'eastTab0',iconCls:'fa fa-info-circle'">                 
                 <div style="margin: 0px;">
                 </div>
                 
                 <div class="cubeui-fluid">
                     <fieldset>
-                        <legend>基础信息</legend>
+                        <legend data-i18n="nodes.section.basic">基础信息</legend>
                     </fieldset>
                     
                     <div class="cubeui-row">
@@ -472,7 +592,7 @@ let node_html_template = `
 								},
 								btnCls: 'cubeui-btn-blue',
 								iconCls: 'fa fa-pencil-square-o'
-							}">修改</a>
+                            }"><span data-i18n="common.btn.edit">修改</span></a>
                         </div>
                     </div>
                     
@@ -658,20 +778,20 @@ let node_html_template = `
                     </div>
                                         
                     <fieldset>
-                        <legend style="margin-bottom: 0px;">标签选项</legend>
+                        <legend style="margin-bottom: 0px;" data-i18n="nodes.section.labels">标签选项</legend>
                     </fieldset>
                 
                     <div class="cubeui-row">
                         <div class="cubeui-col-sm12">
                             <div class="cubeui-row"  style="margin-top: 0px;">
                                 <div class="cubeui-col-sm5 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                    <span style='line-height: 20px;padding-right:0px;'>标签</span>
+                                    <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.key">标签</span>
                                 </div>
                                 <div class="cubeui-col-sm1">
                                     <span style='line-height: 20px;padding-right:0px;'>&nbsp;</span>
                                 </div>
                                 <div class="cubeui-col-sm5" >
-                                    <span style='line-height: 20px;padding-right:0px;'>值</span>
+                                    <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.value">值</span>
                                 </div>
                             </div>
                             {{props Spec.Labels}}
@@ -695,14 +815,14 @@ let node_html_template = `
                 
             </div>
             
-            <div title="管理节点信息"
+              <div title="管理节点信息" data-i18n-title="nodes.tab.managerInfo"
                  data-options="id:'eastTab1',iconCls:'fa fa-sitemap',disabled:{{if Role == 'manager'}}false{{else}}true{{/if}}">                 
                 <div style="margin: 0px;">
                 </div>
                 
                 <div class="cubeui-fluid">
                     <fieldset>
-                        <legend>管理信息</legend>
+                        <legend data-i18n="nodes.section.manager">管理信息</legend>
                     </fieldset>             
                     
                     <div class="cubeui-row">
@@ -776,7 +896,7 @@ let node_html_template = `
                 
                     <div class="cubeui-row">
                         <div class="cubeui-col-sm12">
-                            <label class="cubeui-form-label">管理节点角色:</label>
+                            <label class="cubeui-form-label" data-i18n="nodes.label.leaderRole">管理节点角色:</label>
                             <div class="cubeui-input-block">
                 
                                 <input type="text" data-toggle="cubeui-textbox" name="CreateAt" readonly
@@ -817,12 +937,12 @@ function updateTags(id, inspect){
         let rows = $('#nodesDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个节点编辑元数据');
+            $.app.show(t('nodes.msg.onlyOne.editMetadata'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个节点降级当前节点编辑元数据');
+            $.app.show(t('nodes.msg.pickOne.editMetadata'));
             return;
         }else{
             id = rows[0].ID;
@@ -838,18 +958,18 @@ function updateTags(id, inspect){
                 </div>
                 <div class="cubeui-fluid">
                     <div style="margin-top:5px">      
-                        <div class="cubeui-row" title="用户定义的节点键/值元数据">
+                        <div class="cubeui-row" title="${t('nodes.dialog.labels.sectionTitle')}">
                             <fieldset>
-                                <legend style="margin-bottom: 0px;">用户定义的节点键/值元数据</legend>
+                                <legend style="margin-bottom: 0px;">${t('nodes.dialog.labels.sectionTitle')}</legend>
                             </fieldset>
                                             
                             <div class="cubeui-col-sm12 add-opt-div">
                                 <div class="cubeui-row">
                                     <div class="cubeui-col-sm4 cubeui-col-sm-offset1" style="padding-right: 5px">
-                                        <span style='line-height: 20px;padding-right:0px;'>键</span>
+                                        <span style='line-height: 20px;padding-right:0px;'>${t('common.label.key')}</span>
                                     </div>
                                     <div class="cubeui-col-sm5" >
-                                        <span style='line-height: 20px;padding-right:0px;'>值</span>
+                                        <span style='line-height: 20px;padding-right:0px;'>${t('common.label.value')}</span>
                                     </div>
                                     <div class="cubeui-col-sm2" style="text-align: center">
                                         <span style='line-height: 20px;padding-right:0px;'>
@@ -863,11 +983,11 @@ function updateTags(id, inspect){
                                 <div class="cubeui-row">
                                     <div class="cubeui-col-sm4 cubeui-col-sm-offset1" style="padding-right: 5px">
                                         <input type="text" data-toggle="cubeui-textbox" value="{{>key}}"
-                                               name='Labels-name' data-options="required:false,prompt:'名字，比如：group '">
+                                               name='Labels-name' data-options="required:false,prompt:'${t('nodes.prompt.labelKey')}'">
                                     </div>
                                     <div class="cubeui-col-sm5">
                                         <input type="text" data-toggle="cubeui-textbox" value="{{>prop}}"
-                                               name='Labels-value' data-options="required:false,prompt:'对应值，比如：db '">
+                                               name='Labels-value' data-options="required:false,prompt:'${t('nodes.prompt.labelValue')}'">
                                     </div>
                                     <div class="cubeui-col-sm2" style="text-align: center">
                                         <span style='line-height: 30px;padding-right:0px;'><span onClick="$.docker.utils.ui.removeOpt(this)"  class="ops-fa-icon fa fa-close" style="font-size:14px!important;">&nbsp;</span></span>
@@ -886,12 +1006,12 @@ function updateTags(id, inspect){
 
         html = $.templates(html).render(response)
 
-        $.docker.utils.optionConfirm('修改节点键/值标签的元数据', null, html,
+        $.docker.utils.optionConfirm(t('nodes.dialog.labels.title'), null, html,
             function(param, closeFn){
                 let labels = $.docker.utils.buildOptsData(param['Labels-name'],param['Labels-value']);
 
                 $.docker.request.node.update_labels(function (response) {
-                    $.app.show("节点{0}节点键/值标签的元数据修改成功".format(response.Info.Description.Hostname));
+                    $.app.show(t('nodes.msg.labels.updated', response.Info.Description.Hostname));
 
                     reloadDg();
                     if(inspect){
@@ -912,15 +1032,15 @@ function updateName(btn, id){
 
     if(opts.flag==2){
 
-        $.app.confirm("确定修改节点名称？", function(){
+        $.app.confirm(t('nodes.dialog.nodeName.confirm'), function(){
 
             let name = $('#Nodename').textbox('getValue');
 
             $.docker.request.node.update_name(function (response) {
-                $.app.show('修改节点名称已经完成');
+                $.app.show(t('nodes.msg.nodeName.updated'));
                 opts.flag = 1;
                 $(btn).linkbutton({
-                    text:'修改',
+                    text:t('common.btn.edit'),
                     iconCls: 'fa fa-pencil-square-o'
                 });
 
@@ -935,7 +1055,7 @@ function updateName(btn, id){
         opts.flag = 2;
         $('#Nodename').textbox('readonly', false);
         $(btn).linkbutton({
-            text:'确定',
+            text:t('common.btn.confirm'),
             iconCls: 'fa fa-check-square-o'
         });
     }

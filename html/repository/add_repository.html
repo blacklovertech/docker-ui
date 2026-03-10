@@ -3,37 +3,37 @@
 
 <div class="cubeui-fluid">
     <fieldset>
-        <legend>仓库信息</legend>
+        <legend data-i18n="repository.form.legend">仓库信息</legend>
     </fieldset>
     <div class="cubeui-row">
         <div class="cubeui-col-sm12" style="margin-top: 5px">
-            <label class="cubeui-form-label">仓库名字:</label>
+            <label class="cubeui-form-label" data-i18n="repository.form.name">仓库名字:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-textbox" name="Name"
                        value='{{:Name}}'
                        {{if ID=="Default"}}disabled{{/if}}
                        data-options="
-                                required:false,prompt:'仓库名字'
+                                required:false,prompt:'{{:~t("repository.prompt.name")}}'
                                 "
                 >
             </div>
         </div>
 
         <div class="cubeui-col-sm12" style="margin-top: 5px">
-            <label class="cubeui-form-label">仓库地址:</label>
+            <label class="cubeui-form-label" data-i18n="repository.form.endpoint">仓库地址:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-textbox" name="Endpoint"
                        {{if ID=="Default"}}disabled{{/if}}
                        value='{{:Endpoint}}'
                        data-options="
-                                required:false,prompt:'仓库地址，选择填写；为空默认为官方镜像地址https://index.docker.io/v1/'
+                                required:false,prompt:'{{:~t("repository.prompt.endpoint")}}'
                                 "
                 >
             </div>
         </div>
 
         <div class="cubeui-col-sm12" style="margin-top: 5px">
-            <label class="cubeui-form-label">备注:</label>
+            <label class="cubeui-form-label" data-i18n="repository.form.description">备注:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-textbox" name="Description"
                        {{if ID=="Default"}}disabled{{/if}}
@@ -41,31 +41,31 @@
                        data-options="
                                 multiline:true,
                                 height:60,
-                                required:false,prompt:'仓库备注，选择填写'
+                                required:false,prompt:'{{:~t("repository.prompt.description")}}'
                                 "
                 >
             </div>
         </div>
 
         <div class="cubeui-col-sm12" style="margin-top: 5px">
-            <label class="cubeui-form-label">用户名:</label>
+            <label class="cubeui-form-label" data-i18n="repository.form.username">用户名:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-textbox" name="Username"
                        value='{{:Username}}'
                        data-options="
-                                                        required:false,prompt:'登录镜像仓库的用户名'
+                                                        required:false,prompt:'{{:~t("repository.prompt.username")}}'
                                                         "
                 >
             </div>
         </div>
 
         <div class="cubeui-col-sm12" style="margin-top: 5px">
-            <label class="cubeui-form-label">密码:</label>
+            <label class="cubeui-form-label" data-i18n="repository.form.password">密码:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-passwordbox" name="Password"
                        value='{{:Password}}'
                        data-options="
-                                                        required:false,prompt:'登录镜像仓库的用户密码'
+                                                        required:false,prompt:'{{:~t("repository.prompt.password")}}'
                                                         "
                 >
             </div>

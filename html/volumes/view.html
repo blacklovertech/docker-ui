@@ -3,11 +3,11 @@
 
 <div class="cubeui-fluid">
     <fieldset>
-        <legend>数据卷信息</legend>
+        <legend data-i18n="volumes.form.legend">数据卷信息</legend>
     </fieldset>
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
-            <label class="cubeui-form-label">数据卷:</label>
+            <label class="cubeui-form-label" data-i18n="volumes.form.name">数据卷:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-textbox" name="Name" readonly
                        value='{{>Name}}'
@@ -20,7 +20,7 @@
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
-            <label class="cubeui-form-label">Mountpoint:</label>
+            <label class="cubeui-form-label" data-i18n="volumes.form.mountpoint">Mountpoint:</label>
             <div class="cubeui-input-block">
 
                 <input type="text" data-toggle="cubeui-textbox" name="Driver" readonly
@@ -34,7 +34,7 @@
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
-            <label class="cubeui-form-label">Scope:</label>
+            <label class="cubeui-form-label" data-i18n="volumes.form.scope">Scope:</label>
             <div class="cubeui-input-block">
 
                 <input type="text" data-toggle="cubeui-textbox" name="Driver" readonly
@@ -48,7 +48,7 @@
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
-            <label class="cubeui-form-label">CreatedAt:</label>
+            <label class="cubeui-form-label" data-i18n="volumes.form.createdAt">CreatedAt:</label>
             <div class="cubeui-input-block">
 
                 <input type="text" data-toggle="cubeui-textbox" name="Driver" readonly
@@ -62,7 +62,7 @@
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
-            <label class="cubeui-form-label">数据卷驱动:</label>
+            <label class="cubeui-form-label" data-i18n="volumes.form.driver">数据卷驱动:</label>
             <div class="cubeui-input-block">
 
                 <input type="text" data-toggle="cubeui-textbox" name="Driver" readonly
@@ -75,28 +75,28 @@
     </div>
 
     <fieldset>
-        <legend style="margin-bottom: 0px;">驱动选项</legend>
+        <legend style="margin-bottom: 0px;" data-i18n="volumes.section.driverOpts">驱动选项</legend>
     </fieldset>
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
             <div class="cubeui-row">
                 <div class="cubeui-col-sm4 cubeui-col-sm-offset2" style="padding-right: 5px">
-                    <span style='line-height: 20px;padding-right:0px;'>选项</span>
+                    <span style='line-height: 20px;padding-right:0px;' data-i18n="volumes.label.option">选项</span>
                 </div>
                 <div class="cubeui-col-sm5" >
-                    <span style='line-height: 20px;padding-right:0px;'>值</span>
+                    <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.value">值</span>
                 </div>
             </div>
             {{props Options}}
             <div class="cubeui-row">
                 <div class="cubeui-col-sm4 cubeui-col-sm-offset2" style="padding-right: 5px">
                     <input type="text" data-toggle="cubeui-textbox" readonly
-                           value='{{>key}}' data-options="required:false,prompt:'租约ID，选择填写，默认为空，不使用租约'">
+                           value='{{>key}}' data-options="required:false,prompt:&quot;{{:~t('volumes.prompt.leaseIdOptional')}}&quot;">
                 </div>
                 <div class="cubeui-col-sm5">
                     <input type="text" data-toggle="cubeui-textbox" readonly
-                           value='{{>prop}}' data-options="required:false,prompt:'租约ID，选择填写，默认为空，不使用租约'">
+                           value='{{>prop}}' data-options="required:false,prompt:&quot;{{:~t('volumes.prompt.leaseIdOptional')}}&quot;">
                 </div>
             </div>
             {{/props}}
@@ -104,28 +104,28 @@
     </div>
 
     <fieldset>
-        <legend style="margin-bottom: 0px;">标签选项</legend>
+        <legend style="margin-bottom: 0px;" data-i18n="volumes.section.labels">标签选项</legend>
     </fieldset>
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
             <div class="cubeui-row">
                 <div class="cubeui-col-sm4 cubeui-col-sm-offset2" style="padding-right: 5px">
-                    <span style='line-height: 20px;padding-right:0px;'>标签</span>
+                    <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.key">标签</span>
                 </div>
                 <div class="cubeui-col-sm5" >
-                    <span style='line-height: 20px;padding-right:0px;'>值</span>
+                    <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.value">值</span>
                 </div>
             </div>
             {{props Labels}}
             <div class="cubeui-row">
                 <div class="cubeui-col-sm4 cubeui-col-sm-offset2" style="padding-right: 5px">
                     <input type="text" data-toggle="cubeui-textbox" readonly
-                           value='{{>key}}' data-options="required:false,prompt:'租约ID，选择填写，默认为空，不使用租约'">
+                           value='{{>key}}' data-options="required:false,prompt:&quot;{{:~t('volumes.prompt.leaseIdOptional')}}&quot;">
                 </div>
                 <div class="cubeui-col-sm5">
                     <input type="text" data-toggle="cubeui-textbox" readonly
-                           value='{{>prop}}' data-options="required:false,prompt:'租约ID，选择填写，默认为空，不使用租约'">
+                           value='{{>prop}}' data-options="required:false,prompt:&quot;{{:~t('volumes.prompt.leaseIdOptional')}}&quot;">
                 </div>
             </div>
             {{/props}}

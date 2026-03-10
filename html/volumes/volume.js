@@ -1,3 +1,102 @@
+function t(key) {
+    try {
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        return i18n ? i18n.t.apply(i18n, arguments) : key;
+    } catch (e) {
+        return key;
+    }
+}
+
+function __volumes_getI18n(){
+    return (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+}
+
+function __volumes_applyI18n(root){
+    var i18n = __volumes_getI18n();
+    if(i18n && i18n.apply){
+        try{ i18n.apply(root || document); }catch(e){}
+    }
+}
+
+function __volumes_setPlaceholder($el, text){
+    if(!$el || !$el.length) return;
+    try{
+        if($el.textbox){
+            $el.textbox('textbox').attr('placeholder', text);
+            return;
+        }
+    }catch(e){}
+    try{
+        if($el.combobox){
+            $el.combobox('textbox').attr('placeholder', text);
+            return;
+        }
+    }catch(e){}
+}
+
+function __volumes_applyControlsI18n(){
+    var i18n = __volumes_getI18n();
+    if(!i18n || !i18n.t) return;
+
+    var $searchType = $('#search_type');
+    var $searchKey = $('#search_key');
+
+    __volumes_setPlaceholder($searchType, i18n.t('common.prompt.searchTypeRequired'));
+    __volumes_setPlaceholder($searchKey, i18n.t('common.prompt.searchKey'));
+
+    try{
+        var v = $searchType.combobox('getValue');
+        $searchType.combobox('loadData', [
+            {KEY:'name', TEXT:i18n.t('volumes.search.type.name')},
+            {KEY:'label', TEXT:i18n.t('volumes.search.type.label')},
+            {KEY:'dangling', TEXT:i18n.t('volumes.search.type.dangling')}
+        ]).combobox('setValue', v || 'name');
+    }catch(e){}
+}
+
+function __volumes_applyGridI18n(){
+    try{
+        __volumes_applyI18n($('#volumesDg').datagrid('getPanel'));
+    }catch(e){}
+}
+
+function __volumes_updateOpenPanelTitle(){
+    var i18n = __volumes_getI18n();
+    if(!i18n || !i18n.t) return;
+
+    try{
+        var p = $('#layout').layout('panel','east');
+        if(!p || !p.length) return;
+
+        if(window.__volume_panel_mode === 'inspect' && window.__volume_inspect_row){
+            p.panel('setTitle', i18n.t('volumes.panel.inspect.titleformat', window.__volume_inspect_row.Name));
+        }else if(window.__volume_panel_mode === 'add'){
+            p.panel('setTitle', i18n.t('volumes.panel.add.title'));
+        }
+        __volumes_applyI18n(p[0]);
+    }catch(e){}
+}
+
+function __volumes_bindLangChanged(){
+    try{
+        $(document).off('app:langChanged.volumes').on('app:langChanged.volumes', function(){
+            __volumes_applyControlsI18n();
+            try{ $('#volumesDg').datagrid('reload'); }catch(e){}
+            __volumes_applyGridI18n();
+            __volumes_updateOpenPanelTitle();
+        });
+    }catch(e2){}
+}
+
+function __volumes_applyAddFormI18n(){
+    var i18n = __volumes_getI18n();
+    if(!i18n || !i18n.t) return;
+    try{
+        __volumes_setPlaceholder($('input[name=Name]'), i18n.t('volumes.prompt.nameRequired'));
+        __volumes_setPlaceholder($('input[name=Driver]'), i18n.t('volumes.prompt.driverRequired'));
+    }catch(e){}
+}
+
 function loadLease(){
 
     // let node = $.docker.menu.getCurrentTabAttachNode();
@@ -11,7 +110,7 @@ function loadLease(){
             pageSize:50,
             frozenColumns:[[
                 {field: 'ID', title: '', checkbox: true},
-                {field: 'op', title: '操作', sortable: false, halign:'center',align:'center',
+                {field: 'op', title: '<span data-i18n="common.col.operation">操作</span>', sortable: false, halign:'center',align:'center',
                     width: 150, formatter:leaseOperateFormatter},
                 {field: 'Name', title: 'VOLUME NAME', sortable: true,
                     formatter:$.iGrid.buildformatter([$.iGrid.templateformatter('{Name}'), $.iGrid.tooltipformatter()]),
@@ -45,13 +144,18 @@ function loadLease(){
                 }
             ),
         });
+
+        __volumes_bindLangChanged();
+        __volumes_applyControlsI18n();
+        __volumes_applyGridI18n();
+        __volumes_applyI18n(document);
     });
 }
 
 function leaseOperateFormatter(value, row, index) {
     let htmlstr = "";
-    htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectLease(\'' + index + '\')">查看卷</button>';
-    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeLease(\'' + row.ID + '\')">删除卷</button>';
+    htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectLease(\'' + index + '\')">' + t('volumes.btn.view') + '</button>';
+    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeLease(\'' + row.ID + '\')">' + t('volumes.btn.delete') + '</button>';
 
     return htmlstr;
 }
@@ -79,9 +183,9 @@ function removeLease(leaseId) {
         let rows = $('#volumesDg').datagrid('getChecked');
 
         if(rows.length == 0) {
-            $.app.alert('请选择需要删除的租期')
+            $.app.alert(t('volumes.msg.remove.pick'))
         }else{
-            $.docker.utils.deleteConfirm('删除卷', '您确认要删除当前想选择的数据卷', function (param, closeFn){
+            $.docker.utils.deleteConfirm(t('volumes.dialog.remove.title'), t('volumes.dialog.remove.confirmSelected'), function (param, closeFn){
 
                 let ids = $.extends.collect(rows, function(r){
                     return r.ID;
@@ -90,9 +194,9 @@ function removeLease(leaseId) {
                 $.docker.request.volume.deleteBulk(function(response){
                     let msg = '';
                     if(response.fail.length==0){
-                        msg = '删除成功，已经成功删除'+response.ok.length+'个数据卷';
+                        msg = t('volumes.msg.remove.bulkSuccess', response.ok.length);
                     }else{
-                        msg = '已经成功删除'+response.ok.length+'个数据卷, 失败删除'+response.fail.length+'个数据卷';
+                        msg = t('volumes.msg.remove.bulkPartial', response.ok.length, response.fail.length);
                     }
 
                     reloadDg()
@@ -105,10 +209,10 @@ function removeLease(leaseId) {
         }
 
     }else{
-        $.docker.utils.deleteConfirm('删除卷', '您确认要删除当前的数据卷', function (param, closeFn){
+        $.docker.utils.deleteConfirm(t('volumes.dialog.remove.title'), t('volumes.dialog.remove.confirmSingle'), function (param, closeFn){
             $.docker.request.volume.delete(function(response){
 
-                let msg = '删除成功，已经成功删除数据卷{0}'.format(leaseId);
+                let msg = t('volumes.msg.remove.singleSuccess', leaseId);
                 $.app.show(msg)
 
                 reloadDg()
@@ -125,29 +229,29 @@ function emptyLease(){
                 </div>
                 <div class="cubeui-fluid">
                     <fieldset>
-                        <legend>选项</legend>
+                        <legend>${t('volumes.dialog.prune.options')}</legend>
                     </fieldset>
                     <div style="margin-top:5px">
                 
                         <div class="cubeui-row">
-                            <span style='line-height: 30px;padding-right:0px'><b>清理指定标签:</b>(默认清理全部)</span>
+                            <span style='line-height: 30px;padding-right:0px'><b>${t('volumes.dialog.prune.labelFilter')}</b>(${t('volumes.dialog.prune.labelFilterTip')})</span>
                         </div>
                         <div class="cubeui-row">
-                            <span style='line-height: 20px;padding-right:0px;color: red'>label格式: label1=a label2!=b(不等于) label!=...(没有标签)</span>
+                            <span style='line-height: 20px;padding-right:0px;color: red'>${t('volumes.dialog.prune.labelFormatHint')}</span>
                         </div>
                         <div class="cubeui-row">
                             <input type="text" data-toggle="cubeui-textbox" name="labels"
-                                   value='' data-options="required:false,prompt:'label格式: label1=a,label2!=b,label!=...'">
+                                   value='' data-options="required:false,prompt:'${t('volumes.prompt.prune.labels')}'">
                         </div>
                     </div>
                 </div>
         `;
 
-    $.docker.utils.optionConfirm('清理数据卷', '重要警告：确定要清空所有未使用的数据卷，清理后数据卷数据将无法恢复', html,
+    $.docker.utils.optionConfirm(t('volumes.dialog.prune.title'), t('volumes.dialog.prune.warn'), html,
         function(param, closeFn){
 
             $.docker.request.volume.prune(function(response){
-                let msg = '成功清除{0}个数据卷，回收空间{1}'.format(response.Count, response.Size)
+                let msg = t('volumes.msg.prune.success', response.Count, response.Size)
 
                 closeFn();
 
@@ -177,7 +281,7 @@ function addLease(){
         region:'east',
         split:false,border:false,width:'100%',collapsed:true,
         iconCls:'fa fa-database',
-        titleformat:'添加数据卷'.format(rowData.Name), title:'数据卷',
+        titleformat:t('volumes.panel.add.title'), title:t('volumes.panel.title'),
         headerCls:'border_right',bodyCls:'border_right',collapsible:true,
         footerHtml:`
              <a  href="javascript:void(0)" data-toggle="cubeui-menubutton" data-options="{
@@ -186,19 +290,25 @@ function addLease(){
                 },
                 btnCls: 'cubeui-btn-orange',
                 iconCls: 'fa fa-plus-square-o'
-            }">创建</a>
+            }"><span data-i18n="common.btn.create">创建</span></a>
              <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                 onClick:function(){
                         $('#layout').layout('collapse', 'east');
                 },
                 btnCls: 'cubeui-btn-red',
                 iconCls: 'fa fa-close'
-            }">关闭</a>
+            }"><span data-i18n="common.btn.close">关闭</span></a>
             `,
         render:$('#addVolumeTpl').html()
     }
 
     $.docker.utils.ui.showSlidePanel($('#layout'), east_layout_options)
+    window.__volume_panel_mode = 'add';
+    window.__volume_inspect_row = null;
+    setTimeout(function(){
+        __volumes_applyAddFormI18n();
+        try{ __volumes_applyI18n($('#layout').layout('panel','east')[0]); }catch(e){}
+    }, 0);
     let opts = $.iLayout.getLayoutPanelOptions('#layout',  'east');
     console.log(opts)
 
@@ -220,7 +330,7 @@ function save(){
         let labels = $.docker.utils.buildOptsData(info['label-name'],info['label-value']);
 
         $.docker.request.volume.create(function (response) {
-            $.app.show('添加数据卷{0}成功'.format(info.Name))
+            $.app.show(t('volumes.msg.create.success', info.Name))
             reloadDg()
             $('#layout').layout('collapse', 'east');
 
@@ -242,7 +352,7 @@ function showVolumePanel(index){
             region:'east',
             split:false,border:false,width:'100%',collapsed:true,
             iconCls:'fa fa-database',
-            titleformat:'数据卷-{0}'.format(rowData.Name), title:'数据卷',
+            titleformat:t('volumes.panel.inspect.titleformat', rowData.Name), title:t('volumes.panel.title'),
             headerCls:'border_right',bodyCls:'border_right',collapsible:true,
             footerTpl1:'#footerTpl',
             footerHtml:`
@@ -252,12 +362,15 @@ function showVolumePanel(index){
                 },
                 btnCls: 'cubeui-btn-red',
                 iconCls: 'fa fa-close'
-            }">关闭</a>
+            }"><span data-i18n="common.btn.close">关闭</span></a>
             `,
             render:$.templates(html_template).render(rowData)
         }
 
         $.docker.utils.ui.showSlidePanel($('#layout'), east_layout_options)
+        window.__volume_panel_mode = 'inspect';
+        window.__volume_inspect_row = rowData;
+        __volumes_applyI18n($('#layout').layout('panel','east')[0]);
         let opts = $.iLayout.getLayoutPanelOptions('#layout',  'east');
         console.log(opts)
 
@@ -270,11 +383,11 @@ let html_template = `
 
 <div class="cubeui-fluid">
     <fieldset>
-        <legend>数据卷信息</legend>
+        <legend data-i18n="volumes.form.legend">数据卷信息</legend>
     </fieldset>
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
-            <label class="cubeui-form-label">数据卷:</label>
+            <label class="cubeui-form-label" data-i18n="volumes.form.name">数据卷:</label>
             <div class="cubeui-input-block">
                 <input type="text" data-toggle="cubeui-textbox" name="Name" readonly
                        value='{{>Name}}'
@@ -287,7 +400,7 @@ let html_template = `
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
-            <label class="cubeui-form-label">Mountpoint:</label>
+            <label class="cubeui-form-label" data-i18n="volumes.form.mountpoint">Mountpoint:</label>
             <div class="cubeui-input-block">
 
                 <input type="text" data-toggle="cubeui-textbox" name="Driver" readonly
@@ -301,7 +414,7 @@ let html_template = `
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
-            <label class="cubeui-form-label">Scope:</label>
+            <label class="cubeui-form-label" data-i18n="volumes.form.scope">Scope:</label>
             <div class="cubeui-input-block">
 
                 <input type="text" data-toggle="cubeui-textbox" name="Driver" readonly
@@ -315,7 +428,7 @@ let html_template = `
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
-            <label class="cubeui-form-label">CreatedAt:</label>
+            <label class="cubeui-form-label" data-i18n="volumes.form.createdAt">CreatedAt:</label>
             <div class="cubeui-input-block">
 
                 <input type="text" data-toggle="cubeui-textbox" name="Driver" readonly
@@ -329,7 +442,7 @@ let html_template = `
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
-            <label class="cubeui-form-label">数据卷驱动:</label>
+            <label class="cubeui-form-label" data-i18n="volumes.form.driver">数据卷驱动:</label>
             <div class="cubeui-input-block">
 
                 <input type="text" data-toggle="cubeui-textbox" name="Driver" readonly
@@ -342,28 +455,28 @@ let html_template = `
     </div>
 
     <fieldset>
-        <legend style="margin-bottom: 0px;">驱动选项</legend>
+        <legend style="margin-bottom: 0px;" data-i18n="volumes.section.driverOpts">驱动选项</legend>
     </fieldset>
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
             <div class="cubeui-row">
                 <div class="cubeui-col-sm4 cubeui-col-sm-offset2" style="padding-right: 5px">
-                    <span style='line-height: 20px;padding-right:0px;'>选项</span>
+                    <span style='line-height: 20px;padding-right:0px;' data-i18n="volumes.label.option">选项</span>
                 </div>
                 <div class="cubeui-col-sm5" >
-                    <span style='line-height: 20px;padding-right:0px;'>值</span>
+                    <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.value">值</span>
                 </div>
             </div>
             {{props Options}}
             <div class="cubeui-row">
                 <div class="cubeui-col-sm4 cubeui-col-sm-offset2" style="padding-right: 5px">
                     <input type="text" data-toggle="cubeui-textbox" readonly
-                           value='{{>key}}' data-options="required:false,prompt:'租约ID，选择填写，默认为空，不使用租约'">
+                           value='{{>key}}' data-options="required:false,prompt:&quot;{{:~t('volumes.prompt.leaseIdOptional')}}&quot;">
                 </div>
                 <div class="cubeui-col-sm5">
                     <input type="text" data-toggle="cubeui-textbox" readonly
-                           value='{{>prop}}' data-options="required:false,prompt:'租约ID，选择填写，默认为空，不使用租约'">
+                           value='{{>prop}}' data-options="required:false,prompt:&quot;{{:~t('volumes.prompt.leaseIdOptional')}}&quot;">
                 </div>
             </div>
             {{/props}}
@@ -371,28 +484,28 @@ let html_template = `
     </div>
 
     <fieldset>
-        <legend style="margin-bottom: 0px;">标签选项</legend>
+        <legend style="margin-bottom: 0px;" data-i18n="volumes.section.labels">标签选项</legend>
     </fieldset>
 
     <div class="cubeui-row">
         <div class="cubeui-col-sm12">
             <div class="cubeui-row">
                 <div class="cubeui-col-sm4 cubeui-col-sm-offset2" style="padding-right: 5px">
-                    <span style='line-height: 20px;padding-right:0px;'>标签</span>
+                    <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.key">标签</span>
                 </div>
                 <div class="cubeui-col-sm5" >
-                    <span style='line-height: 20px;padding-right:0px;'>值</span>
+                    <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.value">值</span>
                 </div>
             </div>
             {{props Labels}}
             <div class="cubeui-row">
                 <div class="cubeui-col-sm4 cubeui-col-sm-offset2" style="padding-right: 5px">
                     <input type="text" data-toggle="cubeui-textbox" readonly
-                           value='{{>key}}' data-options="required:false,prompt:'租约ID，选择填写，默认为空，不使用租约'">
+                           value='{{>key}}' data-options="required:false,prompt:&quot;{{:~t('volumes.prompt.leaseIdOptional')}}&quot;">
                 </div>
                 <div class="cubeui-col-sm5">
                     <input type="text" data-toggle="cubeui-textbox" readonly
-                           value='{{>prop}}' data-options="required:false,prompt:'租约ID，选择填写，默认为空，不使用租约'">
+                           value='{{>prop}}' data-options="required:false,prompt:&quot;{{:~t('volumes.prompt.leaseIdOptional')}}&quot;">
                 </div>
             </div>
             {{/props}}

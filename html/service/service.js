@@ -1,3 +1,12 @@
+function t(key) {
+    try {
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        return i18n ? i18n.t.apply(i18n, arguments) : key;
+    } catch (e) {
+        return key;
+    }
+}
+
 function loadLease(){
 
     // let node = $.docker.menu.getCurrentTabAttachNode();
@@ -12,7 +21,7 @@ function loadLease(){
             queryParams:{all1:1},
             frozenColumns:[[
                 {field: 'ID', title: '', checkbox: true},
-                {field: 'op', title: '操作', sortable: false, halign:'center',align:'left',
+                {field: 'op', title: t('common.col.operation'), sortable: false, halign:'center',align:'left',
                     formatter:leaseOperateFormatter},
                 {field: 'Name', title: 'NAME', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),
@@ -57,14 +66,22 @@ function loadLease(){
                 }
             ),
         });
+
+        // 即时切换语言：重载列表以刷新 formatter 里的按钮文案
+        try {
+            $(document).off('app:langChanged.services').on('app:langChanged.services', function(){
+                try { $('#servicesDg').datagrid('reload'); } catch (e) {}
+                try { $('#relatedTasksDg').datagrid('reload'); } catch (e2) {}
+            });
+        } catch (e3) {}
     });
 }
 
 function leaseOperateFormatter(value, row, index) {
     let htmlstr = "";
-    htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectService(\'' + row.ID + '\')">查看</button>';
-    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeLease(\'' + row.ID + '\')">删除</button>';
-    htmlstr += '<button title="查看服务日志" class="layui-btn-orange layui-btn layui-btn-xs" onclick="logService(\'' + row.ID + '\')">日志</button>';
+    htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectService(\'' + row.ID + '\')">' + t('common.btn.view') + '</button>';
+    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeLease(\'' + row.ID + '\')">' + t('common.btn.delete') + '</button>';
+    htmlstr += '<button title="' + t('services.btn.logs.title') + '" class="layui-btn-orange layui-btn layui-btn-xs" onclick="logService(\'' + row.ID + '\')">' + t('common.btn.logs') + '</button>';
     return htmlstr;
 }
 
@@ -73,12 +90,12 @@ function createRelatedTaskOperateFormatter(id){
         let htmlstr = "";
         //superpowers
         if(row.Status.State=='running'){
-            htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectTask(\''+row.ID+'\', \'' + row.ID + '\')">查看</button>';
+            htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectTask(\''+row.ID+'\', \'' + row.ID + '\')">' + t('common.btn.view') + '</button>';
         }else{
-            htmlstr += '<button class="layui-btn-brown layui-btn layui-btn-xs" onclick="inspectTask(\''+row.ID+'\', \'' + row.ID + '\')">查看</button>';
+            htmlstr += '<button class="layui-btn-brown layui-btn layui-btn-xs" onclick="inspectTask(\''+row.ID+'\', \'' + row.ID + '\')">' + t('common.btn.view') + '</button>';
         }
 
-        htmlstr += '<button class="layui-btn-orange layui-btn layui-btn-xs" onclick="logTask(\''+row.ID+'\', \'' + row.ID + '\')">日志</button>';
+        htmlstr += '<button class="layui-btn-orange layui-btn layui-btn-xs" onclick="logTask(\''+row.ID+'\', \'' + row.ID + '\')">' + t('common.btn.logs') + '</button>';
 
         return htmlstr;
     }
@@ -165,12 +182,12 @@ function removeLease(id, closePanel) {
         let rows = $('#servicesDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个服务删除');
+            $.app.show(t('services.msg.remove.onlyOne'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个服务删除');
+            $.app.show(t('services.msg.remove.pickOne'));
             return;
         }else{
             id = rows[0].ID;
@@ -179,11 +196,11 @@ function removeLease(id, closePanel) {
 
     let node = local_node;
 
-    $.docker.utils.deleteConfirm('从SWARM集群里删除服务', '您确认要从SWARM里删除当前服务', function (param, closeFn){
+    $.docker.utils.deleteConfirm(t('services.dialog.remove.title'), t('services.dialog.remove.confirm'), function (param, closeFn){
 
         let node = local_node;
         $.docker.request.service.delete(function(response){
-            $.app.show("从SWARM集群里删除服务成功".format(""));
+            $.app.show(t('services.msg.remove.success'));
             reloadDg();
             closeFn();
 
@@ -308,7 +325,7 @@ function saveService(){
         config.TaskTemplate.Placement.Constraints = $.docker.utils.convert2ListParamValue(info['TaskTemplate.Placement.Constraints'])
         
         $.docker.request.service.create(function (response) {
-            $.app.show("服务{0}已经创建成功".format(config.Name));
+            $.app.show(t('services.msg.create.success', config.Name));
             reloadDg();
         }, node, config.Name, config);
     }
@@ -339,7 +356,8 @@ function showServicePanel(rowData){
             iconCls:'fa fa-info-circle',
             collapsible:false,
             showHeader1:false,
-            titleformat:'SWARM服务信息-{0}'.format($.extends.isEmpty(rowData.Name, rowData.ID)), title:'服务信息',
+            titleformat: t('services.panel.titleformat', $.extends.isEmpty(rowData.Name, rowData.ID)),
+            title: t('services.panel.title'),
             headerCls:'border_right',bodyCls:'border_right',collapsible:true,
             footerHtml:$.templates(service_panel_footer_html).render(rowData),
             render:function (panel, option) {
@@ -386,7 +404,7 @@ function showServicePanel(rowData){
                                 }
                             },
                             frozenColumns:[[
-                                {field: 'op', title: '操作', sortable: false, halign:'center',align:'left',
+                                {field: 'op', title: t('common.col.operation'), sortable: false, halign:'center',align:'left',
                                     width1: 300, formatter:createRelatedTaskOperateFormatter(rowData.ID)},
                                 {field: 'ID', title: 'ID', sortable: true,
                                     formatter:$.iGrid.tooltipformatter(),width: 250},
@@ -469,7 +487,7 @@ function showServicePanel(rowData){
 function showTaskPanel(rowData){
 
     let one = $.iDialog.openDialog({
-        title: '任务信息-{0}'.format($.extends.isEmpty(rowData.SlotStr, rowData.ID)),
+        title: t('services.task.dialog.title', $.extends.isEmpty(rowData.SlotStr, rowData.ID)),
         minimizable:true,
         modal:true,
         maximized:true,

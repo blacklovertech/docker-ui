@@ -29,30 +29,30 @@
                    id:'userDg'
                }">
 
-            <a href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a href="javascript:void(0)" id="usersCreateBtn" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
                         createUser();
                     },
                     btnCls: 'cubeui-btn-blue',
                     iconCls: 'fa fa-plus'
-                }">新增用户</a>
+                }" data-i18n="users.toolbar.create">新增用户</a>
 
-            <a href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a href="javascript:void(0)" id="usersResetPwdBtn" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
                         resetUserPwd();
                     },
                     btnCls: 'cubeui-btn-slateblue',
                     iconCls: 'fa fa-key'
-                }">修改密码</a>
+                }" data-i18n="users.toolbar.resetPwd">修改密码</a>
 
-            <a href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a href="javascript:void(0)" id="usersRemoveBtn" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
                         removeUser();
                     },
                     extend: '#userDg-toolbar',
                     btnCls: 'cubeui-btn-red',
                     iconCls: 'fa fa-times'
-                }">删除用户</a>
+                }" data-i18n="users.toolbar.remove">删除用户</a>
 
             <form id="queryForm" class="search-box">
                 <a href="javascript:void(0)" id="searchbtn"
@@ -61,7 +61,7 @@
                    iconCls:'fa fa-refresh',
                    btnCls:'cubeui-btn-blue',
                    form:{id:'queryForm'},
-                   grid:{type:'datagrid','id':'userDg'}">刷新</a>
+                         grid:{type:'datagrid','id':'userDg'}" data-i18n="common.btn.refresh">刷新</a>
             </form>
         </div>
     </div>

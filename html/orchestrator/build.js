@@ -29,42 +29,42 @@ function getVolumes(){
 
 function buildTreeDatas(orchestratorData){
     return [{
-        text: '编排计划',
+        text: (window.APP_I18N || (window.APP && window.APP.i18n)) ? (window.APP_I18N || (window.APP && window.APP.i18n)).t('orchestrator.tree.root') : '编排计划',
         "id": ROOT_ID,
         'type':'root',
         "iconCls": "fa fa-delicious",
         children:[{
-            text: '服务',
+            text: (window.APP_I18N || (window.APP && window.APP.i18n)) ? (window.APP_I18N || (window.APP && window.APP.i18n)).t('orchestrator.tree.services') : '服务',
             "id": ROOT_SERVICES_ID,
             'type':'services',
             state: "closed",
             "iconCls": "fa fa-spinner",
         },{
-            text: '网络',
+            text: (window.APP_I18N || (window.APP && window.APP.i18n)) ? (window.APP_I18N || (window.APP && window.APP.i18n)).t('orchestrator.tree.networks') : '网络',
             "id": ROOT_NETWORKS_ID,
             'type':'networks',
             state: "closed",
             "iconCls": "fa fa-usb",
         },{
-            text: '数据卷',
+            text: (window.APP_I18N || (window.APP && window.APP.i18n)) ? (window.APP_I18N || (window.APP && window.APP.i18n)).t('orchestrator.tree.volumes') : '数据卷',
             "id": ROOT_VOLUMES_ID,
             'type':'volumes',
             state: "closed",
             "iconCls": "fa fa-database",
         },{
-            text: '密码文件',
+            text: (window.APP_I18N || (window.APP && window.APP.i18n)) ? (window.APP_I18N || (window.APP && window.APP.i18n)).t('orchestrator.tree.secrets') : '密码文件',
             "id": ROOT_SECRETS_ID,
             'type':'secrets',
             state: "closed",
             "iconCls": "fa fa-key",
         },{
-            text: '配置文件',
+            text: (window.APP_I18N || (window.APP && window.APP.i18n)) ? (window.APP_I18N || (window.APP && window.APP.i18n)).t('orchestrator.tree.configs') : '配置文件',
             "id": ROOT_CONFIGS_ID,
             'type':'configs',
             state: "closed",
             "iconCls": "fa fa-gear",
         },{
-            text: '其他项目',
+            text: (window.APP_I18N || (window.APP && window.APP.i18n)) ? (window.APP_I18N || (window.APP && window.APP.i18n)).t('orchestrator.tree.extras') : '其他项目',
             "id": ROOT_EXTRAS_ID,
             'type':'extras',
             state: "closed",

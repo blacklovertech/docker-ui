@@ -6,26 +6,30 @@
 </style>
 <table class="editTable">
     <tr>
-        <td class="label">新密码</td>
+        <td class="label" data-i18n="users.form.newPassword">新密码</td>
         <td><input type="password" id="password1" name="password1" value=""></td>
     </tr>
     <tr>
-        <td class="label">确认新密码</td>
+        <td class="label" data-i18n="users.form.confirmNewPassword">确认新密码</td>
         <td><input type="password" id="password2" name="password2" value=""></td>
     </tr>
 </table>
 
 <script type="text/javascript">
     $(function () {
+        var i18n = window.APP_I18N || (window.APP && window.APP.i18n);
+        if(i18n && i18n.apply){
+            i18n.apply(document);
+        }
         $('#password1').iPasswordbox({
             width: 300,
             required: true,
-            prompt: '新密码,长度6-12，必须填写',
+            prompt: i18n ? i18n.t('users.prompt.newPasswordRequired') : '新密码,长度6-12，必须填写',
             validType: ['length[6,12]']
         });
         $('#password2').iPasswordbox({
             width: 300,
-            prompt: '确认新密码,必须填写和新密码一致',
+            prompt: i18n ? i18n.t('users.prompt.confirmNewPasswordRequired') : '确认新密码,必须填写和新密码一致',
             required: true,
             validType: ['length[6,12]',"equals['#password1']"]
         });

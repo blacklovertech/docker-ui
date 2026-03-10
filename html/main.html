@@ -22,16 +22,16 @@
 
 <script id="mainTmpl1" type="text/x-jquery-tmpl">
 <div style="display:none" id="mm" class="submenubutton" style="width: 140px;">
-    <div id="mm-tabclose" name="6" iconCls="fa fa-refresh">刷新</div>
+    <div id="mm-tabclose" name="6" iconCls="fa fa-refresh" data-i18n="main.menu.refresh">刷新</div>
     <div class="menu-sep"></div>
-    <div id="Div1" name="1" iconCls="fa fa-close">关闭</div>
-    <div id="mm-tabcloseother" name="3">关闭其他</div>
-    <div id="mm-tabcloseall" name="2">关闭全部</div>
+    <div id="Div1" name="1" iconCls="fa fa-close" data-i18n="main.menu.close">关闭</div>
+    <div id="mm-tabcloseother" name="3" data-i18n="main.menu.closeOther">关闭其他</div>
+    <div id="mm-tabcloseall" name="2" data-i18n="main.menu.closeAll">关闭全部</div>
     <div class="menu-sep"></div>
-    <div id="mm-tabcloseright" name="4">关闭右侧标签</div>
-    <div id="mm-tabcloseleft" name="5">关闭左侧标签</div>
+    <div id="mm-tabcloseright" name="4" data-i18n="main.menu.closeRight">关闭右侧标签</div>
+    <div id="mm-tabcloseleft" name="5" data-i18n="main.menu.closeLeft">关闭左侧标签</div>
     <div class="menu-sep"></div>
-    <div id="mm-newwindow" name="7">新窗口中打开</div>
+    <div id="mm-newwindow" name="7" data-i18n="main.menu.openNewWindow">新窗口中打开</div>
 </div>
 
 <div data-toggle="cubeui-layout"
@@ -58,18 +58,27 @@
             </tr>
         </table>
 
-        <span
+        <span class="top-action-bar"
                 style="float:right; padding-right: 10px; height: 70px; line-height: 70px;">
 
+            <a href="javascript:void(0)" onclick="toggleLang()"
+               class="top-action-btn top-action-btn-lang"
+               data-toggle="cubeui-menubutton"
+               data-options="iconCls:'fa fa-language',hasDownArrow:false"
+               style="color: #fff;outline: unset;"><span id="langToggleText" class="top-action-label">EN</span></a>
+
             <a href="javascript:showEvent()"
+                class="top-action-btn"
                 data-toggle="cubeui-menubutton"
                 data-options="iconCls:'fa fa-bell',hasDownArrow:false"
-                style="color: #fff;outline: unset;">事件<span style='margin-left: 2px;' class="title-event layui-badge layui-bg-red">0</span></a>
+                style="color: #fff;outline: unset;"><span class="top-action-label" data-i18n="main.action.event">事件</span><span class="top-action-badge title-event layui-badge layui-bg-red">0</span></a>
 
 				<a href="javascript:void(0)" onclick="logout()"
+                          class="top-action-btn"
                           data-toggle="cubeui-menubutton"
                           data-options="iconCls:'fa fa-sign-out',hasDownArrow:false"
-                          style="color: #fff;">注销</a>
+
+                          style="color: #fff;"><span class="top-action-label" data-i18n="main.action.logout">注销</span></a>
 			</span>
     </div>
 
@@ -86,8 +95,8 @@
          style="overflow: hidden;">
         <div style="height:100%;display:flex;flex-direction:column;">
             <div style="padding:8px 10px;border-bottom:1px solid #eee;flex:0 0 auto;">
-                <span style="font-weight:600;">Docker 事件</span>
-                <span style="margin-left:8px;color:#888;">（最近 200 条）</span>
+                <span style="font-weight:600;" data-i18n="main.drawer.header">Docker 事件</span>
+                <span style="margin-left:8px;color:#888;" id="eventDrawerRecent">（最近 200 条）</span>
             </div>
             <div id="eventDrawerBody" style="flex:1 1 auto;overflow:auto;padding:8px 10px;"></div>
         </div>
@@ -96,7 +105,7 @@
     <div id="center" data-options="region:'center',border:false"
          style="overflow: hidden;">
         <div id="index_tabs" style="width: 100%; height: 100%">
-            <div title="概览<span class='title-summary layui-badge layui-badge-dot'></span>" iconCls="fa fa-windows"
+            <div title="Overview<span class='title-summary layui-badge layui-badge-dot'></span>" iconCls="fa fa-windows"
                  data-options="border:true,iframe:true,
             content:'<iframe src=\'./portal/index.html\' scrolling=\'auto\' frameborder=\'0\' style=\'width:100%;height:100%;\'></iframe>'"></div>
         </div>
@@ -105,14 +114,14 @@
     <div data-options="region:'south',border:true"
          style="text-align: center; height: 30px; line-height: 30px; border-bottom: 0; overflow: hidden;">
 			<span
-                    style="float: left; padding-left: 5px; width: 30%; text-align: left;">当前用户：<block
+                    style="float: left; padding-left: 5px; width: 30%; text-align: left;"><span data-i18n="main.footer.currentUser">当前用户：</span><block
                     class="currentuserinfo">Jonnyan404</block></span>
         <span style="padding-right: 5px; width: 40%"></b>  <a
                 href="https://github.com/Jonnyan404" target="_blank">Power by jonnyan404 ©2026</a>
             </span> <span
-            style="float: right; padding-right: 5px; width: 30%; text-align: right;"><span id='versioninfo'>版本：v2.0</span>  <a
+            style="float: right; padding-right: 5px; width: 30%; text-align: right;"><span id='versioninfo'><span data-i18n="main.footer.version">版本：</span>v2.0</span>  <a
             href="javascript:void(0);"
-            onclick="show_term();">《条款说明》</a></span>
+            onclick="show_term();" data-i18n="main.footer.terms">《条款说明》</a></span>
     </div>
 </div>
 
@@ -149,6 +158,23 @@
 
 <script>
 
+    function updateHomeTabTitle(){
+        try {
+            var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+            if (!i18n || !i18n.t) return;
+            var tabs = $('#index_tabs');
+            if (!tabs.length || !tabs.iTabs) return;
+            var firstTab = tabs.iTabs('getTab', 0);
+            if (!firstTab) return;
+            tabs.iTabs('update', {
+                tab: firstTab,
+                options: {
+                    title: i18n.t('nav.overview') + "<span class='title-summary layui-badge layui-badge-dot'></span>"
+                }
+            });
+        } catch (e) {}
+    }
+
     new APP(function(){
         return {
             css: [
@@ -162,7 +188,7 @@
             render: function () {
 
                 if (!isTokenOK()) {
-                    $.app.alert("登录已经无效，重新登录", function(){
+                    $.app.alert(((window.APP && window.APP.i18n) ? window.APP.i18n.t('main.session.invalid') : (window.APP_I18N ? window.APP_I18N.t('main.session.invalid') : "登录已经无效，重新登录")), function(){
                         window.location = "./login.html";
                     })
                     return
@@ -177,9 +203,50 @@
                 initMenu()
 
                 monitorEvent();
+
+                try {
+                    var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+                    if (i18n && i18n.apply) {
+                        i18n.apply(document);
+                    }
+                    updateEventDrawerHeader();
+                    try {
+                        if (i18n && i18n.t) {
+                            $('#index_layout').layout('panel','east').panel('setTitle', i18n.t('main.drawer.title'));
+                        }
+                    } catch (e1) {}
+                    updateHomeTabTitle();
+                } catch (e) {}
             }
         }
     });
+
+    function toggleLang(){
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        if (!i18n) return;
+        var next = (i18n.getLang && i18n.getLang() === 'zh-CN') ? 'en-US' : 'zh-CN';
+        i18n.setLang(next);
+        __postLangToIframes(next);
+        updateEventDrawerHeader();
+        try {
+            // EasyUI layout 的 title 不会自动绑定 data-i18n，这里补一次
+            $('#index_layout').layout('panel','east').panel('setTitle', i18n.t('main.drawer.title'));
+        } catch (e) {}
+        updateHomeTabTitle();
+    }
+
+    function __postLangToIframes(lang){
+        try {
+            var iframes = document.getElementsByTagName('iframe');
+            for (var i = 0; i < iframes.length; i++) {
+                var f = iframes[i];
+                if (!f || !f.contentWindow) continue;
+                try {
+                    f.contentWindow.postMessage({ type: 'dockerui:setLang', lang: lang }, '*');
+                } catch (e1) {}
+            }
+        } catch (e) {}
+    }
 
     function openDebugMode(){
         console.log("debug");
@@ -269,7 +336,8 @@
             if (container.isNull()) return;
 
             if (!state.list || state.list.length === 0) {
-                container.html('<div style="color:#888;">暂无事件</div>');
+                var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+                container.html('<div style="color:#888;">' + (i18n ? i18n.t('main.drawer.empty') : '暂无事件') + '</div>');
                 return;
             }
 
@@ -329,11 +397,23 @@
         }, local_node, function(){
 
         }, function (xhr, status) {
-            $.app.show('事件监控退出，5秒后重新建立监控事件.....');
+            var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+            $.app.show((i18n ? i18n.t('main.event.monitor.exit', 5) : '事件监控退出，5秒后重新建立监控事件.....'));
             $.easyui.thread.sleep(function (){
                 monitorEvent()
             }, 5000)
         })
+    }
+
+    function updateEventDrawerHeader(){
+        try {
+            var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+            if (!i18n) return;
+            var el = document.getElementById('eventDrawerRecent');
+            if (el) {
+                el.textContent = i18n.t('main.drawer.recentN', (window.__dockerEventState && window.__dockerEventState.max) ? window.__dockerEventState.max : 200);
+            }
+        } catch (e) {}
     }
 
     function showEvent(){

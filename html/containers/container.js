@@ -1,5 +1,14 @@
 function loadLease(){
 
+    function t(key) {
+        try {
+            var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+            return i18n ? i18n.t.apply(i18n, arguments) : key;
+        } catch (e) {
+            return key;
+        }
+    }
+
     // let node = $.docker.menu.getCurrentTabAttachNode();
     let node = local_node;
 
@@ -12,7 +21,7 @@ function loadLease(){
             queryParams:{all:1},
             frozenColumns:[[
                 {field: 'ID', title: '', checkbox: true},
-                {field: 'op', title: '操作', sortable: false, halign:'center',align:'left',
+                {field: 'op', title: t('common.col.operation'), sortable: false, halign:'center',align:'left',
                     width1: 300, formatter:leaseOperateFormatter},
                 {field: 'Name', title: 'NAME', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),
@@ -64,32 +73,48 @@ function loadLease(){
                 }
             ),
         });
+
+        // 即时切换语言：重载列表以刷新 formatter 里的按钮文案
+        try {
+            $(document).off('app:langChanged.containers').on('app:langChanged.containers', function(){
+                try { $('#containersDg').datagrid('reload'); } catch (e) {}
+            });
+        } catch (e) {}
     });
 }
 
 function leaseOperateFormatter(value, row, index) {
     let htmlstr = "";
 
+    function t(key) {
+        try {
+            var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+            return i18n ? i18n.t.apply(i18n, arguments) : key;
+        } catch (e) {
+            return key;
+        }
+    }
+
     //superpowers
-    htmlstr += '<button class="layui-btn-orange layui-btn layui-btn-xs" onclick="inspectContainer(\'' + row.ID + '\')">查看</button>';
+    htmlstr += '<button class="layui-btn-orange layui-btn layui-btn-xs" onclick="inspectContainer(\'' + row.ID + '\')">' + t('common.btn.view') + '</button>';
 
 
 
     if(row.Running==1){
-        htmlstr += '<button class="layui-btn-ivory layui-btn layui-btn-xs" onclick="restartContainer(\'' + row.ID + '\')">重启</button>';
-        htmlstr += '<button class="layui-btn-brown layui-btn layui-btn-xs" onclick="stopLease(\'' + row.ID + '\', \'' + index + '\')">停止</button>';
-        htmlstr += '<button class="layui-btn-dodgerblue layui-btn layui-btn-xs" onclick="killLease(\'' + row.ID + '\', \'' + index + '\')">强止</button>';
-        htmlstr += '<button class="layui-btn-olive layui-btn layui-btn-xs" onclick="showConsole(\'' + row.ID + '\', \'' + index + '\')">控制台</button>';
-        htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="execContainer(\'' + row.ID + '\')">执行</button>';
+        htmlstr += '<button class="layui-btn-ivory layui-btn layui-btn-xs" onclick="restartContainer(\'' + row.ID + '\')">' + t('common.btn.restart') + '</button>';
+        htmlstr += '<button class="layui-btn-brown layui-btn layui-btn-xs" onclick="stopLease(\'' + row.ID + '\', \'' + index + '\')">' + t('common.btn.stop') + '</button>';
+        htmlstr += '<button class="layui-btn-dodgerblue layui-btn layui-btn-xs" onclick="killLease(\'' + row.ID + '\', \'' + index + '\')">' + t('common.btn.kill') + '</button>';
+        htmlstr += '<button class="layui-btn-olive layui-btn layui-btn-xs" onclick="showConsole(\'' + row.ID + '\', \'' + index + '\')">' + t('common.btn.console') + '</button>';
+        htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="execContainer(\'' + row.ID + '\')">' + t('common.btn.exec') + '</button>';
     }else{
-        htmlstr += '<button disabled class="layui-btn-ivory layui-btn layui-btn-xs disabled" onclick="restartContainer(\'' + row.ID + '\')">重启</button>';
-        htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="startLease(\'' + row.ID + '\', \'' + index + '\')">启动</button>';
-        htmlstr += '<button disabled class="layui-btn-dodgerblue layui-btn layui-btn-xs disabled" onclick="killLease(\'' + row.ID + '\', \'' + index + '\')">强止</button>';
-        htmlstr += '<button disabled class="layui-btn-olive layui-btn layui-btn-xs disabled" onclick="showConsole(\'' + row.ID + '\', \'' + index + '\')">控制台</button>';
-        htmlstr += '<button disabled class="layui-btn-gray layui-btn layui-btn-xs disabled" onclick="execContainer(\'' + row.ID + '\')">执行</button>';
+        htmlstr += '<button disabled class="layui-btn-ivory layui-btn layui-btn-xs disabled" onclick="restartContainer(\'' + row.ID + '\')">' + t('common.btn.restart') + '</button>';
+        htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="startLease(\'' + row.ID + '\', \'' + index + '\')">' + t('common.btn.start') + '</button>';
+        htmlstr += '<button disabled class="layui-btn-dodgerblue layui-btn layui-btn-xs disabled" onclick="killLease(\'' + row.ID + '\', \'' + index + '\')">' + t('common.btn.kill') + '</button>';
+        htmlstr += '<button disabled class="layui-btn-olive layui-btn layui-btn-xs disabled" onclick="showConsole(\'' + row.ID + '\', \'' + index + '\')">' + t('common.btn.console') + '</button>';
+        htmlstr += '<button disabled class="layui-btn-gray layui-btn layui-btn-xs disabled" onclick="execContainer(\'' + row.ID + '\')">' + t('common.btn.exec') + '</button>';
     }
-    htmlstr += '<button class="layui-btn-red layui-btn layui-btn-xs" onclick="removeLease(\'' + index + '\', \'' + row.ID + '\')">删除</button>';
-    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="showLog(\'' + row.ID + '\', \'' + index + '\')">日志</button>';
+    htmlstr += '<button class="layui-btn-red layui-btn layui-btn-xs" onclick="removeLease(\'' + index + '\', \'' + row.ID + '\')">' + t('common.btn.delete') + '</button>';
+    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="showLog(\'' + row.ID + '\', \'' + index + '\')">' + t('common.btn.logs') + '</button>';
 
     return htmlstr;
 }
@@ -162,12 +187,14 @@ function cloneContainer(id, flag){
 function cloneContainerPanel(){
     let rows = $('#containersDg').datagrid('getChecked');
     if(rows.length>1){
-        $.app.show('本版本仅支持选择一个容器进行克隆');
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        $.app.show(i18n ? i18n.t('containers.msg.clone.onlyOne') : '本版本仅支持选择一个容器进行克隆');
         return ;
     }
 
     if(rows.length==0){
-        $.app.show('选择一个容器进行克隆');
+        var i18n2 = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        $.app.show(i18n2 ? i18n2.t('containers.msg.clone.pickOne') : '选择一个容器进行克隆');
         return ;
     }
 
@@ -180,15 +207,16 @@ function createContainerPanel(data, flag){
     let node = local_node;
     removePanel();
 
-    let title = '创建容器';
+    var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+    let title = i18n ? i18n.t('containers.action.create') : '创建容器';
     let iconCls = 'fa fa-info-circle';
 
     if(flag == 2){
-        title = '运行容器';
+        title = i18n ? i18n.t('containers.action.run') : '运行容器';
         iconCls = 'fa fa-play-circle-o';
     }
     else if(flag == 3){
-        title = '执行命令';
+        title = i18n ? i18n.t('containers.action.exec') : '执行命令';
         iconCls = 'fa fa-random';
     }
 
@@ -198,7 +226,7 @@ function createContainerPanel(data, flag){
         iconCls:iconCls,
         collapsible:false,
         showHeader1:false,
-        titleformat:title, title:'创建容器',
+        titleformat:title, title:title,
         headerCls:'border_right',bodyCls:'border_right',collapsible:true,
         footerHtml: $.templates(create_panel_buttons_html).render({Flag:flag}),
         // render1:$.templates(html_template).render(rowData),

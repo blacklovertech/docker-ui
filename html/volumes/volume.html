@@ -35,7 +35,7 @@
                     extend: '#volumesDg-toolbar',
                     btnCls: 'cubeui-btn-blue',
                     iconCls: 'fa fa-plus'
-                }">新增数据卷</a>
+                }"><span data-i18n="volumes.toolbar.create">新增数据卷</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
@@ -44,7 +44,7 @@
                     extend: '#volumesDg-toolbar',
                     btnCls: 'cubeui-btn-red',
                     iconCls: 'fa fa-times'
-                }">删除数据卷</a>
+                }"><span data-i18n="volumes.toolbar.remove">删除数据卷</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
@@ -53,7 +53,7 @@
                     extend: '#imagesDg-toolbar',
                     btnCls: 'cubeui-btn-brown',
                     iconCls: 'fa fa-trash'
-                }">清理数据卷</a>
+                }"><span data-i18n="volumes.toolbar.prune">清理数据卷</span></a>
 
 
             <form id="queryForm" class="search-box">
@@ -62,7 +62,7 @@
                 <input type="text" id='search_type' name="search_type" value="name" data-toggle="cubeui-combobox"
                        data-options="
                                 width:120,
-                                required:true,prompt:'查询方式，必须填写',
+                            required:true,prompt:'',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:[{'KEY':'name','TEXT':'Name'},{'KEY':'label','TEXT':'Label'},
@@ -72,7 +72,7 @@
                        data-options="onClear:function(){
                             console.log(111);
                             $('#searchbtn').trigger('click');
-                       }, mask:'{{:~js(prefix)}}', prompt:'查询条件, 多条件逗号分隔；label方式 label1=a,label2=b',width:420">
+                      }, mask:'{{:~js(prefix)}}', prompt:'',width:420">
 
                 <a href="javascript:void(0)" id="searchbtn"
                    data-toggle="cubeui-menubutton"
@@ -80,7 +80,7 @@
                    iconCls:'fa fa-search',
                    btnCls:'cubeui-btn-blue',
                    form:{id:'queryForm'},
-                   grid:{type:'datagrid','id':'volumesDg'}">查询</a>
+                   grid:{type:'datagrid','id':'volumesDg'}"><span data-i18n="common.btn.search">查询</span></a>
             </form>
         </div>
     </div>
@@ -93,16 +93,16 @@
 
     <div class="cubeui-fluid">
         <fieldset>
-            <legend>数据卷信息</legend>
+            <legend data-i18n="volumes.form.legend">数据卷信息</legend>
         </fieldset>
         <div class="cubeui-row">
             <div class="cubeui-col-sm12">
-                <label class="cubeui-form-label">数据卷:</label>
+                <label class="cubeui-form-label" data-i18n="volumes.form.name">数据卷:</label>
                 <div class="cubeui-input-block">
                     <input type="text" data-toggle="cubeui-textbox" name="Name"
                            value='{{:Name}}'
                            data-options="
-                                required:true,prompt:'数据卷，必须填写'
+                                required:true,prompt:''
                                 "
                     >
                 </div>
@@ -110,12 +110,12 @@
         </div>
         <div class="cubeui-row">
             <div class="cubeui-col-sm12">
-                <label class="cubeui-form-label">数据卷驱动:</label>
+                <label class="cubeui-form-label" data-i18n="volumes.form.driver">数据卷驱动:</label>
                 <div class="cubeui-input-block">
                     <input type="text" name="Driver" value="local" data-toggle="cubeui-combobox"
                            data-options="
                                 limitToList:true,
-                                required:true,prompt:'数据卷驱动，必须填写',
+                                required:true,prompt:'',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:$.docker.utils.getLocalVolume()
@@ -125,17 +125,17 @@
         </div>
 
         <fieldset>
-            <legend style="margin-bottom: 0px;">驱动选项</legend>
+            <legend style="margin-bottom: 0px;" data-i18n="volumes.section.driverOpts">驱动选项</legend>
         </fieldset>
 
         <div class="cubeui-row">
             <div class="cubeui-col-sm12 add-opt-div">
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm4 cubeui-col-sm-offset2" style="padding-right: 5px">
-                        <span style='line-height: 20px;padding-right:0px;'>选项</span>
+                        <span style='line-height: 20px;padding-right:0px;' data-i18n="volumes.label.option">选项</span>
                     </div>
                     <div class="cubeui-col-sm5" >
-                        <span style='line-height: 20px;padding-right:0px;'>值</span>
+                        <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.value">值</span>
                     </div>
                     <div class="cubeui-col-sm1" style="text-align: center">
                         <span style='line-height: 20px;padding-right:0px;'>
@@ -161,17 +161,17 @@
 
 
         <fieldset>
-            <legend style="margin-bottom: 0px;">标签选项</legend>
+            <legend style="margin-bottom: 0px;" data-i18n="volumes.section.labels">标签选项</legend>
         </fieldset>
 
         <div class="cubeui-row">
             <div class="cubeui-col-sm12 add-opt-div">
                 <div class="cubeui-row">
                     <div class="cubeui-col-sm4 cubeui-col-sm-offset2" style="padding-right: 5px">
-                        <span style='line-height: 20px;padding-right:0px;'>标签</span>
+                        <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.key">标签</span>
                     </div>
                     <div class="cubeui-col-sm5" >
-                        <span style='line-height: 20px;padding-right:0px;'>值</span>
+                        <span style='line-height: 20px;padding-right:0px;' data-i18n="common.label.value">值</span>
                     </div>
                     <div class="cubeui-col-sm1" style="text-align: center">
                         <span style='line-height: 20px;padding-right:0px;'>

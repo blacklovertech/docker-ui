@@ -2,7 +2,8 @@
   {
     "id": 1350,
     "pid": 1325,
-    "text": "概览<span class=\"title-summary layui-badge layui-badge-dot\"></span>",
+    "textId": "overview",
+    "text": "<span data-i18n=\"nav.overview\">概览</span><span class=\"title-summary layui-badge layui-badge-dot\"></span>",
     "state": "closed",
     "iconCls": "fa fa-windows",
     "url": "./portal/index.html"
@@ -10,8 +11,8 @@
   {
     "id": 1365,
     "pid": 1325,
-    "text": "镜像<span class=\"title-image layui-badge layui-bg-orange\">34</span>",
-    "textId":"images",
+    "textId": "images",
+    "text": "<span data-i18n=\"nav.images\">镜像</span><span class=\"title-image layui-badge layui-bg-orange\">34</span>",
     "state": "closed",
     "iconCls": "fa fa-headphones",
     "url": "./images/image.html"
@@ -19,8 +20,8 @@
   {
     "id": 1369,
     "pid": 1325,
-    "textId":"containers",
-    "text": "容器 <span class=\"title-container layui-badge layui-bg-orange\">0</span> <span class=\"title-container2 layui-badge\" style=\"margin: 0px 0 0 -8px;\">10</span>  ",
+    "textId": "containers",
+    "text": "<span data-i18n=\"nav.containers\">容器</span> <span class=\"title-container layui-badge layui-bg-orange\">0</span> <span class=\"title-container2 layui-badge\" style=\"margin: 0px 0 0 -8px;\">10</span>  ",
     "state": "closed",
     "iconCls": "fa fa-superpowers",
     "url": "./containers/container.html"
@@ -28,8 +29,8 @@
   {
     "id": 1327,
     "pid": 1325,
-    "textId":"volumes",
-    "text": "数据卷<span class=\"title-volume layui-badge layui-bg-orange\">2</span>",
+    "textId": "volumes",
+    "text": "<span data-i18n=\"nav.volumes\">数据卷</span><span class=\"title-volume layui-badge layui-bg-orange\">2</span>",
     "state": "closed",
     "iconCls": "fa fa-database",
     "url": "./volumes/volume.html"
@@ -37,14 +38,16 @@
   {
     "id": 1328,
     "pid": 1325,
-    "text": "Swarm集群",
+    "textId": "swarm",
+    "text": "<span data-i18n=\"nav.swarm\">Swarm集群</span>",
     "state": "closed",
     "iconCls": "fa fa-sitemap",
     "children":[
       {
         "id": 1338,
         "pid": 1328,
-        "text": "集群信息",
+        "titleId": "swarm.info",
+        "text": "<span data-i18n=\"nav.swarm.info\">集群信息</span>",
         "state": "open",
         "iconCls": "fa fa-info-circle",
         "url": "./swarm/info.html"
@@ -52,7 +55,8 @@
       {
         "id": 1337,
         "pid": 1328,
-        "text": "节点",
+        "titleId": "swarm.nodes",
+        "text": "<span data-i18n=\"nav.swarm.nodes\">节点</span>",
         "state": "open",
         "iconCls": "fa fa-server",
         "url": "./node/node.html"
@@ -60,7 +64,8 @@
       {
         "id": 1368,
         "pid": 1328,
-        "text": "服务",
+        "titleId": "swarm.services",
+        "text": "<span data-i18n=\"nav.swarm.services\">服务</span>",
         "state": "open",
         "iconCls": "fa fa-spinner",
         "url": "./service/service.html"
@@ -68,7 +73,8 @@
       {
         "id": 1369,
         "pid": 1328,
-        "text": "任务",
+        "titleId": "swarm.tasks",
+        "text": "<span data-i18n=\"nav.swarm.tasks\">任务</span>",
         "state": "open",
         "iconCls": "fa fa-rebel",
         "url": "./task/task.html"
@@ -76,7 +82,8 @@
       {
         "id": 12368,
         "pid": 12328,
-        "text": "密码",
+        "titleId": "swarm.secrets",
+        "text": "<span data-i18n=\"nav.swarm.secrets\">密码</span>",
         "state": "open",
         "iconCls": "fa fa-key",
         "url": "./secret/secret.html"
@@ -84,7 +91,8 @@
       {
         "id": 1362,
         "pid": 1328,
-        "text": "配置",
+        "titleId": "swarm.configs",
+        "text": "<span data-i18n=\"nav.swarm.configs\">配置</span>",
         "state": "open",
         "iconCls": "fa fa-gear",
         "url": "./config/config.html"
@@ -95,7 +103,8 @@
   {
     "id": 11368,
     "pid": 11328,
-    "text": "仓库",
+    "textId": "repository",
+    "text": "<span data-i18n=\"nav.repository\">仓库</span>",
     "state": "open",
     "iconCls": "fa fa-podcast",
     "url": "./repository/repository.html"
@@ -103,7 +112,8 @@
   {
     "id": 12368,
     "pid": 12328,
-    "text": "网络",
+    "textId": "network",
+    "text": "<span data-i18n=\"nav.network\">网络</span>",
     "state": "open",
     "iconCls": "fa fa-usb",
     "url": "./network/network.html"
@@ -111,7 +121,8 @@
   {
     "id": 13468,
     "pid": 13428,
-    "text": "任务编排",
+    "textId": "orchestrator",
+    "text": "<span data-i18n=\"nav.orchestrator\">任务编排</span>",
     "state": "open",
     "iconCls": "fa fa-delicious",
     "url": "./orchestrator/orchestrator.html"
@@ -119,7 +130,8 @@
   {
     "id": 15001,
     "pid": 1325,
-    "text": "用户管理",
+    "textId": "users",
+    "text": "<span data-i18n=\"nav.users\">用户管理</span>",
     "state": "open",
     "iconCls": "fa fa-users",
     "url": "./user/user.html"

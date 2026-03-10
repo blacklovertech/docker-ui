@@ -125,8 +125,16 @@ function loadOne(css, js, cb){
 
 contextpath = "";
 window.APP_DEBUG = true;
-window.APP_VERSION = '2.0';
+// Used for cache-busting static assets (scripts/styles).
+// Bump this when frontend static files change.
+window.APP_VERSION = '2.0.11';
 window.ROOT_RES_URL = '';
+
+function appendAssetVersion(url) {
+    if (!url) return url;
+    if (/([?&])v=/.test(url)) return url;
+    return url + (url.indexOf('?') >= 0 ? '&' : '?') + APP_VERSION;
+}
 
 function loadAllCss(){
     dynamicLoading.loadCss([
@@ -152,6 +160,10 @@ function loadAll(cb){
         ROOT_RES_URL + "/static/common/js/date.js?" + APP_VERSION,
         ROOT_RES_URL + "/static/common/js/jquery.extends.js?" + APP_VERSION,
         ROOT_RES_URL + "/static/common/js/jquery.extends-excel.js?" + APP_VERSION,
+
+        ROOT_RES_URL + "/static/common/js/i18n.js?" + APP_VERSION,
+        ROOT_RES_URL + "/static/common/js/i18n/zh-CN.js?" + APP_VERSION,
+        ROOT_RES_URL + "/static/common/js/i18n/en-US.js?" + APP_VERSION,
 
         ROOT_RES_URL + "/static/plugins/jquery/jquery.base64.min.js?" + APP_VERSION,
         ROOT_RES_URL + "/static/plugins/jquery/daterangepicker-master/moment.min.js?" + APP_VERSION,
@@ -193,6 +205,17 @@ function loadAll(cb){
             trim: function(val) { return val?val.trim():''; },
             js: function(val) { return val?val.trim().jsEncode():''; },
             html: function(val) { return val?val.trim().htmlEncode():''; },
+            t: function(key) {
+                try {
+                    if (window.APP && APP.i18n && APP.i18n.t) {
+                        return APP.i18n.t.apply(APP.i18n, arguments);
+                    }
+                    if (window.APP_I18N && APP_I18N.t) {
+                        return APP_I18N.t.apply(APP_I18N, arguments);
+                    }
+                } catch (e) {}
+                return key;
+            },
             title: "Debug"
         };
 
@@ -234,11 +257,13 @@ let APP = function(config){
 
         if(config){
             if(config.css){
-                dynamicLoading.loadCss(config.css)
+                dynamicLoading.loadCss(config.css.map(function (item) {
+                    return appendAssetVersion(item);
+                }))
             }
             if(config.js){
                 config.js.forEach(function (item, i){
-                    jsFiles.push(item)
+                    jsFiles.push(appendAssetVersion(item))
                 })
             }
         }
@@ -263,6 +288,12 @@ let APP = function(config){
     })
 }
 
+// NOTE: APP is declared with `let`, which does not attach to window.
+// Inline HTML handlers (onclick="...") need window.APP.
+try {
+    window.APP = APP;
+} catch (e) {}
+
 APP.renderBody = function (template, data){
 
     if($(template).isNull())
@@ -272,6 +303,14 @@ APP.renderBody = function (template, data){
     $('body div').remove()
     $(t).appendTo($('body'))
     //$.parser.parse($('body'));
+
+    try {
+        if (window.APP && window.APP.i18n && window.APP.i18n.apply) {
+            window.APP.i18n.apply(document);
+        } else if (window.APP_I18N && window.APP_I18N.apply) {
+            window.APP_I18N.apply(document);
+        }
+    } catch (e) {}
 };
 
 APP.render = function (template, data){

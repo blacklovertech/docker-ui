@@ -66,19 +66,62 @@
     font-weight: 700;
     margin-top: 12px;
     padding-left: 25px;
+    white-space: nowrap;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: nowrap;
+    gap: 0;
 }
 
 .card-info {
     height: 46px;
     margin-top: 8px;
     display: flex;
-    flex-direction: column;
+    align-items: flex-end;
     justify-content: flex-end;
+    flex-wrap: nowrap;
+    white-space: nowrap;
 }
 
 .card-info span {
     font-size: .9rem;
-    display: block;
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.card-info .metric-line {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    max-width: 100%;
+    gap: 0;
+}
+
+.card-info .metric-label,
+.card-info .metric-value,
+.card-info .metric-unit {
+    display: inline-flex;
+    align-items: baseline;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.card-info .metric-unit {
+    margin-left: 0;
+}
+
+.all-count > span,
+.all-count .suffix,
+.card-info > span,
+.card-info > span > span,
+.card-info t {
+    display: inline-flex;
+    align-items: baseline;
+    white-space: nowrap;
 }
 
 .sale-list .col {

@@ -36,7 +36,7 @@
                     extend: '#servicesDg-toolbar',
                     btnCls: 'cubeui-btn-blue',
                     iconCls: 'fa fa-plus'
-                }">创建服务</a>
+                }"><span data-i18n="services.toolbar.create">创建服务</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                 onClick:function(){
@@ -44,7 +44,7 @@
                 },
                 btnCls: 'cubeui-btn-slateblue',
                 iconCls: 'fa fa-tags'
-            }">编辑元数据</a>
+            }"><span data-i18n="services.toolbar.editMetadata">编辑元数据</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                 onClick:function(){
@@ -52,7 +52,7 @@
                 },
                 btnCls: 'cubeui-btn-orange',
                 iconCls: 'fa fa-headphones'
-            }">升级镜像</a>
+            }"><span data-i18n="services.toolbar.upgradeImage">升级镜像</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
@@ -61,11 +61,11 @@
                     extend: '#servicesDg-toolbar',
                     btnCls: 'cubeui-btn-red',
                     iconCls: 'fa fa-times'
-                }">删除服务</a>
+                }"><span data-i18n="services.toolbar.remove">删除服务</span></a>
 
             <form id="queryForm" class="search-box">
 
-                <span style='line-height: 30px;padding-right:0px' title="">模式：</span>
+                <span style='line-height: 30px;padding-right:0px' title="" data-i18n="services.search.mode">模式：</span>
                 <input type="text" name="mode" value="" data-toggle="cubeui-combobox"
                        data-options="
                                 width:160,
@@ -96,7 +96,7 @@
                    iconCls:'fa fa-search',
                    btnCls:'cubeui-btn-blue',
                    form:{id:'queryForm'},
-                   grid:{type:'datagrid','id':'servicesDg'}">查询</a>
+                         grid:{type:'datagrid','id':'servicesDg'}"><span data-i18n="common.btn.search">查询</span></a>
             </form>
         </div>
     </div>

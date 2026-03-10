@@ -1,3 +1,62 @@
+function t(key) {
+    try {
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        return i18n ? i18n.t.apply(i18n, arguments) : key;
+    } catch (e) { return key; }
+}
+
+function __orchestrator_getI18n(){
+    return (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+}
+
+function __orchestrator_applyI18n(root){
+    var i18n = __orchestrator_getI18n();
+    if(i18n && i18n.apply){
+        try { i18n.apply(root || document); } catch (e) {}
+    }
+}
+
+function __orchestrator_setPlaceholder($el, text){
+    if(!$el || !$el.length) return;
+    try {
+        if($el.textbox){
+            $el.textbox('textbox').attr('placeholder', text);
+            return;
+        }
+    } catch (e) {}
+    try {
+        if($el.combobox){
+            $el.combobox('textbox').attr('placeholder', text);
+            return;
+        }
+    } catch (e2) {}
+}
+
+function __orchestrator_setButtonText(selector, text){
+    var $el = $(selector);
+    if(!$el.length) return;
+
+    $el.html(text);
+
+    try { $el.linkbutton({text:text}); } catch (e) {}
+    try { $el.menubutton({text:text}); } catch (e2) {}
+}
+
+function __orchestrator_applyControlsI18n(){
+    var i18n = __orchestrator_getI18n();
+    if(!i18n || !i18n.t) return;
+
+    __orchestrator_setButtonText('#orchestratorCreateBtn', i18n.t('orchestrator.toolbar.create'));
+    __orchestrator_setButtonText('#orchestratorEditBtn', i18n.t('orchestrator.toolbar.edit'));
+    __orchestrator_setButtonText('#orchestratorRemoveBtn', i18n.t('orchestrator.toolbar.remove'));
+    __orchestrator_setButtonText('#searchbtn', i18n.t('common.btn.search'));
+    __orchestrator_setPlaceholder($("input[name='search_key']"), i18n.t('orchestrator.search.placeholder'));
+}
+
+function __orchestrator_applyGridI18n(){
+    try { __orchestrator_applyI18n($('#orchestratorsDg').datagrid('getPanel')); } catch (e) {}
+}
+
 function loadOrchestrators(){
     let node = local_node;
 
@@ -9,7 +68,7 @@ function loadOrchestrators(){
             pageSize:50,
             frozenColumns:[[
                 {field: 'ID', title: '', checkbox: true},
-                {field: 'op', title: '操作', sortable: false, halign:'center',align:'left',
+                {field: 'op', title: '<span data-i18n="common.col.operation">操作</span>', sortable: false, halign:'center',align:'left',
                     width1: 100, formatter:orchestratorsOperateFormatter},
                 {field: 'Id', title: 'ID', sortable: true,
                     formatter:$.iGrid.tooltipformatter(),
@@ -32,13 +91,26 @@ function loadOrchestrators(){
                     formatter:$.iGrid.tooltipformatter(),width: 260}
             ]]
         });
+
+        __orchestrator_applyControlsI18n();
+        __orchestrator_applyGridI18n();
+        __orchestrator_applyI18n(document);
+
+        try {
+            $(document).off('app:langChanged.orchestrator').on('app:langChanged.orchestrator', function () {
+                __orchestrator_applyControlsI18n();
+                __orchestrator_applyGridI18n();
+                __orchestrator_applyI18n(document);
+                reloadDg();
+            });
+        } catch (e3) {}
     });
 }
 
 function orchestratorsOperateFormatter(value, row, index) {
     let htmlstr = "";
-    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="updateOrchestrators(\'' + row.ID + '\')">修改仓库</button>';
-    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeOrchestrators(\'' + row.ID + '\')">删除仓库</button>';
+    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="updateOrchestrators(\'' + row.ID + '\')">' + t('orchestrator.btn.edit') + '</button>';
+    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeOrchestrators(\'' + row.ID + '\')">' + t('orchestrator.btn.delete') + '</button>';
     return htmlstr;
 }
 
@@ -69,23 +141,23 @@ function removeOrchestrators(id){
         let rows = $('#orchestratorsDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个编排任务删除');
+            $.app.show(t('orchestrator.msg.onlyOne.remove'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个编排任务删除');
+            $.app.show(t('orchestrator.msg.pickOne.remove'));
             return;
         }else{
             id = rows[0].ID;
         }
     }
 
-    $.app.confirm("删除编排任务信息", "您确定要删除所选择的编排任务信息？",function () {
+    $.app.confirm(t('orchestrator.dialog.remove.title'), t('orchestrator.dialog.remove.confirm'),function () {
 
         let node = local_node;
         $.docker.request.repos.delete(function (data) {
-            $.app.show("删除编排任务信息成功");
+            $.app.show(t('orchestrator.msg.remove.success'));
             reloadDg();
         }, node, id);
     })
@@ -97,12 +169,12 @@ function updateOrchestrators(id){
         let rows = $('#orchestratorsDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个从编排任务修改');
+            $.app.show(t('orchestrator.msg.onlyOne.edit'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个编排任务修改');
+            $.app.show(t('orchestrator.msg.pickOne.edit'));
             return;
         }else{
             id = rows[0].ID;
@@ -112,7 +184,7 @@ function updateOrchestrators(id){
     $.docker.request.repos.all(function (data, map) {
         let orchestratorData = map[id];
         if(orchestratorData==null){
-            $.app.show('编排任务不存在，请刷新后再重新编辑')
+            $.app.show(t('orchestrator.msg.notFound'))
             return false;
         }
 
@@ -129,9 +201,9 @@ function updateOrchestratorsDlg(orchestratorData){
         let isAdd = true;
         if(orchestratorData == null || orchestratorData.ID == null){
             orchestratorData = {};
-            title = "添加编排任务";
+            title = t('orchestrator.dialog.add.title');
         }else{
-            title = "修改编排任务{0}".format(orchestratorData.Name);
+            title = t('orchestrator.dialog.edit.titleformat').format(orchestratorData.Name);
             isAdd = false;
         }
 
@@ -144,7 +216,7 @@ function updateOrchestratorsDlg(orchestratorData){
             iconCls:'fa fa-info-circle',
             collapsible:false,
             showHeader1:false,
-            titleformat:title, title:'服务信息',
+            titleformat:title, title:t('orchestrator.panel.title'),
             headerCls:'border_right',bodyCls:'border_right',
             // footerHtml:$.templates(service_panel_footer_html).render(rowData),
             render:function (panel, option) {
@@ -158,6 +230,7 @@ function updateOrchestratorsDlg(orchestratorData){
                     let cnt = $($.templates(html).render(orchestratorData));
                     panel.append(cnt);
                     $.parser.parse(cnt);
+                    __orchestrator_applyI18n(cnt);
                     $('#orchestrator_main_layout').iLayout();
 
                     if(orchestratorData.updated){

@@ -1,4 +1,22 @@
+function t(key) {
+    try {
+        var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+        return i18n ? i18n.t.apply(i18n, arguments) : key;
+    } catch (e) {
+        return key;
+    }
+}
+
 function loadLease(){
+
+    function t(key) {
+        try {
+            var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+            return i18n ? i18n.t.apply(i18n, arguments) : key;
+        } catch (e) {
+            return key;
+        }
+    }
 
     // let node = $.docker.menu.getCurrentTabAttachNode();
     let node = local_node;
@@ -12,7 +30,7 @@ function loadLease(){
             queryParams:{all1:1},
             frozenColumns:[[
                 {field: 'ID', title: '', checkbox: true},
-                {field: 'op', title: '操作', sortable: false, halign:'center',align:'center',
+                {field: 'op', title: t('common.col.operation'), sortable: false, halign:'center',align:'center',
                     width: 210, formatter:leaseOperateFormatter},
                 {field: 'Id', title: 'IMAGE ID', sortable: true,
                     formatter:$.iGrid.buildformatter([$.iGrid.templateformatter('{Id}'), $.iGrid.tooltipformatter()]),
@@ -43,15 +61,32 @@ function loadLease(){
                 }
             ),
         });
+
+        // 即时切换语言：重载列表以刷新 formatter 里的按钮文案
+        try {
+            $(document).off('app:langChanged.images').on('app:langChanged.images', function(){
+                try { $('#imagesDg').datagrid('reload'); } catch (e) {}
+            });
+        } catch (e) {}
     });
 }
 
 function leaseOperateFormatter(value, row, index) {
     let htmlstr = "";
-    htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectImage(\'' + index + '\', \'' + row.ID + '\')">查看</button>';
-    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="createContainerFromImage(\'' + index + '\', \'' + row.ID + '\')">运行</button>';
-    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeLease(\'' + row.ID + '\')">删除</button>';
-    htmlstr += '<button class="layui-btn-orange layui-btn layui-btn-xs" onclick="tagLease(\'' + index + '\', \'' + row.ID + '\')">标记</button>';
+
+    function t(key) {
+        try {
+            var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+            return i18n ? i18n.t.apply(i18n, arguments) : key;
+        } catch (e) {
+            return key;
+        }
+    }
+
+    htmlstr += '<button class="layui-btn-yellowgreen layui-btn layui-btn-xs" onclick="inspectImage(\'' + index + '\', \'' + row.ID + '\')">' + t('common.btn.view') + '</button>';
+    htmlstr += '<button class="layui-btn-blue layui-btn layui-btn-xs" onclick="createContainerFromImage(\'' + index + '\', \'' + row.ID + '\')">' + t('common.btn.run') + '</button>';
+    htmlstr += '<button class="layui-btn-gray layui-btn layui-btn-xs" onclick="removeLease(\'' + row.ID + '\')">' + t('common.btn.delete') + '</button>';
+    htmlstr += '<button class="layui-btn-orange layui-btn layui-btn-xs" onclick="tagLease(\'' + index + '\', \'' + row.ID + '\')">' + t('common.btn.tag') + '</button>';
 
     return htmlstr;
 }
@@ -63,13 +98,22 @@ function removePanel(){
 function deleteBuild(){
     let node = local_node;
 
-    $.app.confirm("您确定删除所有的构建缓存？", function (response) {
+    function t(key) {
+        try {
+            var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+            return i18n ? i18n.t.apply(i18n, arguments) : key;
+        } catch (e) {
+            return key;
+        }
+    }
+
+    $.app.confirm(t('images.confirm.deleteBuildCache'), function (response) {
         $.docker.request.build.delete(function(response){
             response.CachesDeleted = response.CachesDeleted||[];
 
             console.log(response.CachesDeleted);
 
-            let msg = '构建缓存清理成功，清理空间{0}, 清理构建缓存{1}个'.format($.docker.utils.getSize(response.SpaceReclaimed), response.CachesDeleted.length);
+            let msg = t('images.msg.buildCachePruned', $.docker.utils.getSize(response.SpaceReclaimed), response.CachesDeleted.length);
 
             $.app.show(msg)
 
@@ -514,7 +558,7 @@ function createContainerFromImage(idx, id){
         let rows = $('#imagesDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个镜像创建容器');
+            $.app.show(t('images.msg.createContainer.onlyOne'));
             return ;
         }
 
@@ -574,7 +618,7 @@ function _tagLease(id, repo, tag, fn){
     }
 
     $.iDialog.openDialog({
-        title: '标记镜像',
+        title: t('images.dialog.tag.title'),
         minimizable:false,
         id:'tagImgDlg',
         iconCls: 'fa fa-headphones',
@@ -587,7 +631,7 @@ function _tagLease(id, repo, tag, fn){
             handler.render(row)
         },
         buttonsGroup: [{
-            text: '标记',
+            text: t('images.dialog.tag.btn'),
             iconCls: 'fa fa-headphones',
             btnCls: 'cubeui-btn-orange',
             handler:'ajaxForm',
@@ -597,10 +641,10 @@ function _tagLease(id, repo, tag, fn){
                 o.ajaxData = $.extends.json.param2json(o.ajaxData);
                 let info = o.ajaxData;
 
-                $.app.confirm('确定标记当前镜像为{0}:{1}'.format(info.fromImage, info.tag), function () {
+                $.app.confirm(t('images.dialog.tag.confirm', info.fromImage, info.tag), function () {
 
                     $.docker.request.image.tag(function (response) {
-                        $.app.show('标记当前镜像为{0}:{1}成功'.format(info.fromImage, info.tag))
+                        $.app.show(t('images.dialog.tag.success', info.fromImage, info.tag))
                         reloadDg()
 
                         if(fn)
@@ -628,9 +672,9 @@ function removeLease(leaseId) {
         let rows = $('#imagesDg').datagrid('getChecked');
 
         if(rows.length == 0) {
-            $.app.alert('请选择需要删除的镜像')
+            $.app.alert(t('images.alert.remove.pick'))
         }else{
-            $.docker.utils.deleteConfirm('删除镜像', '您确认要删除当前想选择的镜像', function (param, closeFn){
+            $.docker.utils.deleteConfirm(t('images.dialog.remove.title'), t('images.dialog.remove.confirmSelected'), function (param, closeFn){
 
                 let ids = $.extends.collect(rows, function(r){
                     if(r.ID=='<none>:<none>'||r.ID=='<none>@<none>')
@@ -657,7 +701,7 @@ function removeLease(leaseId) {
         }
 
     }else{
-        $.docker.utils.deleteConfirm('删除镜像', '您确认要删除当前的镜像', function (param, closeFn){
+        $.docker.utils.deleteConfirm(t('images.dialog.remove.title'), t('images.dialog.remove.confirmSingle'), function (param, closeFn){
             $.docker.request.image.delete(function(response){
 
                 let msg = '删除成功，已经成功删除'+response.length+'个镜像';
@@ -703,7 +747,7 @@ function emptyLease(){
                 </div>
         `;
 
-    $.docker.utils.optionConfirm('清理镜像', '重要警告：确定要清空所有未使用的镜像，清理后数据卷数据将无法恢复', html,
+    $.docker.utils.optionConfirm(t('images.dialog.prune.title'), t('images.dialog.prune.warn'), html,
         function(param, closeFn){
 
             $.docker.request.image.prune(function(response){
@@ -722,12 +766,12 @@ function pushImage(id){
         let rows = $('#imagesDg').datagrid('getChecked');
 
         if(rows.length>1){
-            $.app.show('本版本仅支持选择一个镜像推送至仓库');
+            $.app.show(t('images.msg.push.onlyOne'));
             return ;
         }
 
         if(rows.length==0){
-            $.app.show('请选择一个镜像推送至仓库');
+            $.app.show(t('images.msg.push.pickOne'));
             return;
         }else{
             id = rows[0].ID;

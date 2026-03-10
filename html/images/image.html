@@ -36,7 +36,7 @@
                     extend: '#imagesDg-toolbar',
                     btnCls: 'cubeui-btn-blue',
                     iconCls: 'fa fa-download'
-                }">拉取镜像</a>
+                }"><span data-i18n="images.toolbar.pull">拉取镜像</span></a>
 
 <!--            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{-->
 <!--                    onClick:function(){-->
@@ -63,7 +63,7 @@
                     extend: '#imagesDg-toolbar',
                     btnCls: 'cubeui-btn-orange',
                     iconCls: 'fa fa-sign-in'
-                }">导入tarball</a>
+                }"><span data-i18n="images.toolbar.importTarball">导入tarball</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
@@ -72,7 +72,7 @@
                     extend: '#imagesDg-toolbar',
                     btnCls: 'cubeui-btn-blue',
                     iconCls: 'fa fa-sign-in'
-                }">加载镜像</a>
+                }"><span data-i18n="images.toolbar.load">加载镜像</span></a>
 
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
@@ -82,7 +82,7 @@
                     extend: '#imagesDg-toolbar',
                     btnCls: 'cubeui-btn-limegreen',
                     iconCls: 'fa fa-puzzle-piece'
-                }">构建镜像</a>
+                }"><span data-i18n="images.toolbar.build">构建镜像</span></a>
 
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
@@ -92,7 +92,7 @@
                     extend: '#imagesDg-toolbar',
                     btnCls: 'cubeui-btn-red',
                     iconCls: 'fa fa-sign-in'
-                }">导出镜像</a>
+                }"><span data-i18n="images.toolbar.export">导出镜像</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
@@ -101,7 +101,7 @@
                     extend: '#imagesDg-toolbar',
                     btnCls: 'cubeui-btn-ivory',
                     iconCls: 'fa fa-arrow-circle-up'
-                }">推送镜像</a>
+                }"><span data-i18n="images.toolbar.push">推送镜像</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
@@ -110,7 +110,7 @@
                     extend: '#imagesDg-toolbar',
                     btnCls: 'cubeui-btn-dodgerblue',
                     iconCls: 'fa fa-toggle-right'
-                }">运行容器</a>
+                }"><span data-i18n="images.toolbar.runContainer">运行容器</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
@@ -119,7 +119,7 @@
                     extend: '#imagesDg-toolbar',
                     btnCls: 'cubeui-btn-brown',
                     iconCls: 'fa fa-trash'
-                }">清理镜像</a>
+                }"><span data-i18n="images.toolbar.pruneImages">清理镜像</span></a>
 
             <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
@@ -128,10 +128,10 @@
                     extend: '#imagesDg-toolbar',
                     btnCls: 'cubeui-btn-slateblue',
                     iconCls: 'fa fa-trash'
-                }">清理缓存</a>
+                }"><span data-i18n="images.toolbar.pruneBuildCache">清理缓存</span></a>
 
             <form id="queryForm" class="search-box">
-                <span style='line-height: 30px;padding-right:0px'>包含中间镜像：</span>
+                <span style='line-height: 30px;padding-right:0px' data-i18n="images.search.includeIntermediate">包含中间镜像：</span>
                 <input id='refreshBtn'  name="all"  value='1' data-toggle="cubeui-switchbutton" style="width:50px;height1:30px" checked1="true"
                     data-options="
                     onText:'',offText:'',
@@ -162,15 +162,15 @@
                    iconCls:'fa fa-search',
                    btnCls:'cubeui-btn-blue',
                    form:{id:'queryForm'},
-                   grid:{type:'datagrid','id':'imagesDg'}">查询</a>
+                   grid:{type:'datagrid','id':'imagesDg'}"><span data-i18n="common.btn.search">查询</span></a>
             </form>
         </div>
     </div>
 </div>
 <!-- 表格工具栏结束 -->
 <div id="searchImageMm" data-toggle="cubeui-menu" style="width:120px;display:none" data-options="">
-    <div onclick="pullImgFromMenu()" data-options="iconCls:'fa fa-download'">拉取latest镜像</div>
-    <div onclick="setImgFromMenu()" data-options="iconCls:'fa fa-check-square-o'">指定镜像Tag</div>
+    <div onclick="pullImgFromMenu()" data-options="iconCls:'fa fa-download'"><span data-i18n="images.menu.pullLatest">拉取latest镜像</span></div>
+    <div onclick="setImgFromMenu()" data-options="iconCls:'fa fa-check-square-o'"><span data-i18n="images.menu.setTag">指定镜像Tag</span></div>
 </div>
 </script>
 

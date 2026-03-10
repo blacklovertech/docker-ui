@@ -29,49 +29,49 @@
                }">
 
 
-            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a id="configsCreateBtn" href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
                         createLease();
                     },
                     btnCls: 'cubeui-btn-blue',
                     iconCls: 'fa fa-plus'
-                }">创建配置</a>
+                }">{{:~t("configs.toolbar.create")}}</a>
 
-            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a id="configsEditMetadataBtn" href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                 onClick:function(){
                     updateTags();
                 },
                 btnCls: 'cubeui-btn-slateblue',
                 iconCls: 'fa fa-tags'
-            }">编辑元数据</a>
+            }">{{:~t("configs.toolbar.editMetadata")}}</a>
 
-            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a id="configsUpdateBtn" href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
                         updateData();
                     },
                     extend: '#secretsDg-toolbar',
                     btnCls: 'cubeui-btn-orange',
                     iconCls: 'fa fa-pencil-square-o'
-                }">修改配置</a>
+                }">{{:~t("configs.toolbar.update")}}</a>
 
 
-            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a id="configsRemoveBtn" href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
                         removeLease();
                     },
                     extend: '#configsDg-toolbar',
                     btnCls: 'cubeui-btn-red',
                     iconCls: 'fa fa-times'
-                }">删除配置</a>
+                }">{{:~t("configs.toolbar.remove")}}</a>
 
             <form id="queryForm" class="search-box">
 
-                <span style='line-height: 30px;padding-left:2px;padding-right:2px'>查询方式</span>
+                <span style='line-height: 30px;padding-left:2px;padding-right:2px'>{{:~t("configs.search.type")}}</span>
 
                 <input type="text" id='search_type' name="search_type" value="name" data-toggle="cubeui-combobox"
                        data-options="
                                 width:120,
-                                required:true,prompt:'查询方式，必须填写',
+                            required:true,prompt:'{{:~t("configs.prompt.typeRequired")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:[{'KEY':'name','TEXT':'Name'},{'KEY':'label','TEXT':'Label'},{'KEY':'names','TEXT':'Names'},
@@ -80,22 +80,22 @@
                 <input type="text" id='search_key' name="search_key" data-toggle="cubeui-textbox"
                        data-options="onClear:function(){
                             $('#searchbtn').trigger('click');
-                       }, mask:'{{:~js(prefix)}}', prompt:'查询条件, 多条件逗号分隔；label方式 label1=a,label2=b',width:420">
-                <a href="javascript:void(0)" id="searchbtn"
+                      }, mask:'{{:~js(prefix)}}', prompt:'{{:~t("configs.search.placeholder")}}',width:420">
+                     <a href="javascript:void(0)" id="searchbtn"
                    data-toggle="cubeui-menubutton"
                    data-options="method:'query',
                    iconCls:'fa fa-search',
                    btnCls:'cubeui-btn-blue',
                    form:{id:'queryForm'},
-                   grid:{type:'datagrid','id':'configsDg'}">查询</a>
+                         grid:{type:'datagrid','id':'configsDg'}">{{:~t("common.btn.search")}}</a>
             </form>
         </div>
     </div>
 </div>
 <!-- 表格工具栏结束 -->
 <div id="searchImageMm" data-toggle="cubeui-menu" style="width:120px;display:none" data-options="">
-    <div onclick="pullImgFromMenu()" data-options="iconCls:'fa fa-download'">拉取latest镜像</div>
-    <div onclick="setImgFromMenu()" data-options="iconCls:'fa fa-check-square-o'">指定镜像Tag</div>
+    <div onclick="pullImgFromMenu()" data-options="iconCls:'fa fa-download'">{{:~t("images.menu.pullLatest")}}</div>
+    <div onclick="setImgFromMenu()" data-options="iconCls:'fa fa-check-square-o'">{{:~t("images.menu.setTag")}}</div>
 </div>
 </script>
 
@@ -113,6 +113,17 @@
                 stop = true
                 console.log("finish")
                 APP.renderBody("#tmpl1", {})
+                try {
+                    var i18n = (window.APP && window.APP.i18n) ? window.APP.i18n : window.APP_I18N;
+                    if (i18n && i18n.apply) {
+                        i18n.apply(document);
+                    }
+                } catch (e) {}
+                try {
+                    if (typeof __configs_applyControlsI18n === 'function') {
+                        __configs_applyControlsI18n();
+                    }
+                } catch (e2) {}
                 refreshImageAndContainerInfo()
 
                 // let t = $.templates("#tmpl1").render({id:"1022", name:"davidliu"})

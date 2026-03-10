@@ -29,70 +29,70 @@
                }">
 
 
-            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a  href="javascript:void(0)" id="networkCreateBtn" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
                         createLease();
                     },
                     btnCls: 'cubeui-btn-blue',
                     iconCls: 'fa fa-plus'
-                }">创建网络</a>
+                }">{{:~t("network.toolbar.create")}}</a>
 
-            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a  href="javascript:void(0)" id="networkCloneBtn" data-toggle='cubeui-menubutton' data-options="{
                 onClick:function(){
                     cloneLease();
                 },
                 btnCls: 'cubeui-btn-slateblue',
                 iconCls: 'fa fa-tags'
-            }">克隆网络</a>
+            }">{{:~t("network.toolbar.clone")}}</a>
 
-            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a  href="javascript:void(0)" id="networkRemoveBtn" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
                         removeLease();
                     },
                     extend: '#networksDg-toolbar',
                     btnCls: 'cubeui-btn-red',
                     iconCls: 'fa fa-times'
-                }">删除网络</a>
+                }">{{:~t("network.toolbar.remove")}}</a>
 
-            <a  href="javascript:void(0)" data-toggle='cubeui-menubutton' data-options="{
+            <a  href="javascript:void(0)" id="networkPruneBtn" data-toggle='cubeui-menubutton' data-options="{
                     onClick:function(){
                         pruneLease();
                     },
                     extend: '#secretsDg-toolbar',
                     btnCls: 'cubeui-btn-orange',
                     iconCls: 'fa fa-trash'
-                }">清理网络</a>
+                }">{{:~t("network.toolbar.prune")}}</a>
 
             <form id="queryForm" class="search-box">
 
-                <span style='line-height: 30px;padding-right:0px'>驱动：</span>
+                                <span style='line-height: 30px;padding-right:0px'>{{:~t("network.search.driver")}}</span>
                 <input type="text" id="driver_network" name="driver" value="" data-toggle="cubeui-combobox"
                        data-options="
                                 width:120,
-                                required:false,prompt:'默认所有',
+                            required:false,prompt:'{{:~t("common.prompt.emptyAll")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:[]
                        ">
 
-                <span style='line-height: 30px;padding-right:0px'>类型：</span>
+                                <span style='line-height: 30px;padding-right:0px'>{{:~t("network.search.type")}}</span>
                 <input type="text" name="type" value="" data-toggle="cubeui-combobox"
                        data-options="
                                 width:120,
-                                required:false,prompt:'默认所有',
+                            required:false,prompt:'{{:~t("common.prompt.emptyAll")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
-                                data:[{'KEY':'','TEXT':'所有'},{'KEY':'custom','TEXT':'用户定义'},{'KEY':'builtin','TEXT':'系统内建'}]
+                            data:[{'KEY':'','TEXT':'{{:~t("common.option.all")}}'},{'KEY':'custom','TEXT':'{{:~t("network.search.type.custom")}}'},{'KEY':'builtin','TEXT':'{{:~t("network.search.type.builtin")}}'}]
                        ">
 
-                <span style='line-height: 30px;padding-right:0px'>范围：</span>
+                                <span style='line-height: 30px;padding-right:0px'>{{:~t("network.search.scope")}}</span>
                 <input type="text" name="scope" value="" data-toggle="cubeui-combobox"
                        data-options="
                                 width:120,
-                                required:false,prompt:'默认所有',
+                            required:false,prompt:'{{:~t("common.prompt.emptyAll")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
-                                data:[{'KEY':'','TEXT':'所有'},{'KEY':'local','TEXT':'local'},{'KEY':'swarm','TEXT':'swarm'},{'KEY':'global','TEXT':'global'}]
+                            data:[{'KEY':'','TEXT':'{{:~t("common.option.all")}}'},{'KEY':'local','TEXT':'local'},{'KEY':'swarm','TEXT':'swarm'},{'KEY':'global','TEXT':'global'}]
                        ">
 
                 <span style='line-height: 30px;padding-left:2px;padding-right:10px'></span>
@@ -100,7 +100,7 @@
                 <input type="text" id='search_type' name="search_type" value="name" data-toggle="cubeui-combobox"
                        data-options="
                                 width:120,
-                                required:true,prompt:'查询方式，必须填写',
+                                    required:true,prompt:'{{:~t("common.prompt.searchTypeRequired")}}',
                                 valueField:'KEY',
                                 textField:'TEXT',
                                 data:[{'KEY':'name','TEXT':'Name'},{'KEY':'label','TEXT':'Label'},{'KEY':'dangling','TEXT':'dangling'},
@@ -109,22 +109,22 @@
                 <input type="text" id='search_key' name="search_key" data-toggle="cubeui-textbox"
                        data-options="onClear:function(){
                             $('#searchbtn').trigger('click');
-                       }, mask:'{{:~js(prefix)}}', prompt:'查询条件, 多条件逗号分隔；label方式 label1=a,label2=b',width:420">
+                              }, mask:'{{:~js(prefix)}}', prompt:'{{:~t("common.prompt.searchKey")}}',width:420">
                 <a href="javascript:void(0)" id="searchbtn"
                    data-toggle="cubeui-menubutton"
                    data-options="method:'query',
                    iconCls:'fa fa-search',
                    btnCls:'cubeui-btn-blue',
                    form:{id:'queryForm'},
-                   grid:{type:'datagrid','id':'networksDg'}">查询</a>
+                             grid:{type:'datagrid','id':'networksDg'}">{{:~t("common.btn.search")}}</a>
             </form>
         </div>
     </div>
 </div>
 <!-- 表格工具栏结束 -->
 <div id="searchImageMm" data-toggle="cubeui-menu" style="width:120px;display:none" data-options="">
-    <div onclick="pullImgFromMenu()" data-options="iconCls:'fa fa-download'">拉取latest镜像</div>
-    <div onclick="setImgFromMenu()" data-options="iconCls:'fa fa-check-square-o'">指定镜像Tag</div>
+    <div onclick="pullImgFromMenu()" data-options="iconCls:'fa fa-download'">{{:~t("images.menu.pullLatest")}}</div>
+    <div onclick="setImgFromMenu()" data-options="iconCls:'fa fa-check-square-o'">{{:~t("images.menu.setTag")}}</div>
 </div>
 </script>
 
@@ -144,6 +144,11 @@
 
 
                 APP.renderBody("#tmpl1", {})
+                try {
+                    if (typeof __network_applyControlsI18n === 'function') {
+                        __network_applyControlsI18n();
+                    }
+                } catch (e) {}
 
 
                 $.docker.request.info(local_node, function () {
