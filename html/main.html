@@ -81,11 +81,17 @@
 <!--        </table>-->
     </div>
 
-<!--    <div id="east111"-->
-<!--         data-options="title:'123',collapsedSize:0,region:'east',split:true,width:250,border:false,split:false,collapsed:true"-->
-<!--         title="123" iconCls1="fa  fa-object-ungroup">-->
-<!--         123123123-->
-<!--    </div>-->
+    <div id="east"
+         data-options="region:'east',title:'事件',collapsedSize:0,split:true,width:420,border:true,collapsed:true"
+         style="overflow: hidden;">
+        <div style="height:100%;display:flex;flex-direction:column;">
+            <div style="padding:8px 10px;border-bottom:1px solid #eee;flex:0 0 auto;">
+                <span style="font-weight:600;">Docker 事件</span>
+                <span style="margin-left:8px;color:#888;">（最近 200 条）</span>
+            </div>
+            <div id="eventDrawerBody" style="flex:1 1 auto;overflow:auto;padding:8px 10px;"></div>
+        </div>
+    </div>
 
     <div id="center" data-options="region:'center',border:false"
          style="overflow: hidden;">
@@ -102,7 +108,7 @@
                     style="float: left; padding-left: 5px; width: 30%; text-align: left;">当前用户：<block
                     class="currentuserinfo">Jonnyan404</block></span>
         <span style="padding-right: 5px; width: 40%"></b>  <a
-                href="https://github.com/Jonnyan404" target="_blank">By jonnyan404 ©2026</a>
+                href="https://github.com/Jonnyan404" target="_blank">Power by jonnyan404 ©2026</a>
             </span> <span
             style="float: right; padding-right: 5px; width: 30%; text-align: right;"><span id='versioninfo'>版本：v2.0</span>  <a
             href="javascript:void(0);"
@@ -181,6 +187,123 @@
     }
 
     function monitorEvent(){
+        // 事件抽屉：只做最小实现（内存缓存 + 简单渲染）
+        if (!window.__dockerEventState) {
+            window.__dockerEventState = {
+                list: [],
+                unread: 0,
+                max: 200,
+            };
+        }
+
+        function formatEventTime(evt) {
+            try {
+                if (evt && evt.timeNano) {
+                    return new Date(evt.timeNano / 1000000).pattern('yyyy-MM-dd HH:mm:ss');
+                }
+                if (evt && evt.time) {
+                    return new Date(evt.time * 1000).pattern('yyyy-MM-dd HH:mm:ss');
+                }
+            } catch (e) {}
+            return '';
+        }
+
+        function parseEventsFromChunk(chunk) {
+            if ($.extends.isEmpty(chunk)) return [];
+
+            // $.app.ajaxStream 的 onChunksFn 会传入「按行切好的数组」，每一项一般是 JSON 字符串 + "\n"
+            if ($.isArray(chunk)) {
+                let events = [];
+                for (let i = 0; i < chunk.length; i++) {
+                    let line = (chunk[i] || '').toString().trim();
+                    if (!line) continue;
+                    if (line[0] !== '{' && line[0] !== '[') continue;
+
+                    try {
+                        let one = $.extends.json.toobject2(line);
+                        if ($.isArray(one)) {
+                            // 兼容某些情况下返回数组（虽然 Docker event 通常是单对象）
+                            for (let j = 0; j < one.length; j++) {
+                                if (one[j] && typeof one[j] === 'object') events.push(one[j]);
+                            }
+                        } else if (one && typeof one === 'object') {
+                            events.push(one);
+                        }
+                    } catch (e) {
+                        // ignore parse errors for partial chunks
+                    }
+                }
+                return events;
+            }
+
+            // chunk 也可能是单个 JSON 字符串
+            let text = chunk;
+            if (typeof chunk !== 'string') {
+                try { text = JSON.stringify(chunk); } catch (e) { return []; }
+            }
+
+            let lines = text.split('\n').map(function (l){ return (l || '').trim(); }).filter(function (l){ return l.length > 0; });
+            let events = [];
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                if (line[0] !== '{' && line[0] !== '[') continue;
+                try {
+                    let one = $.extends.json.toobject2(line);
+                    if ($.isArray(one)) {
+                        for (let j = 0; j < one.length; j++) {
+                            if (one[j] && typeof one[j] === 'object') events.push(one[j]);
+                        }
+                    } else if (one && typeof one === 'object') {
+                        events.push(one);
+                    }
+                } catch (e) {
+                    // ignore parse errors for partial chunks
+                }
+            }
+            return events;
+        }
+
+        function renderEventDrawer() {
+            let state = window.__dockerEventState;
+            let container = $('#eventDrawerBody');
+            if (container.isNull()) return;
+
+            if (!state.list || state.list.length === 0) {
+                container.html('<div style="color:#888;">暂无事件</div>');
+                return;
+            }
+
+            let html = '';
+            for (let idx = state.list.length - 1; idx >= 0; idx--) {
+                let e = state.list[idx] || {};
+                if (typeof e === 'string') {
+                    try {
+                        e = $.extends.json.toobject2(e);
+                    } catch (ex) {
+                        e = {};
+                    }
+                }
+                if (!e || typeof e !== 'object') {
+                    continue;
+                }
+                let t = formatEventTime(e);
+                let type = e.Type || '';
+                let action = e.Action || '';
+                let id = (e.Actor && e.Actor.ID) ? e.Actor.ID : '';
+                let scope = e.scope || '';
+
+                html += '<div style="padding:6px 0;border-bottom:1px dashed #eee;">'
+                    +   '<div style="font-size:12px;color:#666;">' + t + (scope ? (' · ' + scope) : '') + '</div>'
+                    +   '<div style="margin-top:2px;">'
+                    +     '<span style="font-weight:600;">' + type + '</span>'
+                    +     (action ? (' <span style="color:#333;">' + action + '</span>') : '')
+                    +   '</div>'
+                    +   (id ? ('<div style="font-size:12px;color:#888;">' + id + '</div>') : '')
+                    + '</div>';
+            }
+            container.html(html);
+        }
+
         $.docker.request.system.event(function (chunk, xhr, state) {
             console.log("Docker Event")
             console.log(xhr)
@@ -189,19 +312,18 @@
 
                 console.log(chunk)
 
-                let a = $('.title-event').text()
-                if($.extends.isEmpty(a))
-                    a = 0;
-
-                $('.title-event').text(a*1 + chunk.length)
-
-                try{
-                    let json = $.extends.json.toobject2(chunk)
-
-                    //$.app.show('收到{0}事件:{1}'.format(json.Type, json.Action, new Date(json.timeNano/1000000).pattern('yyyy-MM-dd HH:mm:ss')))
-
-                }catch (e) {
-                    console.log('Parse event error ' + e)
+                let events = parseEventsFromChunk(chunk);
+                if (events.length > 0) {
+                    let stateObj = window.__dockerEventState;
+                    for (let i = 0; i < events.length; i++) {
+                        stateObj.list.push(events[i]);
+                        stateObj.unread += 1;
+                    }
+                    if (stateObj.list.length > stateObj.max) {
+                        stateObj.list = stateObj.list.slice(stateObj.list.length - stateObj.max);
+                    }
+                    $('.title-event').text(stateObj.unread);
+                    renderEventDrawer();
                 }
             }
         }, local_node, function(){
@@ -215,7 +337,18 @@
     }
 
     function showEvent(){
-       //$('#index_layout').layout('expand','east');
+        // 展开右侧抽屉
+        try {
+            $('#index_layout').layout('expand','east');
+        } catch (e) {
+            // ignore
+        }
+
+        // 打开即视为“已读”
+        if (window.__dockerEventState) {
+            window.__dockerEventState.unread = 0;
+        }
+        $('.title-event').text('0');
     }
 
 
