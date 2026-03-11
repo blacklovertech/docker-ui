@@ -48,8 +48,7 @@ checksum:
   name_template: checksums.txt
 
 release:
-  github:
-    replace_existing_artifacts: true
-    mode: keep-existing
+  replace_existing_artifacts: true
+  mode: keep-existing
   prerelease: auto
   draft: false
