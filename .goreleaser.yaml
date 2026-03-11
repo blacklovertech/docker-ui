@@ -9,7 +9,7 @@ before:
 builds:
   - id: docker-ui
     main: .
-    binary: docker-ui-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ .Ext }}
+    binary: docker-ui-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}
     no_unique_dist_dir: true
     flags:
       - -tags=embed
@@ -27,7 +27,7 @@ builds:
 
   - id: docker-ui-linux-armv7
     main: .
-    binary: docker-ui-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ .Ext }}
+    binary: docker-ui-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}
     no_unique_dist_dir: true
     flags:
       - -tags=embed
